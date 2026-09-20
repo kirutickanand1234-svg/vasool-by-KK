@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vasool Collection by KK — Branch Ledger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#122236">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vasool Collection by KK">
+
+<style>
+  :root{
+    --bg:#F5F2EB;
+    --surface:#FFFFFF;
+    --surface-2:#FBF9F4;
+    --ink:#1B2430;
+    --ink-soft:#5B6472;
+    --ink-faint:#8A92A0;
+    --border:#E4DFD2;
+    --navy:#122236;
+    --navy-2:#1B3350;
+    --teal:#0E7C6B;
+    --teal-soft:#E4F1EC;
+    --amber:#C97C2C;
+    --amber-soft:#FBF0E1;
+    --coral:#C1443A;
+    --coral-soft:#FBEAE8;
+    --shadow: 0 1px 2px rgba(20,20,20,0.04), 0 8px 24px rgba(20,20,20,0.05);
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#10151D;
+      --surface:#182029;
+      --surface-2:#141B23;
+      --ink:#EEEFF1;
+      --ink-soft:#9AA3AE;
+      --ink-faint:#6B7480;
+      --border:#2A323C;
+      --navy:#0B141F;
+      --navy-2:#122032;
+      --teal:#3FBBA3;
+      --teal-soft:#173029;
+      --amber:#E0A45C;
+      --amber-soft:#2E2419;
+      --coral:#E37B72;
+      --coral-soft:#2E1917;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#10151D;
+    --surface:#182029;
+    --surface-2:#141B23;
+    --ink:#EEEFF1;
+    --ink-soft:#9AA3AE;
+    --ink-faint:#6B7480;
+    --border:#2A323C;
+    --navy:#0B141F;
+    --navy-2:#122032;
+    --teal:#3FBBA3;
+    --teal-soft:#173029;
+    --amber:#E0A45C;
+    --amber-soft:#2E2419;
+    --coral:#E37B72;
+    --coral-soft:#2E1917;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .num{ font-family:'IBM Plex Mono', monospace; }
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Layout shell ---------- */
+  #app-shell{
+    display:flex;
+    min-height:100vh;
+    width:100%;
+  }
+
+  /* Sidebar */
+  #sidebar{
+    width:236px;
+    flex-shrink:0;
+    background:var(--navy);
+    color:#DCE3EE;
+    display:flex;
+    flex-direction:column;
+    padding:22px 16px;
+    position:sticky;
+    top:0;
+    height:100vh;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 6px 22px 6px;
+    border-bottom:1px solid rgba(255,255,255,0.09);
+    margin-bottom:18px;
+  }
+  .brand-mark{
+    width:34px;height:34px;border-radius:8px;
+    background:linear-gradient(135deg,var(--teal),#0a5f52);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:16px;
+    flex-shrink:0;
+  }
+  .brand-text .brand-name{font-family:'Fraunces',serif;font-size:16.5px;color:#fff;font-weight:600;}
+  .brand-text .brand-sub{font-size:11px;color:#8FA0B8;letter-spacing:0.02em;}
+
+  nav.side-nav{display:flex;flex-direction:column;gap:2px;}
+  .nav-item{
+    display:flex;align-items:center;gap:11px;
+    padding:10px 12px;border-radius:8px;
+    color:#B9C4D4;font-size:13.5px;font-weight:500;
+    cursor:pointer;border:none;background:none;text-align:left;width:100%;
+    transition:background .12s ease, color .12s ease;
+  }
+  .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:0.85;}
+  .nav-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
+  .nav-item.active{background:var(--navy-2);color:#fff;}
+  .nav-item.active svg{opacity:1;}
+  .side-divider{height:1px;background:rgba(255,255,255,0.08);margin:16px 6px;}
+  .side-foot{margin-top:auto;padding:12px 6px 0;font-size:11px;color:#697A90;}
+
+  /* Main */
+  #main{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+  }
+  #topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 28px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface);
+    position:sticky;top:0;z-index:20;
+    flex-wrap:wrap;
+  }
+  #topbar .title-block h1{font-size:21px;}
+  #topbar .title-block .subtitle{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+
+  .city-picker{position:relative;}
+  .city-picker button.city-btn{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:8px 14px 8px 10px;
+    font-size:13px;font-weight:500;color:var(--ink);
+    cursor:pointer;
+  }
+  .city-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);}
+  .city-dropdown{
+    position:absolute;top:calc(100% + 6px);right:0;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;box-shadow:var(--shadow);
+    min-width:200px;padding:6px;z-index:40;
+    display:none;
+  }
+  .city-dropdown.open{display:block;}
+  .city-dropdown .opt{
+    padding:9px 10px;border-radius:7px;font-size:13.5px;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;color:var(--ink);
+  }
+  .city-dropdown .opt:hover{background:var(--surface-2);}
+  .city-dropdown .opt.sel{color:var(--teal);font-weight:600;}
+  .city-dropdown .opt .cnt{font-size:11.5px;color:var(--ink-faint);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:9px 16px;border-radius:8px;border:1px solid transparent;
+    font-size:13.5px;font-weight:600;cursor:pointer;
+    transition:transform .08s ease, opacity .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--teal);color:#fff;}
+  .btn-primary:hover{opacity:0.92;}
+  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--ink);}
+  .btn-outline:hover{background:var(--surface-2);}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:none;padding:6px 8px;}
+  .btn-ghost:hover{color:var(--ink);}
+  .btn-danger{background:var(--coral);color:#fff;}
+  .btn-sm{padding:6px 11px;font-size:12.5px;}
+  .btn svg{width:15px;height:15px;}
+
+  #content{padding:24px 28px 60px;max-width:1320px;width:100%;}
+
+  /* ---------- Dashboard ---------- */
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .kpi-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 16px 14px;
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .kpi-label{font-size:11.5px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.03em;}
+  .kpi-value{font-family:'Fraunces',serif;font-size:23px;font-weight:600;}
+  .kpi-sub{font-size:11.5px;color:var(--ink-faint);}
+  .kpi-value.teal{color:var(--teal);}
+  .kpi-value.amber{color:var(--amber);}
+  .kpi-value.coral{color:var(--coral);}
+
+  .dash-row{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
+  .panel{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .panel-head h3{font-size:15.5px;}
+  .panel-head .meta{font-size:11.5px;color:var(--ink-faint);}
+
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+  .bar-row .bar-label{width:92px;font-size:12.5px;color:var(--ink-soft);flex-shrink:0;}
+  .bar-track{flex:1;height:9px;background:var(--surface-2);border-radius:5px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),#0a5f52);border-radius:5px;}
+  .bar-val{width:74px;text-align:right;font-size:12px;color:var(--ink-soft);flex-shrink:0;}
+
+  .activity-list{display:flex;flex-direction:column;gap:2px;}
+  .activity-item{
+    display:flex;align-items:center;gap:11px;padding:10px 2px;
+    border-bottom:1px solid var(--border);
+  }
+  .activity-item:last-child{border-bottom:none;}
+  .activity-ic{
+    width:30px;height:30px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:13px;
+  }
+  .activity-ic.pay{background:var(--teal-soft);color:var(--teal);}
+  .activity-ic.new{background:var(--amber-soft);color:var(--amber);}
+  .activity-body{flex:1;min-width:0;}
+  .activity-title{font-size:13px;font-weight:500;}
+  .activity-sub{font-size:11.5px;color:var(--ink-faint);}
+  .activity-amt{font-size:13px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Status badges ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;}
+  .badge.active{background:var(--teal-soft);color:var(--teal);}
+  .badge.active::before{background:var(--teal);}
+  .badge.completed{background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--border);}
+  .badge.completed::before{background:var(--ink-faint);}
+  .badge.overdue{background:var(--coral-soft);color:var(--coral);}
+  .badge.overdue::before{background:var(--coral);}
+
+  /* ---------- Customers page ---------- */
+  .filter-bar{
+    display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:8px;padding:8px 12px;flex:1;min-width:220px;max-width:340px;
+  }
+  .search-box svg{width:15px;height:15px;color:var(--ink-faint);flex-shrink:0;}
+  .search-box input{border:none;outline:none;background:none;font-size:13.5px;color:var(--ink);width:100%;font-family:inherit;}
+  .pill-group{display:flex;gap:6px;flex-wrap:wrap;}
+  .pill{
+    padding:7px 13px;border-radius:999px;border:1px solid var(--border);
+    background:var(--surface);font-size:12.5px;font-weight:500;color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .pill.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  .table-wrap{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    overflow:auto;box-shadow:var(--shadow);
+  }
+  table{width:100%;border-collapse:collapse;min-width:920px;}
+  thead th{
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;
+    color:var(--ink-faint);font-weight:600;padding:12px 14px;
+    border-bottom:1px solid var(--border);background:var(--surface-2);
+    white-space:nowrap;position:sticky;top:0;
+  }
+  tbody td{
+    padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr{cursor:pointer;transition:background .1s ease;}
+  tbody tr:hover{background:var(--surface-2);}
+  .cust-name{font-weight:600;}
+  .cust-id{font-size:11.5px;color:var(--ink-faint);}
+  .cell-city{
+    display:inline-flex;padding:3px 9px;border-radius:6px;background:var(--surface-2);
+    font-size:11.5px;color:var(--ink-soft);
+  }
+  .dots{display:flex;gap:3px;flex-wrap:wrap;max-width:150px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
+  .dot.filled{background:var(--teal);}
+  .empty-state{padding:60px 20px;text-align:center;color:var(--ink-faint);}
+  .empty-state svg{width:40px;height:40px;margin-bottom:10px;opacity:0.5;}
+
+  /* ---------- Forms ---------- */
+  .form-shell{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;}
+  .form-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px 24px;box-shadow:var(--shadow);
+  }
+  .form-card h3{font-size:15px;margin-bottom:16px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:2px;}
+  .field.full{grid-column:1 / -1;}
+  .field label{font-size:12px;font-weight:600;color:var(--ink-soft);}
+  .field input, .field select, .field textarea{
+    border:1px solid var(--border);border-radius:7px;padding:9px 11px;
+    font-size:13.5px;background:var(--surface-2);color:var(--ink);font-family:inherit;
+    outline:none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--teal);}
+  .field .hint{font-size:11px;color:var(--ink-faint);}
+  .form-actions{display:flex;gap:10px;margin-top:18px;}
+
+  .summary-card{
+    background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px 22px;
+    position:sticky;top:90px;
+  }
+  .summary-card h3{color:#fff;font-size:14.5px;margin-bottom:14px;}
+  .summary-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:13px;}
+  .summary-row:last-child{border-bottom:none;}
+  .summary-row .lbl{color:#A9B7CB;}
+  .summary-row .val{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+  .summary-row.big .val{color:#5FD9C0;font-size:16px;}
+
+  /* ---------- Customer detail modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(10,14,20,0.55);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:14px;max-width:760px;width:100%;
+    max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    padding:22px 24px 16px;border-bottom:1px solid var(--border);
+    position:sticky;top:0;background:var(--surface);z-index:5;
+  }
+  .modal-head h2{font-size:19px;}
+  .modal-head .modal-sub{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
+  .modal-body{padding:20px 24px 26px;}
+  .modal-close{cursor:pointer;background:var(--surface-2);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;}
+
+  .detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+  .detail-stat{background:var(--surface-2);border-radius:9px;padding:12px 13px;}
+  .detail-stat .l{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.02em;margin-bottom:3px;}
+  .detail-stat .v{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;}
+
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-bottom:20px;font-size:13px;}
+  .info-grid .k{color:var(--ink-faint);}
+  .info-grid .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+
+  .payhist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .payhist-head h4{font-size:13.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.02em;font-weight:600;}
+  .pay-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .pay-row:last-child{border-bottom:none;}
+  .pay-left{display:flex;align-items:center;gap:9px;}
+  .pay-left .ic{width:26px;height:26px;border-radius:50%;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .pay-amt{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--teal);}
+  .no-payments{color:var(--ink-faint);font-size:13px;padding:14px 0;text-align:center;}
+
+  .record-pay-box{
+    background:var(--teal-soft);border:1px solid var(--teal);border-radius:10px;
+    padding:14px 16px;margin-top:18px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;
+  }
+  .record-pay-box .field{margin-bottom:0;min-width:120px;flex:1;}
+  .record-pay-box label{color:#0a5f52;}
+  :root[data-theme="dark"] .record-pay-box label, .record-pay-box label{color:var(--teal);}
+
+  /* mobile nav */
+  #mobile-topbar{display:none;}
+  .hamburger{display:none;}
+
+  @media (max-width: 980px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .dash-row{grid-template-columns:1fr;}
+    .form-shell{grid-template-columns:1fr;}
+    .summary-card{position:static;}
+    .detail-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width: 760px){
+    #sidebar{
+      position:fixed;left:0;top:0;height:100vh;z-index:200;
+      transform:translateX(-100%);transition:transform .2s ease;
+      box-shadow:0 0 40px rgba(0,0,0,0.3);
+    }
+    #sidebar.open{transform:translateX(0);}
+    .hamburger{
+      display:flex;align-items:center;justify-content:center;
+      width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
+      background:var(--surface);cursor:pointer;flex-shrink:0;
+    }
+    #content{padding:18px 14px 60px;}
+    #topbar{padding:12px 14px;}
+    .kpi-grid{grid-template-columns:1fr 1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .info-grid{grid-template-columns:1fr;}
+    .detail-grid{grid-template-columns:1fr 1fr;}
+    #topbar .title-block h1{font-size:18px;}
+    .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:150;}
+    .sidebar-scrim.open{display:block;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app-shell">
+  <div class="sidebar-scrim" id="scrim"></div>
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">KK</div>
+      <div class="brand-text">
+        <div class="brand-name">Vasool Collection by KK</div>
+        <div class="brand-sub">Branch Ledger</div>
+      </div>
+    </div>
+    <nav class="side-nav" id="side-nav">
+      <button class="nav-item" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="customers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </button>
+      <button class="nav-item" data-view="add-customer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+        Add Customer
+      </button>
+    </nav>
+    <div class="side-divider"></div>
+    <div class="side-foot">Sample data preloaded<br/>for demo purposes.</div>
+  </aside>
+
+  <div id="main">
+    <div id="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="title-block">
+          <h1 id="page-title">Dashboard</h1>
+          <div class="subtitle" id="page-subtitle">Overview across all branches</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="city-picker">
+          <button class="city-btn" id="city-btn"><span class="dot"></span><span id="city-label">All Cities</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="city-dropdown" id="city-dropdown"></div>
+        </div>
+        <button class="btn btn-primary" id="quick-add-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Customer
+        </button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-inner"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ====================== CONFIG ====================== */
+  var CITIES = ["Chennai","Trichy","Thanjavur","Madurai","Coimbatore"];
+  var STORAGE_KEY = "vasool_collection_customers_v1";
+
+  var state = {
+    view: "dashboard",
+    selectedCity: "All",
+    search: "",
+    statusFilter: "All",
+    activeCustomerId: null,
+    editingCustomerId: null
+  };
+
+  /* ====================== UTILITIES ====================== */
+  function fmtINR(n){
+    n = Math.round(n || 0);
+    var neg = n < 0; n = Math.abs(n);
+    var s = n.toString();
+    var last3 = s.slice(-3);
+    var rest = s.slice(0, -3);
+    if(rest !== "") last3 = "," + last3;
+    var formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + last3;
+    return (neg ? "-" : "") + "₹" + formatted;
+  }
+  function fmtDate(d){
+    if(!d) return "—";
+    var dt = new Date(d);
+    var dd = String(dt.getDate()).padStart(2,"0");
+    var mm = String(dt.getMonth()+1).padStart(2,"0");
+    var yy = dt.getFullYear();
+    return dd + "/" + mm + "/" + yy;
+  }
+  function addDays(dateStr, days){
+    var d = new Date(dateStr);
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0,10);
+  }
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  function uid(){ return "c" + Math.random().toString(36).slice(2,9); }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  /* Compute derived loan fields for a customer */
+  function calc(c){
+    var totalRepayment = Math.round(c.amountLent * (1 + (c.interestPercent||0)/100));
+    var weeklyInstallment = Math.round(totalRepayment / c.weeks);
+    var amountPaid = (c.payments||[]).reduce(function(s,p){ return s + p.amount; }, 0);
+    var balance = Math.max(0, totalRepayment - amountPaid);
+    var installmentsCompleted = Math.min(c.weeks, Math.round(amountPaid / weeklyInstallment));
+    var installmentsRemaining = Math.max(0, c.weeks - installmentsCompleted);
+    var dueDate = addDays(c.startDate, c.weeks * 7);
+    var status;
+    if(balance <= 0){ status = "Completed"; }
+    else if(todayStr() > dueDate){ status = "Overdue"; }
+    else { status = "Active"; }
+    return {
+      totalRepayment: totalRepayment,
+      weeklyInstallment: weeklyInstallment,
+      amountPaid: amountPaid,
+      balance: balance,
+      installmentsCompleted: installmentsCompleted,
+      installmentsRemaining: installmentsRemaining,
+      dueDate: dueDate,
+      status: status
+    };
+  }
+
+  /* ====================== SAMPLE DATA ====================== */
+  function buildSampleData(){
+    var base = [
+      {name:"Amaravathi Selvam", phone:"98841 23456", address:"12, Bazaar Street", city:"Chennai", amountLent:20000, weeks:10, weeksPaid:10, startDaysAgo:80},
+      {name:"Usha Rani", phone:"90031 55210", address:"45, North Car Street", city:"Chennai", amountLent:9000, weeks:12, weeksPaid:7, startDaysAgo:52},
+      {name:"Jeyaprakash M.", phone:"96772 40981", address:"7, Market Road", city:"Chennai", amountLent:15000, weeks:20, weeksPaid:15, startDaysAgo:120},
+      {name:"Parvathi Krishnan", phone:"94422 10098", address:"22, Temple Street", city:"Chennai", amountLent:6000, weeks:10, weeksPaid:10, startDaysAgo:78},
+      {name:"Karthik Subramani", phone:"97890 11223", address:"3, Anna Nagar 2nd St", city:"Trichy", amountLent:25000, weeks:15, weeksPaid:9, startDaysAgo:64},
+      {name:"Meena Sundaram", phone:"98765 44332", address:"18, Srirangam Main Rd", city:"Trichy", amountLent:12000, weeks:10, weeksPaid:4, startDaysAgo:29},
+      {name:"Ravichandran P.", phone:"90420 88761", address:"9, Thillai Nagar", city:"Trichy", amountLent:18000, weeks:12, weeksPaid:5, startDaysAgo:98},
+      {name:"Deepa Lakshmi", phone:"93810 55021", address:"31, K.K. Nagar", city:"Trichy", amountLent:8000, weeks:8, weeksPaid:8, startDaysAgo:60},
+      {name:"Muthu Vel", phone:"99942 30187", address:"5, Big Bazaar Street", city:"Thanjavur", amountLent:30000, weeks:20, weeksPaid:11, startDaysAgo:82},
+      {name:"Ilamathi R.", phone:"97105 62239", address:"14, Nanjikottai Rd", city:"Thanjavur", amountLent:10000, weeks:10, weeksPaid:3, startDaysAgo:25},
+      {name:"Sankaran Nair", phone:"96001 47732", address:"27, East Main Street", city:"Thanjavur", amountLent:14000, weeks:14, weeksPaid:14, startDaysAgo:105},
+      {name:"Bhuvana Devi", phone:"98432 90112", address:"2, Medical College Rd", city:"Thanjavur", amountLent:7000, weeks:10, weeksPaid:2, startDaysAgo:80},
+      {name:"Alagesan T.", phone:"90876 33441", address:"41, West Masi Street", city:"Madurai", amountLent:22000, weeks:15, weeksPaid:12, startDaysAgo:88},
+      {name:"Kannagi S.", phone:"99433 21087", address:"6, Simmakkal", city:"Madurai", amountLent:9500, weeks:10, weeksPaid:6, startDaysAgo:44},
+      {name:"Perumal Raj", phone:"93450 11290", address:"19, Goripalayam", city:"Madurai", amountLent:16000, weeks:12, weeksPaid:5, startDaysAgo:91},
+      {name:"Vijayalakshmi N.", phone:"97880 65523", address:"33, Anna Nagar", city:"Madurai", amountLent:11000, weeks:10, weeksPaid:10, startDaysAgo:73},
+      {name:"Ganesh Moorthy", phone:"94871 20033", address:"8, RS Puram", city:"Coimbatore", amountLent:28000, weeks:16, weeksPaid:10, startDaysAgo:69},
+      {name:"Saraswathi B.", phone:"96222 40871", address:"25, Gandhipuram", city:"Coimbatore", amountLent:13000, weeks:10, weeksPaid:3, startDaysAgo:23},
+      {name:"Manikandan V.", phone:"90099 55671", address:"17, Peelamedu", city:"Coimbatore", amountLent:20000, weeks:14, weeksPaid:8, startDaysAgo:60},
+      {name:"Revathi Chandran", phone:"93670 82219", address:"4, Race Course Rd", city:"Coimbatore", amountLent:6500, weeks:8, weeksPaid:8, startDaysAgo:58}
+    ];
+
+    return base.map(function(b, i){
+      var startDate = addDays(todayStr(), -b.startDaysAgo);
+      var totalRepayment = b.amountLent; // 0% interest by default, matches ledger totals
+      var weeklyInstallment = Math.round(totalRepayment / b.weeks);
+      var payments = [];
+      for(var w=1; w<=b.weeksPaid; w++){
+        payments.push({
+          date: addDays(startDate, w*7),
+          amount: weeklyInstallment
+        });
+      }
+      return {
+        id: uid(),
+        customerId: String(101 + i),
+        name: b.name,
+        phone: b.phone,
+        address: b.address,
+        city: b.city,
+        amountLent: b.amountLent,
+        weeks: b.weeks,
+        interestPercent: 0,
+        startDate: startDate,
+        payments: payments
+      };
+    });
+  }
+
+  var customers = [];
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        customers = JSON.parse(raw);
+        return;
+      }
+    }catch(e){ /* ignore, fall through to sample data */ }
+    customers = buildSampleData();
+    saveData();
+  }
+  function saveData(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(customers)); }
+    catch(e){ /* storage unavailable, continue in-memory */ }
+  }
+
+  /* ====================== DATA HELPERS ====================== */
+  function cityFiltered(list){
+    if(state.selectedCity === "All") return list;
+    return list.filter(function(c){ return c.city === state.selectedCity; });
+  }
+  function getCustomerById(id){
+    return customers.filter(function(c){ return c.id === id; })[0];
+  }
+  function cityCounts(){
+    var m = {};
+    CITIES.forEach(function(city){ m[city] = customers.filter(function(c){return c.city===city;}).length; });
+    return m;
+  }
+
+  /* ====================== RENDER: SHELL ====================== */
+  function setActiveNav(){
+    document.querySelectorAll(".nav-item").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-view") === state.view);
+    });
+  }
+  function setTitle(title, subtitle){
+    document.getElementById("page-title").textContent = title;
+    document.getElementById("page-subtitle").textContent = subtitle;
+  }
+  function renderCityDropdown(){
+    var counts = cityCounts();
+    var html = '<div class="opt' + (state.selectedCity==="All"?" sel":"") + '" data-city="All">' +
+      '<span>All Cities</span><span class="cnt">' + customers.length + '</span></div>';
+    CITIES.forEach(function(city){
+      html += '<div class="opt' + (state.selectedCity===city?" sel":"") + '" data-city="' + city + '">' +
+        '<span>' + city + '</span><span class="cnt">' + (counts[city]||0) + '</span></div>';
+    });
+    document.getElementById("city-dropdown").innerHTML = html;
+    document.getElementById("city-label").textContent = state.selectedCity === "All" ? "All Cities" : state.selectedCity;
+  }
+
+  /* ====================== RENDER: DASHBOARD ====================== */
+  function renderDashboard(){
+    var list = cityFiltered(customers).map(function(c){
+      var d = calc(c);
+      return Object.assign({}, c, d);
+    });
+    var totalCustomers = list.length;
+    var totalLent = list.reduce(function(s,c){return s+c.amountLent;},0);
+    var totalCollected = list.reduce(function(s,c){return s+c.amountPaid;},0);
+    var outstanding = list.reduce(function(s,c){return s+c.balance;},0);
+    var active = list.filter(function(c){return c.status==="Active";}).length;
+    var overdue = list.filter(function(c){return c.status==="Overdue";}).length;
+    var completed = list.filter(function(c){return c.status==="Completed";}).length;
+
+    var kpiHtml =
+      '<div class="kpi-grid">' +
+        kpiCard("Total Customers", totalCustomers, "across " + (state.selectedCity==="All"?CITIES.length+" branches":state.selectedCity), "") +
+        kpiCard("Amount Lent", fmtINR(totalLent), "principal disbursed", "") +
+        kpiCard("Amount Collected", fmtINR(totalCollected), "received to date", "teal") +
+        kpiCard("Outstanding Balance", fmtINR(outstanding), "yet to be collected", "amber") +
+        kpiCard("Active Loans", active + (overdue?(" +"+overdue+" overdue"):""), "currently running", overdue?"coral":"teal") +
+        kpiCard("Completed Loans", completed, "fully repaid", "") +
+      '</div>';
+
+    // City collection breakdown (only meaningful in All view, but show branch split always)
+    var counts = {};
+    CITIES.forEach(function(city){
+      var sub = customers.filter(function(c){return c.city===city;}).map(function(c){return Object.assign({},c,calc(c));});
+      counts[city] = sub.reduce(function(s,c){return s+c.amountPaid;},0);
+    });
+    var maxVal = Math.max.apply(null, Object.values(counts).concat([1]));
+    var barsHtml = CITIES.map(function(city){
+      var v = counts[city];
+      var pct = Math.round((v/maxVal)*100);
+      return '<div class="bar-row"><div class="bar-label">'+city+'</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div>' +
+        '<div class="bar-val num">'+fmtINR(v)+'</div></div>';
+    }).join("");
+
+    // Recent activity: latest payments + latest customers, mixed, newest first
+    var events = [];
+    customers.forEach(function(c){
+      (c.payments||[]).forEach(function(p){
+        events.push({type:"pay", date:p.date, name:c.name, city:c.city, amount:p.amount});
+      });
+      events.push({type:"new", date:c.startDate, name:c.name, city:c.city, amount:c.amountLent});
+    });
+    events.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    events = events.slice(0, 8);
+    var activityHtml = events.map(function(e){
+      if(e.type==="pay"){
+        return '<div class="activity-item"><div class="activity-ic pay">₹</div>' +
+          '<div class="activity-body"><div class="activity-title">Payment received — '+escapeHtml(e.name)+'</div>' +
+          '<div class="activity-sub">'+e.city+' · '+fmtDate(e.date)+'</div></div>' +
+          '<div class="activity-amt">'+fmtINR(e.amount)+'</div></div>';
+      }
+      return '<div class="activity-item"><div class="activity-ic new">+</div>' +
+        '<div class="activity-body"><div class="activity-title">New loan opened — '+escapeHtml(e.name)+'</div>' +
+        '<div class="activity-sub">'+e.city+' · '+fmtDate(e.date)+'</div></div>' +
+        '<div class="activity-amt">'+fmtINR(e.amount)+'</div></div>';
+    }).join("") || '<div class="no-payments">No recent activity.</div>';
+
+    document.getElementById("content").innerHTML =
+      kpiHtml +
+      '<div class="dash-row">' +
+        '<div class="panel"><div class="panel-head"><h3>Collections by branch</h3><span class="meta">all-time</span></div>' + barsHtml + '</div>' +
+        '<div class="panel"><div class="panel-head"><h3>Recent activity</h3><span class="meta">latest 8</span></div>' +
+          '<div class="activity-list">' + activityHtml + '</div>' +
+        '</div>' +
+      '</div>';
+  }
+  function kpiCard(label, value, sub, colorClass){
+    return '<div class="kpi-card"><div class="kpi-label">'+label+'</div>' +
+      '<div class="kpi-value '+(colorClass||"")+'">'+value+'</div>' +
+      '<div class="kpi-sub">'+sub+'</div></div>';
+  }
+
+  /* ====================== RENDER: CUSTOMERS LIST ====================== */
+  function renderCustomers(){
+    var list = cityFiltered(customers).map(function(c){ return Object.assign({}, c, calc(c)); });
+
+    if(state.search.trim()){
+      var q = state.search.trim().toLowerCase();
+      list = list.filter(function(c){
+        return c.name.toLowerCase().indexOf(q) > -1 ||
+               c.customerId.toLowerCase().indexOf(q) > -1 ||
+               c.phone.toLowerCase().indexOf(q) > -1;
+      });
+    }
+    if(state.statusFilter !== "All"){
+      list = list.filter(function(c){ return c.status === state.statusFilter; });
+    }
+    list.sort(function(a,b){ return new Date(b.startDate) - new Date(a.startDate); });
+
+    var pills = ["All","Active","Overdue","Completed"].map(function(s){
+      return '<button class="pill'+(state.statusFilter===s?" active":"")+'" data-status="'+s+'">'+s+'</button>';
+    }).join("");
+
+    var filterHtml =
+      '<div class="filter-bar">' +
+        '<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        '<input id="search-input" type="text" placeholder="Search by name, ID or phone" value="'+escapeHtml(state.search)+'"/></div>' +
+        '<div class="pill-group">'+pills+'</div>' +
+      '</div>';
+
+    var rowsHtml;
+    if(list.length === 0){
+      rowsHtml = '';
+    } else {
+      rowsHtml = list.map(function(c){
+        var dots = "";
+        for(var i=0;i<c.weeks;i++){
+          dots += '<span class="dot'+(i<c.installmentsCompleted?" filled":"")+'"></span>';
+        }
+        return '<tr data-id="'+c.id+'">' +
+          '<td><div class="cust-name">'+escapeHtml(c.name)+'</div><div class="cust-id">'+escapeHtml(c.phone)+'</div></td>' +
+          '<td class="num">'+c.customerId+'</td>' +
+          '<td><span class="cell-city">'+c.city+'</span></td>' +
+          '<td class="num">'+fmtINR(c.amountLent)+'</td>' +
+          '<td class="num">'+fmtINR(c.weeklyInstallment)+'</td>' +
+          '<td class="num">'+c.installmentsCompleted+'/'+c.weeks+'</td>' +
+          '<td class="num">'+fmtINR(c.amountPaid)+'</td>' +
+          '<td class="num">'+fmtINR(c.balance)+'</td>' +
+          '<td><span class="badge '+c.status.toLowerCase()+'">'+c.status+'</span></td>' +
+          '<td><div class="dots">'+dots+'</div></td>' +
+        '</tr>';
+      }).join("");
+    }
+
+    var tableHtml =
+      '<div class="table-wrap">' +
+        (list.length === 0 ?
+          '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>No customers match your search.</div></div>' :
+          '<table><thead><tr>' +
+            '<th>Customer</th><th>ID</th><th>City</th><th>Amount Lent</th><th>Weekly</th>' +
+            '<th>Installments</th><th>Paid</th><th>Balance</th><th>Status</th><th>Progress</th>' +
+          '</tr></thead><tbody>' + rowsHtml + '</tbody></table>'
+        ) +
+      '</div>';
+
+    document.getElementById("content").innerHTML = filterHtml + tableHtml;
+
+    document.getElementById("search-input").addEventListener("input", function(e){
+      state.search = e.target.value; renderCustomers();
+      // preserve focus & caret
+      var el = document.getElementById("search-input");
+      el.focus(); el.setSelectionRange(el.value.length, el.value.length);
+    });
+    document.querySelectorAll(".pill").forEach(function(p){
+      p.addEventListener("click", function(){ state.statusFilter = p.getAttribute("data-status"); renderCustomers(); });
+    });
+    document.querySelectorAll("tbody tr").forEach(function(tr){
+      tr.addEventListener("click", function(){ openCustomerModal(tr.getAttribute("data-id")); });
+    });
+  }
+
+  /* ====================== RENDER: ADD CUSTOMER ====================== */
+  function renderAddCustomer(){
+    var editing = state.editingCustomerId ? getCustomerById(state.editingCustomerId) : null;
+
+    document.getElementById("content").innerHTML =
+      '<div class="form-shell">' +
+        '<div class="form-card">' +
+          '<h3>'+(editing?"Edit customer":"New customer & loan")+'</h3>' +
+          '<form id="cust-form">' +
+            '<div class="form-grid">' +
+              field("Customer name","name","text", editing?editing.name:"", true, "e.g. Kavitha Raman") +
+              field("Customer ID","custId","text", editing?editing.customerId: nextCustomerId(), true, "") +
+              field("Phone number","phone","tel", editing?editing.phone:"", true, "10-digit mobile") +
+              selectField("City / branch","city", CITIES, editing?editing.city:CITIES[0]) +
+              fieldFull("Address","address","text", editing?editing.address:"", "House no., street, area") +
+              field("Amount lent (₹)","amountLent","number", editing?editing.amountLent:"10000", true, "") +
+              field("Weeks to repay","weeks","number", editing?editing.weeks:"10", true, "") +
+              field("Interest (%, optional)","interest","number", editing?editing.interestPercent:"0", false, "0 = no interest") +
+              field("Start date","startDate","date", editing?editing.startDate:todayStr(), true, "") +
+            '</div>' +
+            '<div class="form-actions">' +
+              '<button type="submit" class="btn btn-primary">'+(editing?"Save changes":"Add customer")+'</button>' +
+              '<button type="button" class="btn btn-outline" id="cancel-add">Cancel</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>' +
+        '<div class="summary-card" id="calc-summary"></div>' +
+      '</div>';
+
+    var form = document.getElementById("cust-form");
+    function refreshSummary(){
+      var amountLent = parseFloat(form.amountLent.value) || 0;
+      var weeks = parseInt(form.weeks.value) || 1;
+      var interest = parseFloat(form.interest.value) || 0;
+      var startDate = form.startDate.value || todayStr();
+      var total = Math.round(amountLent * (1+interest/100));
+      var weekly = Math.round(total/weeks);
+      var due = addDays(startDate, weeks*7);
+      var paidSoFar = editing ? (editing.payments||[]).reduce(function(s,p){return s+p.amount;},0) : 0;
+      document.getElementById("calc-summary").innerHTML =
+        '<h3>Loan summary</h3>' +
+        summaryRow("Principal amount", fmtINR(amountLent)) +
+        summaryRow("Interest", interest+"%") +
+        summaryRow("Total repayment", fmtINR(total)) +
+        summaryRow("Weekly installment", fmtINR(weekly)) +
+        summaryRow("Due date", fmtDate(due)) +
+        summaryRow("Amount paid so far", fmtINR(paidSoFar)) +
+        summaryRow("Remaining balance", fmtINR(Math.max(0,total-paidSoFar)), true);
+    }
+    ["amountLent","weeks","interest","startDate"].forEach(function(n){
+      form[n].addEventListener("input", refreshSummary);
+    });
+    refreshSummary();
+
+    document.getElementById("cancel-add").addEventListener("click", function(){
+      state.editingCustomerId = null; navigate("customers");
+    });
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var payload = {
+        name: form.name.value.trim(),
+        customerId: form.custId.value.trim(),
+        phone: form.phone.value.trim(),
+        address: form.address.value.trim(),
+        city: form.city.value,
+        amountLent: parseFloat(form.amountLent.value) || 0,
+        weeks: parseInt(form.weeks.value) || 1,
+        interestPercent: parseFloat(form.interest.value) || 0,
+        startDate: form.startDate.value || todayStr()
+      };
+      if(!payload.name || !payload.phone){ return; }
+      if(editing){
+        Object.assign(editing, payload);
+      } else {
+        customers.unshift(Object.assign({id: uid(), payments: []}, payload));
+      }
+      saveData();
+      state.editingCustomerId = null;
+      navigate("customers");
+    });
+  }
+  function nextCustomerId(){
+    var max = customers.reduce(function(m,c){ var n=parseInt(c.customerId); return isNaN(n)?m:Math.max(m,n); }, 100);
+    return String(max+1);
+  }
+  function field(label,name,type,value,required,placeholder){
+    return '<div class="field"><label>'+label+(required?" *":"")+'</label>' +
+      '<input name="'+name+'" type="'+type+'" '+(type==="number"?'step="1" min="0"':'')+' value="'+escapeHtml(String(value))+'" placeholder="'+(placeholder||"")+'" '+(required?"required":"")+'/></div>';
+  }
+  function fieldFull(label,name,type,value,placeholder){
+    return '<div class="field full"><label>'+label+'</label>' +
+      '<input name="'+name+'" type="'+type+'" value="'+escapeHtml(String(value))+'" placeholder="'+(placeholder||"")+'"/></div>';
+  }
+  function selectField(label,name,options,selected){
+    var opts = options.map(function(o){ return '<option value="'+o+'"'+(o===selected?" selected":"")+'>'+o+'</option>'; }).join("");
+    return '<div class="field"><label>'+label+'</label><select name="'+name+'">'+opts+'</select></div>';
+  }
+  function summaryRow(label, val, big){
+    return '<div class="summary-row'+(big?" big":"")+'"><span class="lbl">'+label+'</span><span class="val">'+val+'</span></div>';
+  }
+
+  /* ====================== CUSTOMER DETAIL MODAL ====================== */
+  function openCustomerModal(id){
+    state.activeCustomerId = id;
+    renderModal();
+    document.getElementById("modal-overlay").classList.add("open");
+  }
+  function closeModal(){
+    document.getElementById("modal-overlay").classList.remove("open");
+    state.activeCustomerId = null;
+  }
+  function renderModal(){
+    var c = getCustomerById(state.activeCustomerId);
+    if(!c) return;
+    var d = calc(c);
+
+    var payHtml = (c.payments||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);})
+      .map(function(p, idx){
+        return '<div class="pay-row"><div class="pay-left"><div class="ic">₹</div>' +
+          '<div>Installment payment<div style="font-size:11.5px;color:var(--ink-faint)">'+fmtDate(p.date)+'</div></div></div>' +
+          '<div class="pay-amt">+'+fmtINR(p.amount)+'</div></div>';
+      }).join("") || '<div class="no-payments">No payments recorded yet.</div>';
+
+    document.getElementById("modal-inner").innerHTML =
+      '<div class="modal-head"><div>' +
+        '<h2>'+escapeHtml(c.name)+'</h2>' +
+        '<div class="modal-sub">Customer ID '+c.customerId+' · '+c.city+' · '+escapeHtml(c.phone)+'</div>' +
+      '</div><button class="modal-close" id="modal-close-btn">✕</button></div>' +
+      '<div class="modal-body">' +
+        '<div class="detail-grid">' +
+          detailStat("Amount lent", fmtINR(c.amountLent)) +
+          detailStat("Weekly installment", fmtINR(d.weeklyInstallment)) +
+          detailStat("Amount paid", fmtINR(d.amountPaid)) +
+          detailStat("Balance", fmtINR(d.balance)) +
+        '</div>' +
+        '<div class="info-grid">' +
+          infoRow("Address", c.address || "—") +
+          infoRow("Loan status", '<span class="badge '+d.status.toLowerCase()+'">'+d.status+'</span>') +
+          infoRow("Start date", fmtDate(c.startDate)) +
+          infoRow("Due date", fmtDate(d.dueDate)) +
+          infoRow("Installments completed", d.installmentsCompleted + " / " + c.weeks) +
+          infoRow("Installments remaining", d.installmentsRemaining) +
+        '</div>' +
+        (d.status !== "Completed" ?
+          '<div class="record-pay-box"><div class="field"><label>Record payment amount (₹)</label>' +
+          '<input id="pay-amount" type="number" min="1" value="'+d.weeklyInstallment+'"/></div>' +
+          '<div class="field"><label>Payment date</label><input id="pay-date" type="date" value="'+todayStr()+'"/></div>' +
+          '<button class="btn btn-primary btn-sm" id="record-pay-btn">Record payment</button></div>'
+          : '<div class="record-pay-box" style="background:var(--surface-2);border-color:var(--border);"><div style="color:var(--ink-soft);font-size:13px;">✓ This loan is fully repaid.</div></div>'
+        ) +
+        '<div class="payhist-head" style="margin-top:22px;"><h4>Payment history</h4><span style="font-size:11.5px;color:var(--ink-faint);">'+(c.payments||[]).length+' entries</span></div>' +
+        payHtml +
+        '<div class="form-actions" style="margin-top:20px;">' +
+          '<button class="btn btn-outline btn-sm" id="edit-cust-btn">Edit details</button>' +
+          '<button class="btn btn-outline btn-sm" id="delete-cust-btn" style="color:var(--coral);border-color:var(--coral-soft);">Delete customer</button>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById("modal-close-btn").addEventListener("click", closeModal);
+    var recordBtn = document.getElementById("record-pay-btn");
+    if(recordBtn){
+      recordBtn.addEventListener("click", function(){
+        var amt = parseFloat(document.getElementById("pay-amount").value) || 0;
+        var dt = document.getElementById("pay-date").value || todayStr();
+        if(amt <= 0) return;
+        c.payments = c.payments || [];
+        c.payments.push({date: dt, amount: amt});
+        saveData();
+        renderModal();
+        renderRoute(); // refresh underlying view (dashboard/list totals)
+      });
+    }
+    document.getElementById("edit-cust-btn").addEventListener("click", function(){
+      state.editingCustomerId = c.id;
+      closeModal();
+      navigate("add-customer");
+    });
+    document.getElementById("delete-cust-btn").addEventListener("click", function(){
+      if(!confirm("Delete " + c.name + "? This cannot be undone.")) return;
+      customers = customers.filter(function(x){ return x.id !== c.id; });
+      saveData();
+      closeModal();
+      renderRoute();
+    });
+  }
+  function detailStat(l,v){ return '<div class="detail-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
+  function infoRow(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+v+'</span></div>'; }
+
+  /* ====================== ROUTER ====================== */
+  function navigate(view){
+    state.view = view;
+    setActiveNav();
+    closeSidebarMobile();
+    renderRoute();
+  }
+  function renderRoute(){
+    if(state.view === "dashboard"){
+      setTitle("Dashboard", state.selectedCity==="All" ? "Overview across all branches" : state.selectedCity + " branch overview");
+      renderDashboard();
+    } else if(state.view === "customers"){
+      setTitle("Customers", state.selectedCity==="All" ? "All branches" : state.selectedCity + " branch");
+      renderCustomers();
+    } else if(state.view === "add-customer"){
+      setTitle(state.editingCustomerId ? "Edit customer" : "Add customer", "Create or update a loan record");
+      renderAddCustomer();
+    }
+    renderCityDropdown();
+  }
+
+  /* ====================== MOBILE SIDEBAR ====================== */
+  function openSidebarMobile(){
+    document.getElementById("sidebar").classList.add("open");
+    document.getElementById("scrim").classList.add("open");
+  }
+  function closeSidebarMobile(){
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("scrim").classList.remove("open");
+  }
+
+  /* ====================== INIT / EVENTS ====================== */
+  function init(){
+    loadData();
+
+    document.querySelectorAll(".nav-item").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(btn.getAttribute("data-view") === "add-customer") state.editingCustomerId = null;
+        navigate(btn.getAttribute("data-view"));
+      });
+    });
+    document.getElementById("quick-add-btn").addEventListener("click", function(){
+      state.editingCustomerId = null;
+      navigate("add-customer");
+    });
+    document.getElementById("hamburger").addEventListener("click", openSidebarMobile);
+    document.getElementById("scrim").addEventListener("click", closeSidebarMobile);
+
+    var cityBtn = document.getElementById("city-btn");
+    var cityDropdown = document.getElementById("city-dropdown");
+    cityBtn.addEventListener("click", function(e){
+      e.stopPropagation();
+      cityDropdown.classList.toggle("open");
+    });
+    document.addEventListener("click", function(){ cityDropdown.classList.remove("open"); });
+    cityDropdown.addEventListener("click", function(e){
+      var opt = e.target.closest(".opt");
+      if(!opt) return;
+      state.selectedCity = opt.getAttribute("data-city");
+      cityDropdown.classList.remove("open");
+      renderRoute();
+    });
+
+    document.getElementById("modal-overlay").addEventListener("click", function(e){
+      if(e.target.id === "modal-overlay") closeModal();
+    });
+
+    setActiveNav();
+    renderRoute();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
