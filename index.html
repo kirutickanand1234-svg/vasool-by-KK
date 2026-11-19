@@ -442,6 +442,47 @@
     .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:150;}
     .sidebar-scrim.open{display:block;}
   }
+  /* ---------- Collection module (dark, mobile-first) ---------- */
+  body.vcm,body.vcm #main{background:#0a0a0a;color:#fff;}
+  body.vcm #topbar{display:none;}
+  body.vcm #content{padding:0;max-width:560px;margin:0 auto;}
+  .vc{--vln:#2e2f33;--vmu:#9aa0a6;--vg:#3ddc84;--vr:#ff5a5f;--vb:#1e90d6;min-height:100vh;padding-bottom:96px;font-size:15px;}
+  .vc .gr{color:var(--vg);} .vc .rd{color:var(--vr);}
+  .vh{display:flex;align-items:center;gap:10px;padding:14px 16px;position:sticky;top:0;background:#0a0a0a;z-index:6;box-shadow:0 3px 10px #000;}
+  .vh h2{flex:1;margin:0;font-family:inherit;font-size:20px;font-weight:700;}
+  .vi{filter:grayscale(1) brightness(2);font-size:20px;}
+  .vib{background:none;border:0;color:#fff;font-size:24px;padding:2px 8px;cursor:pointer;line-height:1;}
+  .vq{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--vln);color:#fff;font-size:17px;padding:8px 4px;outline:0;font-family:inherit;}
+  .vf{padding:16px 16px 0;} .vf label{display:block;color:var(--vmu);font-size:12px;}
+  .vc select,.vc input[type=date]{width:100%;background:transparent;color:#fff;border:0;border-bottom:1px solid var(--vln);font-size:19px;padding:12px 0;font-family:inherit;color-scheme:dark;appearance:none;-webkit-appearance:none;border-radius:0;}
+  .vc select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23fff'/%3E%3C/svg%3E") no-repeat right 4px center;}
+  .vc select:disabled{opacity:.45;} .vc option{background:#1c1d20;color:#fff;}
+  .vsub{display:block;margin:28px auto 10px;padding:14px 44px;border:0;border-radius:10px;background:#1e90d6;color:#fff;font-weight:700;letter-spacing:.06em;font-size:15px;cursor:pointer;}
+  .vsub:disabled{background:#0b3a55;color:#5d7a8c;cursor:default;}
+  .vmu{color:var(--vmu);font-size:12.5px;padding:6px 16px;margin:0;}
+  .vs{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#1c1d20;border-bottom:1px solid var(--vln);font-weight:600;cursor:pointer;}
+  .vbl{text-align:right;} .vbl small{display:block;color:#ddd;font-weight:400;font-size:12px;} .vbl b{font-size:22px;}
+  .vg{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;padding:14px 16px;border-bottom:1px solid var(--vln);}
+  .vtb{display:flex;border-bottom:1px solid var(--vln);margin-top:6px;}
+  .vtb button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:var(--vb);font-size:17px;font-weight:600;padding:14px 0;cursor:pointer;font-family:inherit;}
+  .vtb .on{border-color:var(--vb);}
+  .vt{margin:10px 16px;border:1px solid var(--vln);border-radius:10px;padding:10px 14px;font-weight:600;}
+  .vcd{padding:14px 16px;border-bottom:1px solid var(--vln);}
+  .vr{display:flex;gap:10px;justify-content:space-between;} .vl{flex:1;min-width:0;} .vn{font-weight:700;font-size:16.5px;}
+  .vk{width:42%;max-width:190px;text-align:right;} .vk div{display:flex;justify-content:space-between;gap:8px;} .vk b{font-size:19px;} .vk hr{border:0;border-top:1px solid var(--vln);margin:6px 0;}
+  .vd{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;} .vd i{width:10px;height:10px;border-radius:50%;} .vd .g{background:#1e8e4e;} .vd .r{background:#d6001c;}
+  .vp{display:flex;align-items:center;gap:8px;margin-top:10px;}
+  .vp input,.vad input,.vad select{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--vln);color:#fff;font-size:16px;padding:8px 2px;outline:0;font-family:inherit;}
+  .vgl{width:34px;height:34px;display:grid;place-items:center;border:1px solid #4a4aa8;border-radius:8px;background:#1a1a3a;flex-shrink:0;}
+  .vsv{background:none;border:1px solid var(--vb);color:var(--vb);border-radius:8px;padding:6px 12px;font-size:18px;cursor:pointer;flex-shrink:0;}
+  .vpn{padding:6px 0 12px;border-bottom:1px solid var(--vln);} .vpn h3{margin:12px 16px 0;font-family:inherit;font-size:14px;color:var(--vmu);}
+  .vpy{padding:8px 0;} .vad{display:flex;gap:8px;padding:10px 16px;align-items:center;}
+  .vo{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--vln);} .vo span{flex:1;}
+  .vts{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#333;color:#fff;padding:10px 16px;border-radius:8px;z-index:300;}
+  #bnav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:100;background:#0a0a0a;border-top:1px solid #2e2f33;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));}
+  #bnav button{flex:1;background:none;border:0;color:#9aa0a6;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-family:inherit;}
+  #bnav svg{width:26px;height:26px;fill:currentColor;} #bnav .on{color:#1e90d6;}
+  @media (max-width:760px){ #bnav{display:flex;} body:not(.vcm) #content{padding-bottom:90px;} }
 </style>
 </head>
 <body>
@@ -457,6 +498,8 @@
       </div>
     </div>
     <nav class="side-nav" id="side-nav">
+      <button class="nav-item" data-view="collection"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8z"/></svg>Collection</button>
+      <button class="nav-item" data-view="expense"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Expense</button>
       <button class="nav-item" data-view="dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         Dashboard
@@ -468,6 +511,9 @@
       <button class="nav-item" data-view="add-customer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
         Add Customer
+      </button>
+      <button class="nav-item" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        Settings
       </button>
     </nav>
     <div class="side-divider"></div>
@@ -502,6 +548,14 @@
   </div>
 </div>
 
+<nav id="bnav">
+  <button data-view="collection"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8z"/></svg>Collection</button>
+  <button data-view="expense"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Expense</button>
+  <button data-view="customers"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Customer</button>
+  <button data-view="dashboard"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>Reports</button>
+  <button data-view="settings"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 5v-2l-2.2-.4a7 7 0 0 0-.7-1.6l1.3-1.8-1.4-1.4-1.8 1.3a7 7 0 0 0-1.6-.7L14 3h-2l-.4 2.2a7 7 0 0 0-1.6.7L8.2 4.6 6.8 6l1.3 1.8c-.3.5-.6 1-.7 1.6L5 11v2l2.4.4c.2.6.4 1.1.7 1.6L6.8 17l1.4 1.4 1.8-1.3c.5.3 1 .6 1.6.7L12 20h2l.4-2.2c.6-.2 1.1-.4 1.6-.7l1.8 1.3 1.4-1.4-1.3-1.8c.3-.5.6-1 .7-1.6zM12 9.8a2.2 2.2 0 1 1 0 4.4 2.2 2.2 0 0 1 0-4.4z"/></svg>Settings</button>
+</nav>
+
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal-inner"></div>
 </div>
@@ -515,7 +569,7 @@
   var STORAGE_KEY = "vasool_collection_customers_v1";
 
   var state = {
-    view: "dashboard",
+    view: "collection",
     selectedCity: "All",
     search: "",
     statusFilter: "All",
@@ -561,7 +615,7 @@
     var weeklyInstallment = Math.round(totalRepayment / c.weeks);
     var amountPaid = (c.payments||[]).reduce(function(s,p){ return s + p.amount; }, 0);
     var balance = Math.max(0, totalRepayment - amountPaid);
-    var installmentsCompleted = Math.min(c.weeks, Math.round(amountPaid / weeklyInstallment));
+    var installmentsCompleted = balance <= 0 ? c.weeks : Math.min(c.weeks, weeklyInstallment ? Math.floor(amountPaid / weeklyInstallment) : 0);
     var installmentsRemaining = Math.max(0, c.weeks - installmentsCompleted);
     var dueDate = addDays(c.startDate, c.weeks * 7);
     var status;
@@ -627,6 +681,9 @@
         weeks: b.weeks,
         interestPercent: 0,
         startDate: startDate,
+        line: i%2 ? "Line 2" : "Line 1",
+        area: i%2 ? "Area 3" : (i%4<2 ? "Area 1" : "Area 2"),
+        week: String((i%4)+1),
         payments: payments
       };
     });
@@ -855,6 +912,7 @@
               field("Customer ID","custId","text", editing?editing.customerId: nextCustomerId(), true, "") +
               field("Phone number","phone","tel", editing?editing.phone:"", true, "10-digit mobile") +
               selectField("City / branch","city", CITIES, editing?editing.city:CITIES[0]) +
+              selectField("Line","line", [], "") + selectField("Area","area", [], "") + selectField("Week","week", ["1","2","3","4","5"], editing?String(editing.week||""):"1") +
               fieldFull("Address","address","text", editing?editing.address:"", "House no., street, area") +
               field("Amount lent (₹)","amountLent","number", editing?editing.amountLent:"10000", true, "") +
               field("Weeks to repay","weeks","number", editing?editing.weeks:"10", true, "") +
@@ -871,6 +929,17 @@
       '</div>';
 
     var form = document.getElementById("cust-form");
+    function fillGeo(line, area){
+      var ls = geo[form.city.value] ? Object.keys(geo[form.city.value]) : [];
+      form.line.innerHTML = ls.map(function(l){ return '<option>'+escapeHtml(l)+'</option>'; }).join("");
+      if(line && ls.indexOf(line) > -1) form.line.value = line;
+      var as = (geo[form.city.value] && geo[form.city.value][form.line.value]) || [];
+      form.area.innerHTML = as.map(function(a){ return '<option>'+escapeHtml(a)+'</option>'; }).join("");
+      if(area && as.indexOf(area) > -1) form.area.value = area;
+    }
+    fillGeo(editing?editing.line:"", editing?editing.area:"");
+    form.city.addEventListener("change", function(){ fillGeo("",""); });
+    form.line.addEventListener("change", function(){ fillGeo(form.line.value,""); });
     function refreshSummary(){
       var amountLent = parseFloat(form.amountLent.value) || 0;
       var weeks = parseInt(form.weeks.value) || 1;
@@ -907,6 +976,9 @@
         phone: form.phone.value.trim(),
         address: form.address.value.trim(),
         city: form.city.value,
+        line: form.line.value,
+        area: form.area.value,
+        week: form.week.value,
         amountLent: parseFloat(form.amountLent.value) || 0,
         weeks: parseInt(form.weeks.value) || 1,
         interestPercent: parseFloat(form.interest.value) || 0,
@@ -979,6 +1051,7 @@
         '</div>' +
         '<div class="info-grid">' +
           infoRow("Address", c.address || "—") +
+          infoRow("Line / Area / Week", escapeHtml((c.line||"—")+" / "+(c.area||"—")+" / "+(c.week||"—"))) +
           infoRow("Loan status", '<span class="badge '+d.status.toLowerCase()+'">'+d.status+'</span>') +
           infoRow("Start date", fmtDate(c.startDate)) +
           infoRow("Due date", fmtDate(d.dueDate)) +
@@ -1030,6 +1103,198 @@
   function detailStat(l,v){ return '<div class="detail-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
   function infoRow(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+v+'</span></div>'; }
 
+  /* ====================== COLLECTION MODULE (entry, collection, expense, settings) ====================== */
+  var K_GEO="vasool_geo_v1", K_TX="vasool_tx_v1", K_CFG="vasool_cfg_v1", K_ENT="vasool_entry_v1";
+  var geo = {}, txs = [], cfg = {open:{}};
+  var V = {e:{date:"",city:"",week:"",line:"",area:""}, f:null, tab:"c", q:"", open:true, panel:false, sub:false, msg:""};
+  function jl(k,d){ try{ var r=localStorage.getItem(k); return r?JSON.parse(r):d; }catch(e){ return d; } }
+  function jw(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function ci(a,x){ x=String(x).trim().toLowerCase(); return a.filter(function(y){return y.toLowerCase()===x;})[0]; }
+  /* Adds city/line/area only if missing (case-insensitive) -> never duplicates. Returns true if anything new was added. */
+  function addGeo(c,l,a){
+    c=String(c||"").trim(); l=String(l||"").trim(); a=String(a||"").trim();
+    var added=false; if(!c) return false;
+    var C=ci(Object.keys(geo),c); if(!C){ C=c; geo[C]={}; added=true; }
+    if(!l) return added;
+    var L=ci(Object.keys(geo[C]),l); if(!L){ L=l; geo[C][L]=[]; added=true; }
+    if(a && !ci(geo[C][L],a)){ geo[C][L].push(a); added=true; }
+    return added;
+  }
+  function syncCities(){ CITIES.length=0; Object.keys(geo).forEach(function(c){ CITIES.push(c); }); }
+  function initModule(){
+    geo = jl(K_GEO,null);
+    if(!geo){ geo={}; CITIES.forEach(function(c){ addGeo(c,"Line 1","Area 1"); addGeo(c,"Line 1","Area 2"); addGeo(c,"Line 2","Area 3"); }); }
+    customers.forEach(function(c){ c.line=c.line||""; c.area=c.area||""; c.week=c.week||""; addGeo(c.city,c.line,c.area); });
+    txs = jl(K_TX,[]); cfg = jl(K_CFG,{open:{}}); if(!cfg.open) cfg.open={};
+    jw(K_GEO,geo); syncCities();
+    var s=jl(K_ENT,{});
+    V.e={date:todayStr(),city:s.city||"",week:s.week||"",line:s.line||"",area:s.area||""};
+    V.f=Object.assign({},V.e);
+  }
+
+  /* ---------- calculations (single source of truth = customers[].payments + txs) ---------- */
+  function cm(c,d){ /* customer figures as of date d */
+    var t=calc(c), p=0;
+    (c.payments||[]).forEach(function(x){ if(x.date<=d) p+=x.amount; });
+    var inst=t.weeklyInstallment, bal=Math.max(0,t.totalRepayment-p);
+    var n=bal<=0?c.weeks:Math.min(c.weeks, inst?Math.floor(p/inst):0);
+    return {tot:t.totalRepayment, inst:inst, paid:p, bal:bal, n:n, pend:c.weeks-n};
+  }
+  function custIn(f,c){ return (!f.city||c.city===f.city)&&(!f.week||String(c.week)===String(f.week))&&(!f.line||c.line===f.line)&&(!f.area||c.area===f.area); }
+  function txIn(f,t){ return (!f.city||t.city===f.city)&&(!f.week||String(t.week)===String(f.week)); }
+  function day(f){
+    var d=f.date, r={pbal:0,coll:0,cash:0,online:0,exp:0,bill:0,loan:0,pend:0};
+    Object.keys(cfg.open).forEach(function(k){ if(!f.city||k===f.city) r.pbal+=(+cfg.open[k]||0); });
+    customers.forEach(function(c){
+      if(!custIn(f,c)) return;
+      var got=0;
+      if(c.startDate<d) r.pbal-=c.amountLent; else if(c.startDate===d) r.loan+=c.amountLent;
+      (c.payments||[]).forEach(function(p){
+        if(p.date<d) r.pbal+=p.amount;
+        else if(p.date===d){ r.coll+=p.amount; got+=p.amount; if(p.mode==="online") r.online+=p.amount; else r.cash+=p.amount; }
+      });
+      if(c.startDate<d){ var due=Math.min(calc(c).weeklyInstallment, cm(c,addDays(d,-1)).bal); r.pend+=Math.max(0,due-got); }
+    });
+    txs.forEach(function(t){ if(!txIn(f,t)) return; var k=t.t==="b"?"bill":"exp"; if(t.date<d) r.pbal-=t.amount; else if(t.date===d) r[k]+=t.amount; });
+    r.bal=r.pbal+r.coll-r.exp-r.bill-r.loan;
+    return r;
+  }
+  /* one payment record per customer + date + mode (re-saving replaces, never doubles) */
+  function setPay(c,d,m,a){
+    c.payments=(c.payments||[]).filter(function(p){ return !(p.date===d && (p.mode||"cash")===m); });
+    if(a>0) c.payments.push({date:d,amount:a,mode:m});
+  }
+  function room(c,d){ var o=0; (c.payments||[]).forEach(function(p){ if(p.date!==d) o+=p.amount; }); return calc(c).totalRepayment-o; }
+  function payAmt(c,d,m){ var s=0; (c.payments||[]).forEach(function(p){ if(p.date===d && (p.mode||"cash")===m) s+=p.amount; }); return s; }
+
+  /* ---------- views ---------- */
+  function IN(n){ return fmtINR(n).replace("₹",""); }
+  function vsel(id,lb,items,v,ph){
+    return '<div class="vf"><label>'+lb+'</label><select id="'+id+'"'+(items.length?'':' disabled')+'><option value="">'+ph+'</option>'+
+      items.map(function(x){ var a=x instanceof Array?x:[x,x]; return '<option value="'+escapeHtml(a[0])+'"'+(String(a[0])===String(v)?' selected':'')+'>'+escapeHtml(a[1])+'</option>'; }).join("")+'</select></div>';
+  }
+  function vsels(p,o,ph){
+    var l=geo[o.city]?Object.keys(geo[o.city]):[], a=(geo[o.city]&&geo[o.city][o.line])||[];
+    return vsel(p+"-city","City",Object.keys(geo),o.city,ph)+vsel(p+"-week","Week",[1,2,3,4,5].map(function(w){return [w,"Week "+w];}),o.week,ph)+
+           vsel(p+"-line","Line",l,o.line,ph)+vsel(p+"-area","Area",a,o.area,ph);
+  }
+  function vhd(t,left,right){ return '<div class="vh">'+(left||"")+'<h2>'+t+'</h2>'+(right||'<span class="vi">🔔</span><span class="vi">🧮</span>')+'</div>'; }
+  function vgrid(T){
+    return '<div class="vg"><div>P.Bal: <b class="gr">'+IN(T.pbal)+'</b></div><div>Expense: <b class="rd">'+IN(T.exp)+'</b></div>'+
+      '<div>Bill: <b>'+IN(T.bill)+'</b></div><div>Loan: <b class="rd">'+IN(T.loan)+'</b></div>'+
+      '<div>Coll: <b class="gr">'+IN(T.coll)+'</b></div><div>Pending: <b class="rd">'+IN(T.pend)+'</b></div>'+
+      '<div>Cash: <b class="gr">'+IN(T.cash)+'</b></div><div>Online: <b class="gr">'+IN(T.online)+'</b></div></div>';
+  }
+  function vEntry(){
+    var e=V.e, ok=e.date&&e.city&&e.week&&e.line&&e.area;
+    return vhd("Collection")+'<div class="vf"><label>Date</label><input type="date" id="vce-date" value="'+e.date+'"></div>'+
+      vsels("vce",e,"Select")+
+      '<button class="vsub" data-vc="go"'+(ok?'':' disabled')+'>SUBMIT</button>'+
+      '<p class="vmu">City and week are remembered. Change them here any time.</p>';
+  }
+  function vcard(c,m,f){
+    var wk=Math.max(0,Math.floor((new Date(f.date)-new Date(c.startDate))/6048e5)), dots="";
+    for(var i=0;i<Math.min(Math.max(wk,m.n),c.weeks);i++) dots+='<i class="'+(i<m.n?'g':'r')+'"></i>';
+    var o=payAmt(c,f.date,"online"), h=payAmt(c,f.date,"cash");
+    return '<div class="vcd"><div class="vr"><div class="vl"><div class="vn">'+escapeHtml(c.customerId)+'-'+escapeHtml(c.name)+'</div>'+
+      '<div>'+escapeHtml(c.address||"")+'</div><div>'+fmtDate(c.startDate)+'('+wk+')</div>'+
+      '<div>Install: <b>'+IN(m.inst)+' ('+m.n+'/'+c.weeks+')</b> · Pending '+m.pend+'</div>'+
+      '<div class="vn">'+escapeHtml(c.area||"")+'</div><div class="vd">'+dots+'</div></div>'+
+      '<div class="vk"><div>Bal: <b class="rd">'+IN(m.bal)+'</b></div><div>Paid: <b class="gr">'+IN(m.paid)+'</b></div><hr><div>Tot: <b>'+IN(m.tot)+'</b></div></div></div>'+
+      (m.bal>0||o||h?'<div class="vp"><span class="vgl">🌐</span><input id="vco-'+c.id+'" type="number" inputmode="numeric" min="0" placeholder="Online" value="'+(o||"")+'">'+
+      '<span class="vgl">⁙</span><input id="vcc-'+c.id+'" type="number" inputmode="numeric" min="0" placeholder="Cash" value="'+(h||"")+'">'+
+      '<button class="vsv" data-vc="save" data-id="'+c.id+'" aria-label="Save">💾</button></div>':'')+'</div>';
+  }
+  function vColl(){
+    var f=V.f, T=day(f), q=V.q.trim().toLowerCase();
+    var all=customers.filter(function(c){ return custIn(f,c)&&c.startDate<=f.date&&(!q||(c.customerId+c.name+c.address+c.area).toLowerCase().indexOf(q)>-1); })
+      .map(function(c){ return [c,cm(c,f.date)]; }).sort(function(a,b){ return String(b[0].customerId).localeCompare(String(a[0].customerId),undefined,{numeric:true}); });
+    var col=all.filter(function(x){return x[1].bal>0;}), dn=all.filter(function(x){return x[1].bal<=0;});
+    var paidT=function(x){ return (x[0].payments||[]).some(function(p){return p.date===f.date;}); };
+    var un=customers.filter(function(c){ return (!f.city||c.city===f.city)&&(!c.line||!c.area||!c.week); }).length;
+    var tabs=[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){ return '<button class="'+(V.tab===t[0]?'on':'')+'" data-vc="tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join("");
+    var list=V.tab==="c"?col:dn, body;
+    if(V.tab==="p") body=vPay();
+    else body='<div class="vt">Total: '+list.length+(V.tab==="c"?' [<span class="gr">'+col.filter(function(x){return !paidT(x);}).length+'</span> + <span class="rd">'+col.filter(paidT).length+'</span>]':'')+'</div>'+
+      (list.length?list.map(function(x){return vcard(x[0],x[1],f);}).join(""):'<p class="vmu">No customers for this selection.</p>');
+    return '<div class="vh"><button class="vib" data-vc="back" aria-label="Back">‹</button><input class="vq" id="vcq" placeholder="Search" value="'+escapeHtml(V.q)+'">'+
+      '<button class="vib" data-vc="back" aria-label="Change city and week">⋮</button><button class="vib" data-vc="panel" aria-label="Filters">☰</button></div>'+
+      (V.panel?'<div class="vpn"><div class="vf"><label>Date</label><input type="date" id="vcf-date" value="'+f.date+'"></div>'+vsels("vcf",f,"All")+'</div>':'')+
+      '<div class="vs" data-vc="open"><span>'+fmtDate(f.date)+'</span><span class="vbl"><small>Balance</small><b class="'+(T.bal<0?'rd':'gr')+'">'+IN(T.bal)+'</b></span><span>'+(V.open?'▴':'▾')+'</span></div>'+
+      (V.open?vgrid(T):'')+
+      (un&&(f.line||f.area||f.week)?'<p class="vmu">'+un+' customer(s) have no Line/Area/Week yet and show only when those filters are All. Assign them in Customer › Edit.</p>':'')+
+      '<div class="vtb">'+tabs+'</div>'+body;
+  }
+  function vPay(){
+    var f=V.f, L=txs.filter(function(t){return t.date===f.date&&txIn(f,t);});
+    return '<div class="vpy">'+(f.city&&f.week?'<div class="vad"><select id="vcx-t"><option value="e">Expense</option><option value="b">Bill</option></select>'+
+      '<input id="vcx-a" type="number" inputmode="numeric" min="1" placeholder="Amount"><input id="vcx-n" placeholder="Note"><button class="vsv" data-vc="add">Add</button></div>'
+      :'<p class="vmu">Select a city and week to add an expense or bill.</p>')+
+      '<p class="vmu">Loans are counted automatically from each customer\'s Amount lent on the start date.</p>'+
+      L.map(function(t){ return '<div class="vo"><span>'+(t.t==="b"?"Bill":"Expense")+' '+escapeHtml(t.note||"")+'</span><b class="rd">'+IN(t.amount)+'</b><button class="vib" data-vc="del" data-id="'+t.id+'">✕</button></div>'; }).join("")+'</div>';
+  }
+  function vExp(){
+    var f=V.f, T=day(f);
+    return vhd("Expense")+'<div class="vpn"><div class="vf"><label>Date</label><input type="date" id="vcf-date" value="'+f.date+'"></div>'+vsels("vcf",f,"All")+'</div>'+vgrid(T)+vPay();
+  }
+  function vSet(){
+    var h=vhd("Settings")+'<div class="vpn"><h3>Opening balance (per city)</h3>'+
+      Object.keys(geo).map(function(c){ return '<div class="vf"><label>'+escapeHtml(c)+'</label><input type="number" data-vc="open-bal" data-city="'+escapeHtml(c)+'" value="'+(cfg.open[c]||"")+'" placeholder="0"></div>'; }).join("")+'</div>'+
+      '<div class="vpn"><h3>Add city / line / area</h3><div class="vad"><input id="vcg-c" placeholder="City"><input id="vcg-l" placeholder="Line"><input id="vcg-a" placeholder="Area"><button class="vsv" data-vc="geo">Add</button></div>'+
+      (V.msg?'<p class="vmu">'+V.msg+'</p>':'')+'</div><div class="vpn"><h3>Cities, lines and areas</h3>'+
+      Object.keys(geo).map(function(c){ return '<div><b>'+escapeHtml(c)+'</b>'+Object.keys(geo[c]).map(function(l){ return '<div class="vmu">'+escapeHtml(l)+': '+escapeHtml(geo[c][l].join(", ")||"—")+'</div>'; }).join("")+'</div>'; }).join("")+'</div>';
+    return h;
+  }
+  function vcRender(){
+    var y=window.scrollY, a=document.activeElement&&document.activeElement.id, el=document.getElementById("content");
+    var h = state.view==="expense"?vExp():state.view==="settings"?vSet():(V.sub?vColl():vEntry());
+    el.innerHTML='<div class="vc">'+h+'</div>';
+    if(a==="vcq"){ var q=document.getElementById("vcq"); if(q){ q.focus(); q.setSelectionRange(q.value.length,q.value.length); } }
+    window.scrollTo(0,y);
+  }
+  function vToast(m){ var t=document.createElement("div"); t.className="vts"; t.textContent=m; document.body.appendChild(t); setTimeout(function(){t.remove();},1900); }
+  function vSave(id){
+    var c=getCustomerById(id), d=V.f.date;
+    var o=parseFloat(document.getElementById("vco-"+id).value)||0, h=parseFloat(document.getElementById("vcc-"+id).value)||0;
+    if(o<0||h<0) return;
+    var r=room(c,d); if(o+h>r){ vToast("Exceeds balance. Maximum "+IN(r)); return; }
+    setPay(c,d,"online",o); setPay(c,d,"cash",h); saveData(); vcRender(); vToast("Saved");
+  }
+  function vcInit(){
+    var content=document.getElementById("content");
+    content.addEventListener("click",function(e){
+      var t=e.target.closest("[data-vc]"); if(!t||t.tagName==="INPUT") return;
+      var a=t.getAttribute("data-vc"), id=t.getAttribute("data-id");
+      if(a==="go"){ V.f=Object.assign({},V.e); V.sub=true; V.tab="c"; V.panel=false; jw(K_ENT,{city:V.e.city,week:V.e.week,line:V.e.line,area:V.e.area}); }
+      else if(a==="back") V.sub=false;
+      else if(a==="panel") V.panel=!V.panel;
+      else if(a==="open") V.open=!V.open;
+      else if(a==="tab") V.tab=t.getAttribute("data-t");
+      else if(a==="save") return vSave(id);
+      else if(a==="add"){
+        var amt=parseFloat(document.getElementById("vcx-a").value)||0; if(amt<=0) return;
+        txs.push({id:"t"+Date.now(),t:document.getElementById("vcx-t").value,city:V.f.city,week:+V.f.week,date:V.f.date,amount:amt,note:document.getElementById("vcx-n").value.trim()});
+        jw(K_TX,txs);
+      }
+      else if(a==="del"){ txs=txs.filter(function(x){return x.id!==id;}); jw(K_TX,txs); }
+      else if(a==="geo"){
+        var added=addGeo(document.getElementById("vcg-c").value,document.getElementById("vcg-l").value,document.getElementById("vcg-a").value);
+        V.msg=added?"Added.":"Already exists, nothing duplicated."; jw(K_GEO,geo); syncCities();
+      }
+      vcRender();
+    });
+    content.addEventListener("change",function(e){
+      var t=e.target, a=t.getAttribute&&t.getAttribute("data-vc");
+      if(a==="open-bal"){ cfg.open[t.getAttribute("data-city")]=parseFloat(t.value)||0; jw(K_CFG,cfg); return; }
+      var p=(t.id||"").split("-"); if(p[0]!=="vce"&&p[0]!=="vcf") return;
+      var o=p[0]==="vce"?V.e:V.f; o[p[1]]=t.value;
+      if(p[1]==="city"){ o.line=""; o.area=""; } if(p[1]==="line") o.area="";
+      if(p[0]==="vce") jw(K_ENT,{city:V.e.city,week:V.e.week,line:V.e.line,area:V.e.area});
+      vcRender();
+    });
+    content.addEventListener("input",function(e){ if(e.target.id==="vcq"){ V.q=e.target.value; vcRender(); } });
+  }
+
   /* ====================== ROUTER ====================== */
   function navigate(view){
     state.view = view;
@@ -1038,6 +1303,10 @@
     renderRoute();
   }
   function renderRoute(){
+    var isV = state.view==="collection" || state.view==="expense" || state.view==="settings";
+    document.body.classList.toggle("vcm", isV);
+    document.querySelectorAll("#bnav button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===state.view); });
+    if(isV){ vcRender(); return; }
     if(state.view === "dashboard"){
       setTitle("Dashboard", state.selectedCity==="All" ? "Overview across all branches" : state.selectedCity + " branch overview");
       renderDashboard();
@@ -1064,6 +1333,9 @@
   /* ====================== INIT / EVENTS ====================== */
   function init(){
     loadData();
+    initModule();
+    vcInit();
+    document.querySelectorAll("#bnav button").forEach(function(b){ b.addEventListener("click", function(){ navigate(b.getAttribute("data-view")); }); });
 
     document.querySelectorAll(".nav-item").forEach(function(btn){
       btn.addEventListener("click", function(){
