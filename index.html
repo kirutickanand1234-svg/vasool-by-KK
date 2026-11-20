@@ -1,1380 +1,284 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Vasool Collection by KK — Branch Ledger</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#122236">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Vasool Collection by KK">
-
+<html lang="en"><head><meta charset="UTF-8"><title>Vasool Collection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0a0a0a"><meta name="mobile-web-app-capable" content="yes">
 <style>
-  :root{
-    --bg:#F5F2EB;
-    --surface:#FFFFFF;
-    --surface-2:#FBF9F4;
-    --ink:#1B2430;
-    --ink-soft:#5B6472;
-    --ink-faint:#8A92A0;
-    --border:#E4DFD2;
-    --navy:#122236;
-    --navy-2:#1B3350;
-    --teal:#0E7C6B;
-    --teal-soft:#E4F1EC;
-    --amber:#C97C2C;
-    --amber-soft:#FBF0E1;
-    --coral:#C1443A;
-    --coral-soft:#FBEAE8;
-    --shadow: 0 1px 2px rgba(20,20,20,0.04), 0 8px 24px rgba(20,20,20,0.05);
-    --radius: 10px;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#10151D;
-      --surface:#182029;
-      --surface-2:#141B23;
-      --ink:#EEEFF1;
-      --ink-soft:#9AA3AE;
-      --ink-faint:#6B7480;
-      --border:#2A323C;
-      --navy:#0B141F;
-      --navy-2:#122032;
-      --teal:#3FBBA3;
-      --teal-soft:#173029;
-      --amber:#E0A45C;
-      --amber-soft:#2E2419;
-      --coral:#E37B72;
-      --coral-soft:#2E1917;
-      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#10151D;
-    --surface:#182029;
-    --surface-2:#141B23;
-    --ink:#EEEFF1;
-    --ink-soft:#9AA3AE;
-    --ink-faint:#6B7480;
-    --border:#2A323C;
-    --navy:#0B141F;
-    --navy-2:#122032;
-    --teal:#3FBBA3;
-    --teal-soft:#173029;
-    --amber:#E0A45C;
-    --amber-soft:#2E2419;
-    --coral:#E37B72;
-    --coral-soft:#2E1917;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
-  }
-
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'IBM Plex Sans', system-ui, sans-serif;
-    font-size:14px;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.display{
-    font-family:'Fraunces', Georgia, serif;
-    font-weight:600;
-    letter-spacing:-0.01em;
-    margin:0;
-  }
-  .num{ font-family:'IBM Plex Mono', monospace; }
-  a{color:inherit;}
-  button{font-family:inherit;}
-
-  /* ---------- Layout shell ---------- */
-  #app-shell{
-    display:flex;
-    min-height:100vh;
-    width:100%;
-  }
-
-  /* Sidebar */
-  #sidebar{
-    width:236px;
-    flex-shrink:0;
-    background:var(--navy);
-    color:#DCE3EE;
-    display:flex;
-    flex-direction:column;
-    padding:22px 16px;
-    position:sticky;
-    top:0;
-    height:100vh;
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:0 6px 22px 6px;
-    border-bottom:1px solid rgba(255,255,255,0.09);
-    margin-bottom:18px;
-  }
-  .brand-mark{
-    width:34px;height:34px;border-radius:8px;
-    background:linear-gradient(135deg,var(--teal),#0a5f52);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:16px;
-    flex-shrink:0;
-  }
-  .brand-text .brand-name{font-family:'Fraunces',serif;font-size:16.5px;color:#fff;font-weight:600;}
-  .brand-text .brand-sub{font-size:11px;color:#8FA0B8;letter-spacing:0.02em;}
-
-  nav.side-nav{display:flex;flex-direction:column;gap:2px;}
-  .nav-item{
-    display:flex;align-items:center;gap:11px;
-    padding:10px 12px;border-radius:8px;
-    color:#B9C4D4;font-size:13.5px;font-weight:500;
-    cursor:pointer;border:none;background:none;text-align:left;width:100%;
-    transition:background .12s ease, color .12s ease;
-  }
-  .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:0.85;}
-  .nav-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
-  .nav-item.active{background:var(--navy-2);color:#fff;}
-  .nav-item.active svg{opacity:1;}
-  .side-divider{height:1px;background:rgba(255,255,255,0.08);margin:16px 6px;}
-  .side-foot{margin-top:auto;padding:12px 6px 0;font-size:11px;color:#697A90;}
-
-  /* Main */
-  #main{
-    flex:1;
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-  }
-  #topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    padding:16px 28px;
-    border-bottom:1px solid var(--border);
-    background:var(--surface);
-    position:sticky;top:0;z-index:20;
-    flex-wrap:wrap;
-  }
-  #topbar .title-block h1{font-size:21px;}
-  #topbar .title-block .subtitle{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
-  .topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-
-  .city-picker{position:relative;}
-  .city-picker button.city-btn{
-    display:flex;align-items:center;gap:8px;
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    border-radius:999px;
-    padding:8px 14px 8px 10px;
-    font-size:13px;font-weight:500;color:var(--ink);
-    cursor:pointer;
-  }
-  .city-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);}
-  .city-dropdown{
-    position:absolute;top:calc(100% + 6px);right:0;
-    background:var(--surface);border:1px solid var(--border);
-    border-radius:10px;box-shadow:var(--shadow);
-    min-width:200px;padding:6px;z-index:40;
-    display:none;
-  }
-  .city-dropdown.open{display:block;}
-  .city-dropdown .opt{
-    padding:9px 10px;border-radius:7px;font-size:13.5px;cursor:pointer;
-    display:flex;justify-content:space-between;align-items:center;color:var(--ink);
-  }
-  .city-dropdown .opt:hover{background:var(--surface-2);}
-  .city-dropdown .opt.sel{color:var(--teal);font-weight:600;}
-  .city-dropdown .opt .cnt{font-size:11.5px;color:var(--ink-faint);}
-
-  .btn{
-    display:inline-flex;align-items:center;gap:7px;
-    padding:9px 16px;border-radius:8px;border:1px solid transparent;
-    font-size:13.5px;font-weight:600;cursor:pointer;
-    transition:transform .08s ease, opacity .12s ease;
-  }
-  .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--teal);color:#fff;}
-  .btn-primary:hover{opacity:0.92;}
-  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--ink);}
-  .btn-outline:hover{background:var(--surface-2);}
-  .btn-ghost{background:transparent;color:var(--ink-soft);border:none;padding:6px 8px;}
-  .btn-ghost:hover{color:var(--ink);}
-  .btn-danger{background:var(--coral);color:#fff;}
-  .btn-sm{padding:6px 11px;font-size:12.5px;}
-  .btn svg{width:15px;height:15px;}
-
-  #content{padding:24px 28px 60px;max-width:1320px;width:100%;}
-
-  /* ---------- Dashboard ---------- */
-  .kpi-grid{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:14px;
-    margin-bottom:22px;
-  }
-  .kpi-card{
-    background:var(--surface);border:1px solid var(--border);
-    border-radius:var(--radius);padding:16px 16px 14px;
-    box-shadow:var(--shadow);
-    display:flex;flex-direction:column;gap:6px;
-  }
-  .kpi-label{font-size:11.5px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.03em;}
-  .kpi-value{font-family:'Fraunces',serif;font-size:23px;font-weight:600;}
-  .kpi-sub{font-size:11.5px;color:var(--ink-faint);}
-  .kpi-value.teal{color:var(--teal);}
-  .kpi-value.amber{color:var(--amber);}
-  .kpi-value.coral{color:var(--coral);}
-
-  .dash-row{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
-  .panel{
-    background:var(--surface);border:1px solid var(--border);
-    border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);
-  }
-  .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-  .panel-head h3{font-size:15.5px;}
-  .panel-head .meta{font-size:11.5px;color:var(--ink-faint);}
-
-  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
-  .bar-row .bar-label{width:92px;font-size:12.5px;color:var(--ink-soft);flex-shrink:0;}
-  .bar-track{flex:1;height:9px;background:var(--surface-2);border-radius:5px;overflow:hidden;}
-  .bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),#0a5f52);border-radius:5px;}
-  .bar-val{width:74px;text-align:right;font-size:12px;color:var(--ink-soft);flex-shrink:0;}
-
-  .activity-list{display:flex;flex-direction:column;gap:2px;}
-  .activity-item{
-    display:flex;align-items:center;gap:11px;padding:10px 2px;
-    border-bottom:1px solid var(--border);
-  }
-  .activity-item:last-child{border-bottom:none;}
-  .activity-ic{
-    width:30px;height:30px;border-radius:50%;flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;font-size:13px;
-  }
-  .activity-ic.pay{background:var(--teal-soft);color:var(--teal);}
-  .activity-ic.new{background:var(--amber-soft);color:var(--amber);}
-  .activity-body{flex:1;min-width:0;}
-  .activity-title{font-size:13px;font-weight:500;}
-  .activity-sub{font-size:11.5px;color:var(--ink-faint);}
-  .activity-amt{font-size:13px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
-
-  /* ---------- Status badges ---------- */
-  .badge{
-    display:inline-flex;align-items:center;gap:5px;
-    padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;
-    letter-spacing:0.01em;
-  }
-  .badge::before{content:"";width:6px;height:6px;border-radius:50%;}
-  .badge.active{background:var(--teal-soft);color:var(--teal);}
-  .badge.active::before{background:var(--teal);}
-  .badge.completed{background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--border);}
-  .badge.completed::before{background:var(--ink-faint);}
-  .badge.overdue{background:var(--coral-soft);color:var(--coral);}
-  .badge.overdue::before{background:var(--coral);}
-
-  /* ---------- Customers page ---------- */
-  .filter-bar{
-    display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;
-  }
-  .search-box{
-    display:flex;align-items:center;gap:8px;
-    background:var(--surface);border:1px solid var(--border);
-    border-radius:8px;padding:8px 12px;flex:1;min-width:220px;max-width:340px;
-  }
-  .search-box svg{width:15px;height:15px;color:var(--ink-faint);flex-shrink:0;}
-  .search-box input{border:none;outline:none;background:none;font-size:13.5px;color:var(--ink);width:100%;font-family:inherit;}
-  .pill-group{display:flex;gap:6px;flex-wrap:wrap;}
-  .pill{
-    padding:7px 13px;border-radius:999px;border:1px solid var(--border);
-    background:var(--surface);font-size:12.5px;font-weight:500;color:var(--ink-soft);
-    cursor:pointer;
-  }
-  .pill.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-
-  .table-wrap{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    overflow:auto;box-shadow:var(--shadow);
-  }
-  table{width:100%;border-collapse:collapse;min-width:920px;}
-  thead th{
-    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;
-    color:var(--ink-faint);font-weight:600;padding:12px 14px;
-    border-bottom:1px solid var(--border);background:var(--surface-2);
-    white-space:nowrap;position:sticky;top:0;
-  }
-  tbody td{
-    padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;
-    white-space:nowrap;
-  }
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr{cursor:pointer;transition:background .1s ease;}
-  tbody tr:hover{background:var(--surface-2);}
-  .cust-name{font-weight:600;}
-  .cust-id{font-size:11.5px;color:var(--ink-faint);}
-  .cell-city{
-    display:inline-flex;padding:3px 9px;border-radius:6px;background:var(--surface-2);
-    font-size:11.5px;color:var(--ink-soft);
-  }
-  .dots{display:flex;gap:3px;flex-wrap:wrap;max-width:150px;}
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
-  .dot.filled{background:var(--teal);}
-  .empty-state{padding:60px 20px;text-align:center;color:var(--ink-faint);}
-  .empty-state svg{width:40px;height:40px;margin-bottom:10px;opacity:0.5;}
-
-  /* ---------- Forms ---------- */
-  .form-shell{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;}
-  .form-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:22px 24px;box-shadow:var(--shadow);
-  }
-  .form-card h3{font-size:15px;margin-bottom:16px;}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:2px;}
-  .field.full{grid-column:1 / -1;}
-  .field label{font-size:12px;font-weight:600;color:var(--ink-soft);}
-  .field input, .field select, .field textarea{
-    border:1px solid var(--border);border-radius:7px;padding:9px 11px;
-    font-size:13.5px;background:var(--surface-2);color:var(--ink);font-family:inherit;
-    outline:none;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--teal);}
-  .field .hint{font-size:11px;color:var(--ink-faint);}
-  .form-actions{display:flex;gap:10px;margin-top:18px;}
-
-  .summary-card{
-    background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px 22px;
-    position:sticky;top:90px;
-  }
-  .summary-card h3{color:#fff;font-size:14.5px;margin-bottom:14px;}
-  .summary-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:13px;}
-  .summary-row:last-child{border-bottom:none;}
-  .summary-row .lbl{color:#A9B7CB;}
-  .summary-row .val{font-family:'IBM Plex Mono',monospace;font-weight:600;}
-  .summary-row.big .val{color:#5FD9C0;font-size:16px;}
-
-  /* ---------- Customer detail modal ---------- */
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(10,14,20,0.55);
-    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
-  }
-  .modal-overlay.open{display:flex;}
-  .modal{
-    background:var(--surface);border-radius:14px;max-width:760px;width:100%;
-    max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);
-  }
-  .modal-head{
-    display:flex;justify-content:space-between;align-items:flex-start;
-    padding:22px 24px 16px;border-bottom:1px solid var(--border);
-    position:sticky;top:0;background:var(--surface);z-index:5;
-  }
-  .modal-head h2{font-size:19px;}
-  .modal-head .modal-sub{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
-  .modal-body{padding:20px 24px 26px;}
-  .modal-close{cursor:pointer;background:var(--surface-2);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);flex-shrink:0;}
-
-  .detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
-  .detail-stat{background:var(--surface-2);border-radius:9px;padding:12px 13px;}
-  .detail-stat .l{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.02em;margin-bottom:3px;}
-  .detail-stat .v{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;}
-
-  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-bottom:20px;font-size:13px;}
-  .info-grid .k{color:var(--ink-faint);}
-  .info-grid .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
-
-  .payhist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-  .payhist-head h4{font-size:13.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.02em;font-weight:600;}
-  .pay-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
-  .pay-row:last-child{border-bottom:none;}
-  .pay-left{display:flex;align-items:center;gap:9px;}
-  .pay-left .ic{width:26px;height:26px;border-radius:50%;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;}
-  .pay-amt{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--teal);}
-  .no-payments{color:var(--ink-faint);font-size:13px;padding:14px 0;text-align:center;}
-
-  .record-pay-box{
-    background:var(--teal-soft);border:1px solid var(--teal);border-radius:10px;
-    padding:14px 16px;margin-top:18px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;
-  }
-  .record-pay-box .field{margin-bottom:0;min-width:120px;flex:1;}
-  .record-pay-box label{color:#0a5f52;}
-  :root[data-theme="dark"] .record-pay-box label, .record-pay-box label{color:var(--teal);}
-
-  /* mobile nav */
-  #mobile-topbar{display:none;}
-  .hamburger{display:none;}
-
-  @media (max-width: 980px){
-    .kpi-grid{grid-template-columns:repeat(2,1fr);}
-    .dash-row{grid-template-columns:1fr;}
-    .form-shell{grid-template-columns:1fr;}
-    .summary-card{position:static;}
-    .detail-grid{grid-template-columns:repeat(2,1fr);}
-  }
-  @media (max-width: 760px){
-    #sidebar{
-      position:fixed;left:0;top:0;height:100vh;z-index:200;
-      transform:translateX(-100%);transition:transform .2s ease;
-      box-shadow:0 0 40px rgba(0,0,0,0.3);
-    }
-    #sidebar.open{transform:translateX(0);}
-    .hamburger{
-      display:flex;align-items:center;justify-content:center;
-      width:34px;height:34px;border-radius:8px;border:1px solid var(--border);
-      background:var(--surface);cursor:pointer;flex-shrink:0;
-    }
-    #content{padding:18px 14px 60px;}
-    #topbar{padding:12px 14px;}
-    .kpi-grid{grid-template-columns:1fr 1fr;}
-    .form-grid{grid-template-columns:1fr;}
-    .info-grid{grid-template-columns:1fr;}
-    .detail-grid{grid-template-columns:1fr 1fr;}
-    #topbar .title-block h1{font-size:18px;}
-    .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:150;}
-    .sidebar-scrim.open{display:block;}
-  }
-  /* ---------- Collection module (dark, mobile-first) ---------- */
-  body.vcm,body.vcm #main{background:#0a0a0a;color:#fff;}
-  body.vcm #topbar{display:none;}
-  body.vcm #content{padding:0;max-width:560px;margin:0 auto;}
-  .vc{--vln:#2e2f33;--vmu:#9aa0a6;--vg:#3ddc84;--vr:#ff5a5f;--vb:#1e90d6;min-height:100vh;padding-bottom:96px;font-size:15px;}
-  .vc .gr{color:var(--vg);} .vc .rd{color:var(--vr);}
-  .vh{display:flex;align-items:center;gap:10px;padding:14px 16px;position:sticky;top:0;background:#0a0a0a;z-index:6;box-shadow:0 3px 10px #000;}
-  .vh h2{flex:1;margin:0;font-family:inherit;font-size:20px;font-weight:700;}
-  .vi{filter:grayscale(1) brightness(2);font-size:20px;}
-  .vib{background:none;border:0;color:#fff;font-size:24px;padding:2px 8px;cursor:pointer;line-height:1;}
-  .vq{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--vln);color:#fff;font-size:17px;padding:8px 4px;outline:0;font-family:inherit;}
-  .vf{padding:16px 16px 0;} .vf label{display:block;color:var(--vmu);font-size:12px;}
-  .vc select,.vc input[type=date]{width:100%;background:transparent;color:#fff;border:0;border-bottom:1px solid var(--vln);font-size:19px;padding:12px 0;font-family:inherit;color-scheme:dark;appearance:none;-webkit-appearance:none;border-radius:0;}
-  .vc select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23fff'/%3E%3C/svg%3E") no-repeat right 4px center;}
-  .vc select:disabled{opacity:.45;} .vc option{background:#1c1d20;color:#fff;}
-  .vsub{display:block;margin:28px auto 10px;padding:14px 44px;border:0;border-radius:10px;background:#1e90d6;color:#fff;font-weight:700;letter-spacing:.06em;font-size:15px;cursor:pointer;}
-  .vsub:disabled{background:#0b3a55;color:#5d7a8c;cursor:default;}
-  .vmu{color:var(--vmu);font-size:12.5px;padding:6px 16px;margin:0;}
-  .vs{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#1c1d20;border-bottom:1px solid var(--vln);font-weight:600;cursor:pointer;}
-  .vbl{text-align:right;} .vbl small{display:block;color:#ddd;font-weight:400;font-size:12px;} .vbl b{font-size:22px;}
-  .vg{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;padding:14px 16px;border-bottom:1px solid var(--vln);}
-  .vtb{display:flex;border-bottom:1px solid var(--vln);margin-top:6px;}
-  .vtb button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:var(--vb);font-size:17px;font-weight:600;padding:14px 0;cursor:pointer;font-family:inherit;}
-  .vtb .on{border-color:var(--vb);}
-  .vt{margin:10px 16px;border:1px solid var(--vln);border-radius:10px;padding:10px 14px;font-weight:600;}
-  .vcd{padding:14px 16px;border-bottom:1px solid var(--vln);}
-  .vr{display:flex;gap:10px;justify-content:space-between;} .vl{flex:1;min-width:0;} .vn{font-weight:700;font-size:16.5px;}
-  .vk{width:42%;max-width:190px;text-align:right;} .vk div{display:flex;justify-content:space-between;gap:8px;} .vk b{font-size:19px;} .vk hr{border:0;border-top:1px solid var(--vln);margin:6px 0;}
-  .vd{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;} .vd i{width:10px;height:10px;border-radius:50%;} .vd .g{background:#1e8e4e;} .vd .r{background:#d6001c;}
-  .vp{display:flex;align-items:center;gap:8px;margin-top:10px;}
-  .vp input,.vad input,.vad select{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--vln);color:#fff;font-size:16px;padding:8px 2px;outline:0;font-family:inherit;}
-  .vgl{width:34px;height:34px;display:grid;place-items:center;border:1px solid #4a4aa8;border-radius:8px;background:#1a1a3a;flex-shrink:0;}
-  .vsv{background:none;border:1px solid var(--vb);color:var(--vb);border-radius:8px;padding:6px 12px;font-size:18px;cursor:pointer;flex-shrink:0;}
-  .vpn{padding:6px 0 12px;border-bottom:1px solid var(--vln);} .vpn h3{margin:12px 16px 0;font-family:inherit;font-size:14px;color:var(--vmu);}
-  .vpy{padding:8px 0;} .vad{display:flex;gap:8px;padding:10px 16px;align-items:center;}
-  .vo{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--vln);} .vo span{flex:1;}
-  .vts{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#333;color:#fff;padding:10px 16px;border-radius:8px;z-index:300;}
-  #bnav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:100;background:#0a0a0a;border-top:1px solid #2e2f33;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));}
-  #bnav button{flex:1;background:none;border:0;color:#9aa0a6;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-family:inherit;}
-  #bnav svg{width:26px;height:26px;fill:currentColor;} #bnav .on{color:#1e90d6;}
-  @media (max-width:760px){ #bnav{display:flex;} body:not(.vcm) #content{padding-bottom:90px;} }
-</style>
-</head>
-<body>
-
-<div id="app-shell">
-  <div class="sidebar-scrim" id="scrim"></div>
-  <aside id="sidebar">
-    <div class="brand">
-      <div class="brand-mark">KK</div>
-      <div class="brand-text">
-        <div class="brand-name">Vasool Collection by KK</div>
-        <div class="brand-sub">Branch Ledger</div>
-      </div>
-    </div>
-    <nav class="side-nav" id="side-nav">
-      <button class="nav-item" data-view="collection"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8z"/></svg>Collection</button>
-      <button class="nav-item" data-view="expense"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Expense</button>
-      <button class="nav-item" data-view="dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-        Dashboard
-      </button>
-      <button class="nav-item" data-view="customers">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Customers
-      </button>
-      <button class="nav-item" data-view="add-customer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Add Customer
-      </button>
-      <button class="nav-item" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        Settings
-      </button>
-    </nav>
-    <div class="side-divider"></div>
-    <div class="side-foot">Sample data preloaded<br/>for demo purposes.</div>
-  </aside>
-
-  <div id="main">
-    <div id="topbar">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="title-block">
-          <h1 id="page-title">Dashboard</h1>
-          <div class="subtitle" id="page-subtitle">Overview across all branches</div>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <div class="city-picker">
-          <button class="city-btn" id="city-btn"><span class="dot"></span><span id="city-label">All Cities</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="city-dropdown" id="city-dropdown"></div>
-        </div>
-        <button class="btn btn-primary" id="quick-add-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Customer
-        </button>
-      </div>
-    </div>
-    <div id="content"></div>
-  </div>
-</div>
-
-<nav id="bnav">
-  <button data-view="collection"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8z"/></svg>Collection</button>
-  <button data-view="expense"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Expense</button>
-  <button data-view="customers"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Customer</button>
-  <button data-view="dashboard"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>Reports</button>
-  <button data-view="settings"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 5v-2l-2.2-.4a7 7 0 0 0-.7-1.6l1.3-1.8-1.4-1.4-1.8 1.3a7 7 0 0 0-1.6-.7L14 3h-2l-.4 2.2a7 7 0 0 0-1.6.7L8.2 4.6 6.8 6l1.3 1.8c-.3.5-.6 1-.7 1.6L5 11v2l2.4.4c.2.6.4 1.1.7 1.6L6.8 17l1.4 1.4 1.8-1.3c.5.3 1 .6 1.6.7L12 20h2l.4-2.2c.6-.2 1.1-.4 1.6-.7l1.8 1.3 1.4-1.4-1.3-1.8c.3-.5.6-1 .7-1.6zM12 9.8a2.2 2.2 0 1 1 0 4.4 2.2 2.2 0 0 1 0-4.4z"/></svg>Settings</button>
-</nav>
-
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-inner"></div>
-</div>
-
+:root{--bg:#0a0a0a;--bar:#1c1d20;--ln:#2e2f33;--mu:#9aa0a6;--tx:#fff;--g:#3ddc84;--r:#ff5a5f;--b:#1e90d6;--cd:#121316;color-scheme:dark;padding-top:env(safe-area-inset-top,0px)}
+body.lt{--bg:#f5f5f2;--bar:#e9e9e4;--ln:#d4d4cc;--mu:#666;--tx:#111;--g:#0e8a4e;--r:#c62828;--b:#1565c0;--cd:#fff;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,'Noto Sans Tamil',Roboto,sans-serif}
+#app{max-width:640px;margin:auto;min-height:100vh;padding-bottom:96px}
+.gr{color:var(--g)}.rd{color:var(--r)}.mu{color:var(--mu);font-size:12.5px}.p{padding:6px 16px;margin:0}
+.hd{display:flex;align-items:center;gap:10px;padding:14px 16px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:6;box-shadow:0 3px 10px #0008}
+.hd h2{flex:1;margin:0;font-size:20px}.ib{background:none;border:0;color:var(--tx);font-size:22px;padding:2px 8px;cursor:pointer}
+.q{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--ln);color:var(--tx);font-size:17px;padding:8px 4px;outline:0}
+.btn{background:var(--b);color:#fff;border:0;border-radius:9px;padding:10px 16px;font-weight:700;font-size:14px;cursor:pointer}
+.btn.o{background:none;border:1px solid var(--b);color:var(--b)}.btn.d{background:none;border:1px solid var(--r);color:var(--r)}.btn.s{padding:6px 11px;font-size:12.5px}.btn:disabled{opacity:.4}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 16px}
+.cc{margin:10px 16px;padding:14px;background:var(--cd);border:1px solid var(--ln);border-radius:12px}
+.cc h3{margin:0;font-size:18px}.gd{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:10px 16px;border-bottom:1px solid var(--ln)}.cc .gd{padding:8px 0;border:0}
+.sm{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--bar);border-bottom:1px solid var(--ln);font-weight:600;cursor:pointer}
+.sm small{display:block;font-weight:400;font-size:12px;text-align:right}.sm b{font-size:22px}
+.tb{display:flex;border-bottom:1px solid var(--ln)}.tb button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:var(--b);font-size:17px;font-weight:600;padding:13px 0;cursor:pointer}.tb .on{border-color:var(--b)}
+.tt{margin:10px 16px;border:1px solid var(--ln);border-radius:10px;padding:10px 14px;font-weight:600}
+.cd{padding:14px 16px;border-bottom:1px solid var(--ln)}.cr{display:flex;gap:10px;justify-content:space-between}.cl{flex:1;min-width:0}.nm{font-weight:700;font-size:16.5px}
+.ck{width:44%;max-width:200px}.ck div{display:flex;justify-content:space-between;gap:8px}.ck b{font-size:18px}.ck hr{border:0;border-top:1px solid var(--ln);margin:5px 0}
+.pl{display:flex;align-items:center;gap:8px;margin-top:10px}.pl input{flex:1;min-width:0}
+.chip{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11.5px;font-weight:600;border:1px solid currentColor}
+.fl{padding:10px 16px 0}.fl label{display:block;color:var(--mu);font-size:12px}
+select,input,textarea{background:transparent;color:var(--tx);border:0;border-bottom:1px solid var(--ln);font:inherit;font-size:16px;padding:9px 2px;width:100%;outline:0;border-radius:0}
+select{appearance:none;-webkit-appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%239aa0a6'/%3E%3C/svg%3E") no-repeat right 2px center}
+option{background:var(--bar);color:var(--tx)}select:disabled,input:disabled{opacity:.5}
+.mo{position:fixed;inset:0;background:#000b;z-index:200;display:flex;align-items:flex-end;justify-content:center}.mb{background:var(--bg);border:1px solid var(--ln);border-radius:16px 16px 0 0;width:100%;max-width:640px;max-height:92vh;overflow:auto;padding:6px 0 20px}
+.mb h3{margin:12px 16px 0}.tw{overflow:auto;margin:8px 16px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:8px 10px;border-bottom:1px solid var(--ln);text-align:left;white-space:nowrap}th{color:var(--mu);font-weight:600}
+#bn{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;background:var(--bg);border-top:1px solid var(--ln);padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));max-width:640px;margin:auto}
+#bn button{flex:1;background:none;border:0;color:var(--mu);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}#bn svg{width:25px;height:25px;fill:currentColor}#bn .on{color:var(--b)}
+.ts{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#333;color:#fff;padding:10px 16px;border-radius:8px;z-index:400;max-width:90%}
+@media print{#bn,.hd,.np{display:none!important}body{background:#fff;color:#000}}
+</style></head><body><div id="app"></div>
 <script>
-(function(){
-  "use strict";
+(function(){"use strict";
+/*LOGIC*/
+var K="vasool_v2",OLD="vasool_collection_customers_v1",OLDT="vasool_tx_v1",OLDG="vasool_geo_v1",OLDC="vasool_cfg_v1";
+var DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var r2=function(x){return Math.round((x+Number.EPSILON)*100)/100};
+var iso=function(x){return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
+var pd=function(d){return new Date(d+"T00:00:00")};
+var add=function(d,n){var x=pd(d);x.setDate(x.getDate()+n);return iso(x)};
+var today=function(){return iso(new Date())};
+var dow=function(d){return pd(d).getDay()};
+var nextDay=function(day,from){for(var i=0;i<7;i++){if(dow(add(from,i))===day)return add(from,i)}};
+var uid=function(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-3)};
+var db={cities:[],areas:[],cust:[],tx:[],audit:[],cfg:{pin:"",theme:"dark"}};
+var city=function(id){return db.cities.find(function(x){return x.id===id})},area=function(id){return db.areas.find(function(x){return x.id===id})},cust=function(id){return db.cust.find(function(x){return x.id===id})};
+function audit(a,d){db.audit.unshift({id:uid(),ts:new Date().toISOString(),a:a,d:d});db.audit=db.audit.slice(0,500)}
+function rateFor(cid,aid){var a=area(aid),c=city(cid);return a&&a.rate!=null?a.rate:(c?c.rate:0)}
+function inhDay(cid,aid){var a=area(aid),c=city(cid);if(a&&a.day!=null)return a.day;if(c&&c.day!=null)return c.day;return null}
+function effDay(c){var d=inhDay(c.cityId,c.areaId);return d!=null?d:c.day}
+function tot(c){return r2(c.amt*(1+c.rate/100))}
+function paidTo(c,d){return r2(db.tx.reduce(function(s,t){return s+(t.t==="c"&&t.cid===c.id&&t.d<=d?t.a:0)},0))}
+function cm(c,d){var T=tot(c),p=paidTo(c,d),bal=r2(Math.max(0,T-p)),n=bal<=0?c.n:Math.min(c.n,c.inst?Math.floor((p+0.004)/c.inst):0);
+ var wo=c.status==="completed"&&c.closedOn&&c.closedOn<=d;
+ return{tot:T,paid:p,bal:bal,n:n,pend:c.n-n,prin:(wo||c.loanDate>d||!T)?0:r2(bal*c.amt/T)}}
+function cIn(f,c){return(!f.city||c.cityId===f.city)&&(!f.area||c.areaId===f.area)}
+function tIn(f,t){return(!f.city||t.cityId===f.city)&&(!f.area||t.areaId===f.area)}
+function dayT(f){var d=f.date,r={open:0,loan:0,coll:0,cash:0,online:0,exp:0,bill:0,intr:0,pbal:0},cl=0,ll=0,xl=0;
+ db.cities.forEach(function(x){if(!f.city||x.id===f.city)r.open+=+x.open||0});
+ db.cust.forEach(function(c){if(!cIn(f,c)||c.loanDate>d)return;ll+=c.amt;if(c.loanDate===d)r.loan+=c.amt;r.pbal+=cm(c,d).prin});
+ db.tx.forEach(function(t){if(t.d>d)return;
+  if(t.t==="c"){var c=cust(t.cid);if(!c||!cIn(f,c))return;cl+=t.a;if(t.d===d){r.coll+=t.a;if(t.m==="online")r.online+=t.a;else r.cash+=t.a;r.intr+=t.a*(tot(c)-c.amt)/tot(c)}}
+  else{if(!tIn(f,t))return;xl+=t.a;if(t.d===d)r[t.t==="b"?"bill":"exp"]+=t.a}});
+ r.bal=r2(r.open+cl-ll-xl);Object.keys(r).forEach(function(k){r[k]=r2(r[k])});r.all=r2(r.bal+r.pbal);return r}
+function todayPaid(c,d,m){return r2(db.tx.reduce(function(s,t){return s+(t.t==="c"&&t.cid===c.id&&t.d===d&&(!m||t.m===m)?t.a:0)},0))}
+function dueList(f,ovr){var d=f.date;return db.cust.filter(function(c){
+  if(!cIn(f,c)||c.loanDate>=d||(c.status==="completed"&&c.closedOn<d))return false;
+  var before=cm(c,add(d,-1)).bal;if(before<=0&&!todayPaid(c,d))return false;
+  return ovr||effDay(c)===dow(d)}).map(function(c){var before=cm(c,add(d,-1)).bal,tp=todayPaid(c,d);
+  return{c:c,m:cm(c,d),tp:tp,done:tp>=Math.min(c.inst,before)-0.004&&tp>0||(before<=0)}})}
+function payOk(c,d,ovr){return !!ovr||effDay(c)===dow(d)}
+function setPay(c,d,m,a){db.tx=db.tx.filter(function(t){return!(t.t==="c"&&t.cid===c.id&&t.d===d&&t.m===m)});if(a>0)db.tx.push({id:uid(),t:"c",cid:c.id,cityId:c.cityId,areaId:c.areaId,d:d,m:m,a:r2(a)})}
+function savePay(id,d,on,ca,ovr){var c=cust(id);if(!c)return"Unknown customer";on=r2(+on||0);ca=r2(+ca||0);if(on<0||ca<0)return"Invalid amount";
+ if(!payOk(c,d,ovr))return"Not a collection day for this customer ("+DAYS[effDay(c)]+"). Use admin override.";
+ var other=db.tx.reduce(function(s,t){return s+(t.t==="c"&&t.cid===c.id&&t.d!==d?t.a:0)},0);
+ if(on+ca>r2(tot(c)-other)+0.004)return"Exceeds remaining balance ("+r2(tot(c)-other)+")";
+ setPay(c,d,"online",on);setPay(c,d,"cash",ca);
+ if(ovr&&effDay(c)!==dow(d))audit("override_payment",c.code+" "+c.name+" on "+d+" ("+ovr+") amount "+(on+ca));
+ return""}
+function refCount(kind,id){return db.cust.filter(function(c){return kind==="city"?c.cityId===id:c.areaId===id}).length+db.tx.filter(function(t){return kind==="city"?t.cityId===id:t.areaId===id}).length}
+function delGeo(kind,id){if(refCount(kind,id))return"has records";if(kind==="city"){db.areas=db.areas.filter(function(a){return a.cityId!==id});db.cities=db.cities.filter(function(x){return x.id!==id})}else db.areas=db.areas.filter(function(a){return a.id!==id});return""}
+function migrate(){var oc;try{oc=JSON.parse(localStorage.getItem(OLD))}catch(e){}if(!oc||!oc.length)return false;
+ var g={},ot=[],cf={open:{}};try{g=JSON.parse(localStorage.getItem(OLDG))||{};ot=JSON.parse(localStorage.getItem(OLDT))||[];cf=JSON.parse(localStorage.getItem(OLDC))||cf}catch(e){}
+ var cs={};function gc(n){if(!cs[n]){cs[n]={id:uid(),name:n,rate:0,day:null,open:+(cf.open||{})[n]||0};db.cities.push(cs[n])}return cs[n]}
+ var as={};Object.keys(g).forEach(function(n){gc(n);Object.keys(g[n]).forEach(function(l){g[n][l].forEach(function(a){var k=n+"|"+a;if(!as[k]){as[k]={id:uid(),cityId:cs[n].id,name:a,rate:null,day:null};db.areas.push(as[k])}})})});
+ oc.forEach(function(o){var c=gc(o.city),a=o.area&&as[o.city+"|"+o.area],T=r2(o.amountLent*(1+(o.interestPercent||0)/100)),n=o.weeks||1;
+  var cu={id:o.id,code:o.customerId,name:o.name,phone:o.phone,cityId:c.id,areaId:a?a.id:"",amt:o.amountLent,rate:o.interestPercent||0,loanDate:o.startDate,n:n,inst:r2(T/n),day:dow(o.startDate),notes:o.address||"",status:"active"};
+  db.cust.push(cu);(o.payments||[]).forEach(function(p){db.tx.push({id:uid(),t:"c",cid:o.id,cityId:c.id,areaId:cu.areaId,d:p.date,m:p.mode==="online"?"online":"cash",a:p.amount})})});
+ ot.forEach(function(t){var c=gc(t.city);db.tx.push({id:t.id,t:t.t==="b"?"b":"e",name:t.note||"",cityId:c.id,areaId:"",d:t.date,a:t.amount,note:""})});
+ audit("migrate","Imported "+oc.length+" customers from previous version");return true}
+function seed(){var T="Thanjavur",c1={id:uid(),name:T,rate:10,day:null,open:500000},c2={id:uid(),name:"Madurai",rate:12,day:2,open:300000};db.cities.push(c1,c2);
+ var A=[["Area A",5],["Area B",1],["Area C",3]].map(function(x){var a={id:uid(),cityId:c1.id,name:x[0],rate:x[0]==="Area C"?8:null,day:x[1]};db.areas.push(a);return a});
+ [["Kalaiselvi","9884123456",c1,A[0],5000,10,8,3],["Uma Velmurugan","9003155210",c1,A[0],5000,10,8,3],["Saroja","9677240981",c1,A[1],2500,10,9,4],["Meenakshi","9442210098",c1,A[2],10000,10,6,5],["Pandiammal","9789011223",c2,null,15000,10,9,5],["Rajeswari","9876544332",c2,null,8000,10,5,2]].forEach(function(r,i){
+  var day=r[3]?r[3].day:r[2].day,rate=rateFor(r[2].id,r[3]?r[3].id:""),ld=nextDay(day,add(today(),-7*r[6]));
+  var cu={id:uid(),code:String(101+i),name:r[0],phone:r[1],cityId:r[2].id,areaId:r[3]?r[3].id:"",amt:r[4],rate:rate,loanDate:ld,n:r[5],day:day,notes:"",status:"active"};cu.inst=r2(tot(cu)/cu.n);db.cust.push(cu);
+  for(var k=1;k<=r[7];k++){var d=add(ld,7*k);if(d<today())db.tx.push({id:uid(),t:"c",cid:cu.id,cityId:cu.cityId,areaId:cu.areaId,d:d,m:k%3?"cash":"online",a:cu.inst})}});
+ db.tx.push({id:uid(),t:"e",name:"Fuel",cityId:c1.id,areaId:"",d:add(today(),-3),a:800,note:""},{id:uid(),t:"b",name:"Stationery",cityId:c1.id,areaId:"",d:add(today(),-2),a:200,note:""})}
+/*END*/
 
-  /* ====================== CONFIG ====================== */
-  var CITIES = ["Chennai","Trichy","Thanjavur","Madurai","Coimbatore"];
-  var STORAGE_KEY = "vasool_collection_customers_v1";
+var S={v:"home",city:"",f:{city:"",area:"",date:today(),mode:"",st:""},tab:"c",q:"",open:true,panel:false,ovr:"",unl:false,rep:{t:"daily",from:add(today(),-30),to:today(),city:""},pid:"",xd:today()};
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var F=function(n){return(+n||0).toLocaleString("en-IN",{maximumFractionDigits:2})};
+var D=function(d){return d?d.split("-").reverse().join("/"):"—"};
+function save(){try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}}
+function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}if(r&&r.cities){db=r;db.audit=db.audit||[];db.cfg=db.cfg||{pin:"",theme:"dark"}}else{if(!migrate())seed();save()}}
+function toast(m){var t=document.createElement("div");t.className="ts";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
+function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return String(h)}
+function pinOk(why){if(!db.cfg.pin)return true;var p=prompt("Enter PIN to "+why);return p!==null&&hash(p)===db.cfg.pin}
+function opt(list,v,ph){return(ph!=null?'<option value="">'+ph+"</option>":"")+list.map(function(x){var a=x instanceof Array?x:[x,x];return'<option value="'+esc(a[0])+'"'+(String(a[0])===String(v)?" selected":"")+">"+esc(a[1])+"</option>"}).join("")}
+var cityOpts=function(v,ph){return opt(db.cities.filter(function(c){return!c.arch}).map(function(c){return[c.id,c.name]}),v,ph)};
+var areaOpts=function(cid,v,ph){return opt(db.areas.filter(function(a){return a.cityId===cid&&!a.arch}).map(function(a){return[a.id,a.name]}),v,ph)};
+var dayOpts=function(v,ph){return opt(DAYS.map(function(d,i){return[i,d]}),v==null?"":v,ph)};
+var cn=function(id){var c=city(id);return c?c.name:"—"},an=function(id){var a=area(id);return a?a.name:"—"};
 
-  var state = {
-    view: "collection",
-    selectedCity: "All",
-    search: "",
-    statusFilter: "All",
-    activeCustomerId: null,
-    editingCustomerId: null
-  };
+/* ---------- generic modal form ---------- */
+function openForm(title,fields,onSub,after){
+ var h='<form id="mf"><h3>'+title+"</h3>"+fields.map(function(f){
+  if(f.t==="h")return'<div class="p mu" id="'+f.k+'">'+(f.v||"")+"</div>";
+  var inp=f.t==="s"?'<select name="'+f.k+'">'+f.o+"</select>":f.t==="x"?'<textarea name="'+f.k+'" rows="2">'+esc(f.v)+"</textarea>":'<input name="'+f.k+'" type="'+(f.t==="n"?"number":f.t==="d"?"date":"text")+'"'+(f.t==="n"?' step="any" inputmode="decimal"':"")+' value="'+esc(f.v)+'"'+(f.ph?' placeholder="'+f.ph+'"':"")+">";
+  return'<div class="fl"><label>'+f.l+"</label>"+inp+"</div>"}).join("")+'<div class="row"><button class="btn" type="submit">Save</button><button class="btn o" type="button" data-a="close">Cancel</button></div><div class="p rd" id="mer"></div></form>';
+ var m=document.createElement("div");m.className="mo";m.id="mo";m.innerHTML='<div class="mb">'+h+"</div>";document.body.appendChild(m);
+ var f=m.querySelector("form");if(after){after(f,null);f.addEventListener("input",function(e){after(f,e)});f.addEventListener("change",function(e){after(f,e)})}
+ f.addEventListener("submit",function(e){e.preventDefault();var v={};[].forEach.call(f.elements,function(x){if(x.name)v[x.name]=x.value});var er=onSub(v,f);if(er)m.querySelector("#mer").textContent=er;else{closeM();render()}})}
+function closeM(){var m=$("#mo");if(m)m.remove()}
+function showM(html){closeM();var m=document.createElement("div");m.className="mo";m.id="mo";m.innerHTML='<div class="mb">'+html+"</div>";document.body.appendChild(m)}
 
-  /* ====================== UTILITIES ====================== */
-  function fmtINR(n){
-    n = Math.round(n || 0);
-    var neg = n < 0; n = Math.abs(n);
-    var s = n.toString();
-    var last3 = s.slice(-3);
-    var rest = s.slice(0, -3);
-    if(rest !== "") last3 = "," + last3;
-    var formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + last3;
-    return (neg ? "-" : "") + "₹" + formatted;
-  }
-  function fmtDate(d){
-    if(!d) return "—";
-    var dt = new Date(d);
-    var dd = String(dt.getDate()).padStart(2,"0");
-    var mm = String(dt.getMonth()+1).padStart(2,"0");
-    var yy = dt.getFullYear();
-    return dd + "/" + mm + "/" + yy;
-  }
-  function addDays(dateStr, days){
-    var d = new Date(dateStr);
-    d.setDate(d.getDate() + days);
-    return d.toISOString().slice(0,10);
-  }
-  function todayStr(){ return new Date().toISOString().slice(0,10); }
-  function uid(){ return "c" + Math.random().toString(36).slice(2,9); }
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, function(c){
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-    });
-  }
+/* ---------- forms ---------- */
+function cityForm(id){var c=id?city(id):{name:"",rate:"",open:"",day:null};
+ openForm(id?"Edit city":"Add city",[{k:"name",l:"City name",v:c.name},{k:"rate",l:"Default interest %",t:"n",v:c.rate},{k:"day",l:"Collection day (only if the city has no areas)",t:"s",o:dayOpts(c.day,"Not set")},{k:"open",l:"Opening cash balance",t:"n",v:c.open},
+  id?{t:"h",k:"hh"}:{k:"area",l:"First area (optional)",v:""}],function(v){
+  var n=v.name.trim();if(!n)return"Enter a city name";if(db.cities.some(function(x){return x.id!==id&&x.name.toLowerCase()===n.toLowerCase()}))return"City already exists";
+  if(v.rate===""||+v.rate<0)return"Enter the default interest %";var o=id?city(id):{id:uid()};o.name=n;o.rate=+v.rate;o.day=v.day===""?null:+v.day;o.open=+v.open||0;
+  if(!id){db.cities.push(o);if(v.area.trim())db.areas.push({id:uid(),cityId:o.id,name:v.area.trim(),rate:null,day:null})}audit(id?"city_edit":"city_add",n);save()})}
+function areaForm(cid,id){var a=id?area(id):{name:"",rate:null,day:null};
+ openForm(id?"Edit area":"Add area",[{k:"name",l:"Area name",v:a.name},{k:"rate",l:"Interest % (blank = city default "+city(cid).rate+"%)",t:"n",v:a.rate==null?"":a.rate},{k:"day",l:"Weekly collection day",t:"s",o:dayOpts(a.day,"Select day")}],function(v){
+  var n=v.name.trim();if(!n)return"Enter an area name";if(db.areas.some(function(x){return x.cityId===cid&&x.id!==id&&x.name.toLowerCase()===n.toLowerCase()}))return"Area already exists in this city";
+  if(v.day==="")return"Select the weekly collection day";var o=id?area(id):{id:uid(),cityId:cid};o.name=n;o.rate=v.rate===""?null:+v.rate;o.day=+v.day;if(!id)db.areas.push(o);audit(id?"area_edit":"area_add",n+" "+DAYS[o.day]);save()})}
+function custForm(id){var c=id?cust(id):{name:"",phone:"",cityId:S.f.city||(db.cities[0]||{}).id,areaId:S.f.area||"",amt:"",rate:"",loanDate:today(),n:10,inst:"",day:null,notes:""};
+ if(!db.cities.length)return toast("Add a city first");
+ openForm(id?"Edit customer":"Add customer",[{k:"name",l:"Customer name",v:c.name},{k:"phone",l:"Mobile number",t:"t",v:c.phone},{k:"cityId",l:"City",t:"s",o:cityOpts(c.cityId)},{k:"areaId",l:"Area (optional)",t:"s",o:areaOpts(c.cityId,c.areaId,"No area")},
+  {k:"amt",l:"Loan amount",t:"n",v:c.amt},{k:"rate",l:"Interest % (inherited)",t:"n",v:c.rate},{k:"loanDate",l:"Loan date",t:"d",v:c.loanDate},{k:"n",l:"Total installments",t:"n",v:c.n},{k:"inst",l:"Weekly installment amount",t:"n",v:c.inst},
+  {k:"day",l:"Weekly collection day",t:"s",o:dayOpts(c.day,"Select day")},{k:"notes",l:"Notes (optional)",t:"x",v:c.notes},{t:"h",k:"pv"}],function(v){
+  var amt=+v.amt,n=Math.round(+v.n),rate=+v.rate,inst=+v.inst;if(!v.name.trim())return"Enter the customer name";if(!(amt>0))return"Enter the loan amount";if(!(n>=1))return"Enter the number of installments";if(!(inst>0))return"Enter the installment amount";
+  var inh=inhDay(v.cityId,v.areaId),day=inh!=null?inh:(v.day===""?null:+v.day);if(day==null)return"Select the weekly collection day";
+  if(rate!==rateFor(v.cityId,v.areaId)&&!pinOk("override the interest rate"))return"Interest override needs the PIN";
+  var o=id?cust(id):{id:uid(),code:String(db.cust.reduce(function(m,x){return Math.max(m,parseInt(x.code)||0)},100)+1),status:"active"};
+  Object.assign(o,{name:v.name.trim(),phone:v.phone.trim(),cityId:v.cityId,areaId:v.areaId,amt:amt,rate:rate,loanDate:v.loanDate,n:n,inst:inst,day:day,notes:v.notes});if(!id)db.cust.push(o);audit(id?"cust_edit":"loan_given",o.code+" "+o.name+" "+amt);save()},
+  function(f,e){var nm=e&&e.target.name;if(nm==="cityId"){f.areaId.innerHTML=areaOpts(f.cityId.value,"","No area")}
+   if(!e||nm==="cityId"||nm==="areaId"){if(!id||e){f.rate.value=rateFor(f.cityId.value,f.areaId.value);f.rate.dataset.man=""}}
+   var inh=inhDay(f.cityId.value,f.areaId.value);f.day.disabled=inh!=null;if(inh!=null)f.day.value=inh;
+   if(nm==="rate")f.rate.dataset.man=1;if(nm==="inst")f.inst.dataset.man=1;
+   var a=+f.amt.value||0,T=r2(a*(1+(+f.rate.value||0)/100)),n=Math.max(1,Math.round(+f.n.value||1));
+   if(!f.inst.dataset.man&&(!id||e)&&nm!=="inst")f.inst.value=a?r2(T/n):"";
+   $("#pv").innerHTML="Interest "+F(r2(T-a))+" · Total payable "+F(T)+" · "+n+" × "+F(+f.inst.value||0)+(inh!=null?" · Day from area/city: "+DAYS[inh]:"")})}
+function outForm(type){if(!db.cities.length)return toast("Add a city first");var dt=S.v==="exp"?S.xd:S.f.date;
+ openForm(type==="b"?"Add bill":"Add expense",[{k:"name",l:"Name",v:""},{k:"a",l:"Amount",t:"n",v:""},{k:"d",l:"Date",t:"d",v:dt},{k:"cityId",l:"City",t:"s",o:cityOpts(S.f.city||db.cities[0].id)},{k:"areaId",l:"Area (optional)",t:"s",o:areaOpts(S.f.city||db.cities[0].id,"","No area")},{k:"note",l:"Description",t:"x",v:""}],function(v){
+  if(!v.name.trim()||!(+v.a>0))return"Enter a name and amount";db.tx.push({id:uid(),t:type,name:v.name.trim(),cityId:v.cityId,areaId:v.areaId,d:v.d,a:r2(+v.a),note:v.note});audit("tx_"+type,v.name+" "+v.a);save()},
+  function(f,e){if(e&&e.target.name==="cityId")f.areaId.innerHTML=areaOpts(f.cityId.value,"","No area")})}
 
-  /* Compute derived loan fields for a customer */
-  function calc(c){
-    var totalRepayment = Math.round(c.amountLent * (1 + (c.interestPercent||0)/100));
-    var weeklyInstallment = Math.round(totalRepayment / c.weeks);
-    var amountPaid = (c.payments||[]).reduce(function(s,p){ return s + p.amount; }, 0);
-    var balance = Math.max(0, totalRepayment - amountPaid);
-    var installmentsCompleted = balance <= 0 ? c.weeks : Math.min(c.weeks, weeklyInstallment ? Math.floor(amountPaid / weeklyInstallment) : 0);
-    var installmentsRemaining = Math.max(0, c.weeks - installmentsCompleted);
-    var dueDate = addDays(c.startDate, c.weeks * 7);
-    var status;
-    if(balance <= 0){ status = "Completed"; }
-    else if(todayStr() > dueDate){ status = "Overdue"; }
-    else { status = "Active"; }
-    return {
-      totalRepayment: totalRepayment,
-      weeklyInstallment: weeklyInstallment,
-      amountPaid: amountPaid,
-      balance: balance,
-      installmentsCompleted: installmentsCompleted,
-      installmentsRemaining: installmentsRemaining,
-      dueDate: dueDate,
-      status: status
-    };
-  }
+/* ---------- views ---------- */
+var IC={c:"M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8z",e:"M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z",u:"M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.3 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",r:"M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z",s:"M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 5v-2l-2.2-.4a7 7 0 0 0-.7-1.6l1.3-1.8-1.4-1.4-1.8 1.3a7 7 0 0 0-1.6-.7L14 3h-2l-.4 2.2a7 7 0 0 0-1.6.7L8.2 4.6 6.8 6l1.3 1.8c-.3.5-.6 1-.7 1.6L5 11v2l2.4.4c.2.6.4 1.1.7 1.6L6.8 17l1.4 1.4 1.8-1.3c.5.3 1 .6 1.6.7L12 20h2l.4-2.2c.6-.2 1.1-.4 1.6-.7l1.8 1.3 1.4-1.4-1.3-1.8c.3-.5.6-1 .7-1.6z"};
+function nav(){var N=[["c","Collection",["home","city","coll"]],["e","Expense",["exp"]],["u","Customer",["cust"]],["r","Reports",["rep"]],["s","Settings",["set"]]];
+ return'<nav id="bn">'+N.map(function(n){return'<button data-a="nav" data-v="'+n[2][0]+'" class="'+(n[2].indexOf(S.v)>-1?"on":"")+'"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="'+IC[n[0]]+'"/></svg>'+n[1]+"</button>"}).join("")+"</nav>"}
+function gridT(T,x){return'<div class="gd"><div>P Bal: <b class="gr">'+F(T.pbal)+"</b></div><div>Expense: <b class=\"rd\">"+F(T.exp)+"</b></div><div>Bill: <b>"+F(T.bill)+'</b></div><div>Loan: <b class="rd">'+F(T.loan)+"</b></div><div>Collection: <b class=\"gr\">"+F(T.coll)+"</b></div><div>Total balance: <b>"+F(T.all)+"</b></div><div>Cash: <b class=\"gr\">"+F(T.cash)+"</b></div><div>Online: <b class=\"gr\">"+F(T.online)+"</b></div>"+(x||"")+"</div>"}
+function vHome(){var t=today();
+ return'<div class="hd"><h2>Cities</h2><button class="btn s" data-a="coll">Open collection</button><button class="btn s o" data-a="cadd">+ City</button></div>'+
+ (db.cities.filter(function(c){return!c.arch}).map(function(c){var f={city:c.id,date:t},T=dayT(f),cs=db.cust.filter(function(x){return x.cityId===c.id}),ar=db.areas.filter(function(a){return a.cityId===c.id&&!a.arch}).length;
+  return'<div class="cc"><div class="row" style="padding:0;justify-content:space-between"><h3 data-a="city" data-id="'+c.id+'" style="cursor:pointer;flex:1">'+esc(c.name)+'</h3><button class="btn s o" data-a="cedit" data-id="'+c.id+'">Edit</button><button class="btn s d" data-a="cdel" data-id="'+c.id+'">Delete</button></div>'+
+  '<div class="mu">'+ar+" area(s) · Default interest "+c.rate+"%"+(ar?"":(c.day!=null?" · Collection day "+DAYS[c.day]:" · No collection day set"))+'</div><div class="gd" data-a="city" data-id="'+c.id+'"><div>Customers: <b>'+cs.length+"</b></div><div>Invested: <b>"+F(cs.reduce(function(s,x){return s+x.amt},0))+"</b></div><div>P Bal: <b class=\"gr\">"+F(T.pbal)+"</b></div><div>Today: <b class=\"gr\">"+F(T.coll)+"</b></div></div></div>"}).join("")||'<p class="p mu">No cities yet. Add your first city.</p>')}
+function vCity(){var c=city(S.city);if(!c){S.v="home";return vHome()}var T=dayT({city:c.id,date:today()}),ars=db.areas.filter(function(a){return a.cityId===c.id&&!a.arch});
+ return'<div class="hd"><button class="ib" data-a="nav" data-v="home">‹</button><h2>'+esc(c.name)+'</h2><button class="btn s" data-a="collcity">Collection</button></div>'+gridT(T)+
+ '<div class="row"><b style="flex:1">Areas ('+ars.length+')</b><button class="btn s o" data-a="aadd">+ Area</button><button class="btn s o" data-a="cedit" data-id="'+c.id+'">Edit city</button></div>'+
+ (ars.map(function(a){var n=db.cust.filter(function(x){return x.areaId===a.id}).length;return'<div class="cc"><div class="row" style="padding:0"><b style="flex:1">'+esc(a.name)+'</b><button class="btn s o" data-a="aedit" data-id="'+a.id+'">Edit</button><button class="btn s d" data-a="adel" data-id="'+a.id+'">Delete</button></div><div class="mu">'+(a.day!=null?DAYS[a.day]:"No day set")+" · Interest "+(a.rate==null?c.rate+"% (city)":a.rate+"%")+" · "+n+" customer(s)</div></div>"}).join("")||'<p class="p mu">No areas. This city works without areas'+(c.day!=null?" (collection day: "+DAYS[c.day]+")":" — set a collection day via Edit city")+".</p>")}
+function vColl(){var f=S.f,T=dayT(f),L=dueList(f,S.ovr),q=S.q.trim().toLowerCase();
+ if(q)L=L.filter(function(x){return(x.c.code+x.c.name+x.c.phone).toLowerCase().indexOf(q)>-1});
+ if(f.mode)L=L.filter(function(x){return S.tab!=="d"||todayPaid(x.c,f.date,f.mode)>0});
+ var col=L.filter(function(x){return!x.done}),dn=L.filter(function(x){return x.done}),lst=S.tab==="d"?dn:col,body;
+ if(S.tab==="p")body=vPay();else{
+  body='<div class="tt">Total: '+(col.length+dn.length)+' [<span class="rd">'+col.length+' pending</span> + <span class="gr">'+dn.length+' collected</span>]</div>';
+  if(!L.length&&!S.ovr){var ar=db.areas.filter(function(a){return(!f.city||a.cityId===f.city)&&(!f.area||a.id===f.area)&&a.day!=null&&!a.arch});
+   body+='<p class="p mu">No collections are due on '+DAYS[dow(f.date)]+" "+D(f.date)+".</p>"+ar.map(function(a){return'<p class="p mu">'+esc(cn(a.cityId))+" · "+esc(a.name)+" — "+DAYS[a.day]+", next "+D(nextDay(a.day,f.date))+"</p>"}).join("")}
+  body+=lst.map(function(x){return card(x)}).join("")}
+ return'<div class="hd"><button class="ib" data-a="nav" data-v="home">‹</button><input class="q" id="q" placeholder="Search" value="'+esc(S.q)+'"><button class="ib" data-a="ovr" title="Admin override">'+(S.ovr?"🔓":"🔒")+'</button><button class="ib" data-a="panel">☰</button></div>'+
+ (S.panel?'<div class="row"><div style="flex:1 1 45%"><label class="mu">Date</label><input type="date" id="f-date" value="'+f.date+'"></div><div style="flex:1 1 45%"><label class="mu">City</label><select id="f-city">'+cityOpts(f.city,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Area</label><select id="f-area">'+areaOpts(f.city,f.area,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Payment mode</label><select id="f-mode">'+opt([["cash","Cash"],["online","Online"]],f.mode,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Status</label><select id="f-st">'+opt([["p","Pending"],["d","Collected"]],f.st,"All")+"</select></div></div>":"")+
+ '<div class="sm" data-a="open"><span>'+D(f.date)+'</span><span><small>Balance</small><b class="'+(T.bal<0?"rd":"gr")+'">'+F(T.bal)+"</b></span><span>"+(S.open?"▴":"▾")+"</span></div>"+(S.open?gridT(T):"")+
+ (S.ovr?'<p class="p rd">Admin override active: '+esc(S.ovr)+"</p>":"")+'<div class="tb">'+[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){return'<button data-a="tab" data-v="'+t[0]+'" class="'+(S.tab===t[0]?"on":"")+'">'+t[1]+"</button>"}).join("")+"</div>"+body}
+function card(x){var c=x.c,m=x.m,f=S.f,st=x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':'<span class="chip rd">Pending</span>';
+ return'<div class="cd"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'" style="cursor:pointer">'+esc(c.code)+"-"+esc(c.name)+"</div><div>"+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+"</div><div>Loan date: "+D(c.loanDate)+"</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+")</b> · Pending "+m.pend+"</div><div>"+st+"</div></div>"+
+ '<div class="ck"><div>Bal: <b class="rd">'+F(m.bal)+"</b></div><div>Paid: <b class=\"gr\">"+F(m.paid)+"</b></div><hr><div>Tot: <b>"+F(m.tot)+"</b></div></div></div>"+
+ '<div class="pl"><a class="btn s o" href="tel:'+esc(c.phone)+'" aria-label="Call">📞</a><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="btn s" data-a="save" data-id="'+c.id+'">✔ Collected</button></div></div>'}
+function vPay(){var f=S.f,rows=db.tx.filter(function(t){return t.t!=="c"&&t.d===f.date&&tIn(f,t)}),ln=db.cust.filter(function(c){return c.loanDate===f.date&&cIn(f,c)});
+ return'<div class="row"><button class="btn s o" data-a="oadd" data-v="e">+ Expense</button><button class="btn s o" data-a="oadd" data-v="b">+ Bill</button><button class="btn s o" data-a="cuadd">+ New loan</button></div>'+
+ ln.map(function(c){return'<div class="row"><span style="flex:1">Loan · '+esc(c.name)+'</span><b class="rd">'+F(c.amt)+"</b></div>"}).join("")+
+ rows.map(function(t){return'<div class="row"><span style="flex:1">'+(t.t==="b"?"Bill":"Expense")+" · "+esc(t.name)+'</span><b class="rd">'+F(t.a)+'</b><button class="ib" data-a="odel" data-id="'+t.id+'">✕</button></div>'}).join("")||(ln.length?"":'<p class="p mu">No payments recorded for this date.</p>')}
+function vExp(){var d=S.xd,f={date:d},w=add(d,-dow(d)),ms=d.slice(0,8)+"01",sum=function(a,b){return r2(db.tx.filter(function(t){return t.t!=="c"&&t.d>=a&&t.d<=b}).reduce(function(s,t){return s+t.a},0))};
+ var rows=db.tx.filter(function(t){return t.t!=="c"&&t.d===d});
+ return'<div class="hd"><h2>Expense</h2><button class="btn s" data-a="oadd" data-v="e">+ Expense</button><button class="btn s o" data-a="oadd" data-v="b">+ Bill</button></div><div class="fl"><label>Date</label><input type="date" id="x-date" value="'+d+'"></div>'+
+ '<div class="gd"><div>Day: <b class="rd">'+F(sum(d,d))+"</b></div><div>Week: <b class=\"rd\">"+F(sum(w,add(w,6)))+"</b></div><div>Month: <b class=\"rd\">"+F(sum(ms,d.slice(0,8)+"31"))+"</b></div></div>"+
+ (rows.map(function(t){return'<div class="cd"><div class="row" style="padding:0"><div style="flex:1"><b>'+esc(t.name)+"</b> "+(t.t==="b"?'<span class="chip">Bill</span>':"")+'<div class="mu">'+esc(cn(t.cityId))+" · "+esc(an(t.areaId))+" "+esc(t.note)+'</div></div><b class="rd">'+F(t.a)+'</b><button class="ib" data-a="odel" data-id="'+t.id+'">✕</button></div></div>'}).join("")||'<p class="p mu">No expenses on this date.</p>')}
+function vCust(){var q=S.q.trim().toLowerCase(),l=db.cust.filter(function(c){return(!S.f.city||c.cityId===S.f.city)&&(!q||(c.code+c.name+c.phone).toLowerCase().indexOf(q)>-1)}).sort(function(a,b){return(parseInt(b.code)||0)-(parseInt(a.code)||0)});
+ return'<div class="hd"><input class="q" id="q" placeholder="Search customers" value="'+esc(S.q)+'"><button class="btn s" data-a="cuadd">+ Add</button></div><div class="row"><select id="cf" style="flex:1">'+cityOpts(S.f.city,"All cities")+"</select></div>"+
+ (l.map(function(c){var m=cm(c,today());return'<div class="cd" data-a="prof" data-id="'+c.id+'" style="cursor:pointer"><div class="cr"><div class="cl"><div class="nm">'+esc(c.code)+"-"+esc(c.name)+'</div><div class="mu">'+esc(cn(c.cityId))+" · "+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+"</div></div><div style=\"text-align:right\"><b class=\""+(m.bal>0?"rd":"gr")+'">'+F(m.bal)+'</b><div class="mu">'+(c.status==="completed"?"Completed":m.n+"/"+c.n)+"</div></div></div></div>"}).join("")||'<p class="p mu">No customers.</p>')}
+function profile(id){var c=cust(id),m=cm(c,today()),T=tot(c),first=nextDay(effDay(c),add(c.loanDate,1)),sch="",cum=0,h=db.tx.filter(function(t){return t.cid===id}).sort(function(a,b){return b.d.localeCompare(a.d)});
+ for(var i=0;i<c.n;i++){var a=i===c.n-1?r2(T-c.inst*(c.n-1)):c.inst;cum=r2(cum+a);sch+="<tr><td>"+(i+1)+"</td><td>"+D(add(first,7*i))+"</td><td>"+F(a)+'</td><td class="'+(m.paid+0.004>=cum?"gr":"rd")+'">'+(m.paid+0.004>=cum?"Paid":"Due")+"</td></tr>"}
+ showM("<h3>"+esc(c.code)+"-"+esc(c.name)+'</h3><div class="p mu">'+esc(c.phone)+" · "+esc(cn(c.cityId))+" · "+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+(c.status==="completed"?" · Completed "+D(c.closedOn):"")+"</div>"+
+ '<div class="gd"><div>Loan: <b>'+F(c.amt)+"</b></div><div>Interest "+c.rate+"%: <b>"+F(r2(T-c.amt))+"</b></div><div>Total payable: <b>"+F(T)+'</b></div><div>Paid: <b class="gr">'+F(m.paid)+'</b></div><div>Balance: <b class="rd">'+F(m.bal)+"</b></div><div>Pending inst.: <b>"+m.pend+"/"+c.n+"</b></div></div>"+
+ '<div class="row"><a class="btn s o" href="tel:'+esc(c.phone)+'">📞 Call</a><button class="btn s o" data-a="cuedit" data-id="'+id+'">Edit</button>'+(c.status!=="completed"?'<button class="btn s" data-a="done" data-id="'+id+'">Mark completed</button>':"")+'<button class="btn s o" data-a="close">Close</button></div>'+
+ '<h3>Installment schedule</h3><div class="tw"><table><tr><th>#</th><th>Due</th><th>Amount</th><th></th></tr>'+sch+'</table></div><h3>Payment history</h3><div class="tw"><table><tr><th>Date</th><th>Mode</th><th>Amount</th></tr>'+(h.map(function(t){return"<tr><td>"+D(t.d)+"</td><td>"+t.m+"</td><td>"+F(t.a)+"</td></tr>"}).join("")||'<tr><td colspan="3" class="mu">No payments yet</td></tr>')+"</table></div>")}
 
-  /* ====================== SAMPLE DATA ====================== */
-  function buildSampleData(){
-    var base = [
-      {name:"Amaravathi Selvam", phone:"98841 23456", address:"12, Bazaar Street", city:"Chennai", amountLent:20000, weeks:10, weeksPaid:10, startDaysAgo:80},
-      {name:"Usha Rani", phone:"90031 55210", address:"45, North Car Street", city:"Chennai", amountLent:9000, weeks:12, weeksPaid:7, startDaysAgo:52},
-      {name:"Jeyaprakash M.", phone:"96772 40981", address:"7, Market Road", city:"Chennai", amountLent:15000, weeks:20, weeksPaid:15, startDaysAgo:120},
-      {name:"Parvathi Krishnan", phone:"94422 10098", address:"22, Temple Street", city:"Chennai", amountLent:6000, weeks:10, weeksPaid:10, startDaysAgo:78},
-      {name:"Karthik Subramani", phone:"97890 11223", address:"3, Anna Nagar 2nd St", city:"Trichy", amountLent:25000, weeks:15, weeksPaid:9, startDaysAgo:64},
-      {name:"Meena Sundaram", phone:"98765 44332", address:"18, Srirangam Main Rd", city:"Trichy", amountLent:12000, weeks:10, weeksPaid:4, startDaysAgo:29},
-      {name:"Ravichandran P.", phone:"90420 88761", address:"9, Thillai Nagar", city:"Trichy", amountLent:18000, weeks:12, weeksPaid:5, startDaysAgo:98},
-      {name:"Deepa Lakshmi", phone:"93810 55021", address:"31, K.K. Nagar", city:"Trichy", amountLent:8000, weeks:8, weeksPaid:8, startDaysAgo:60},
-      {name:"Muthu Vel", phone:"99942 30187", address:"5, Big Bazaar Street", city:"Thanjavur", amountLent:30000, weeks:20, weeksPaid:11, startDaysAgo:82},
-      {name:"Ilamathi R.", phone:"97105 62239", address:"14, Nanjikottai Rd", city:"Thanjavur", amountLent:10000, weeks:10, weeksPaid:3, startDaysAgo:25},
-      {name:"Sankaran Nair", phone:"96001 47732", address:"27, East Main Street", city:"Thanjavur", amountLent:14000, weeks:14, weeksPaid:14, startDaysAgo:105},
-      {name:"Bhuvana Devi", phone:"98432 90112", address:"2, Medical College Rd", city:"Thanjavur", amountLent:7000, weeks:10, weeksPaid:2, startDaysAgo:80},
-      {name:"Alagesan T.", phone:"90876 33441", address:"41, West Masi Street", city:"Madurai", amountLent:22000, weeks:15, weeksPaid:12, startDaysAgo:88},
-      {name:"Kannagi S.", phone:"99433 21087", address:"6, Simmakkal", city:"Madurai", amountLent:9500, weeks:10, weeksPaid:6, startDaysAgo:44},
-      {name:"Perumal Raj", phone:"93450 11290", address:"19, Goripalayam", city:"Madurai", amountLent:16000, weeks:12, weeksPaid:5, startDaysAgo:91},
-      {name:"Vijayalakshmi N.", phone:"97880 65523", address:"33, Anna Nagar", city:"Madurai", amountLent:11000, weeks:10, weeksPaid:10, startDaysAgo:73},
-      {name:"Ganesh Moorthy", phone:"94871 20033", address:"8, RS Puram", city:"Coimbatore", amountLent:28000, weeks:16, weeksPaid:10, startDaysAgo:69},
-      {name:"Saraswathi B.", phone:"96222 40871", address:"25, Gandhipuram", city:"Coimbatore", amountLent:13000, weeks:10, weeksPaid:3, startDaysAgo:23},
-      {name:"Manikandan V.", phone:"90099 55671", address:"17, Peelamedu", city:"Coimbatore", amountLent:20000, weeks:14, weeksPaid:8, startDaysAgo:60},
-      {name:"Revathi Chandran", phone:"93670 82219", address:"4, Race Course Rd", city:"Coimbatore", amountLent:6500, weeks:8, weeksPaid:8, startDaysAgo:58}
-    ];
+/* ---------- reports ---------- */
+function report(){var R=S.rep,fr=R.from,to=R.to,ci=R.city,res={cols:[],rows:[]},cs=db.cust.filter(function(c){return!ci||c.cityId===ci}),pay=db.tx.filter(function(t){return t.t==="c"&&t.d>=fr&&t.d<=to&&(!ci||t.cityId===ci)}),ex=db.tx.filter(function(t){return t.t!=="c"&&t.d>=fr&&t.d<=to&&(!ci||t.cityId===ci)});
+ var grp=function(keyf){var g={};pay.forEach(function(t){var k=keyf(t);g[k]=g[k]||{a:0,cash:0,on:0,n:{}};g[k].a+=t.a;g[k][t.m==="online"?"on":"cash"]+=t.a;g[k].n[t.cid]=1});return Object.keys(g).sort().map(function(k){var x=g[k];return[k,F(x.a),F(x.cash),F(x.on),Object.keys(x.n).length]})};
+ var intr=function(t){var c=cust(t.cid);return c?t.a*(tot(c)-c.amt)/tot(c):0};
+ switch(R.t){
+ case"daily":res.cols=["Date","Collection","Cash","Online","Customers"];res.rows=grp(function(t){return t.d});break;
+ case"weekly":res.cols=["Week starting","Collection","Cash","Online","Customers"];res.rows=grp(function(t){return add(t.d,-((dow(t.d)+6)%7))});break;
+ case"monthly":res.cols=["Month","Collection","Cash","Online","Customers"];res.rows=grp(function(t){return t.d.slice(0,7)});break;
+ case"city":res.cols=["City","Loans given","Collection","P Bal","Interest income","Expenses"];res.rows=db.cities.filter(function(c){return!ci||c.id===ci}).map(function(c){var f={city:c.id,date:to};return[c.name,F(db.cust.filter(function(x){return x.cityId===c.id&&x.loanDate>=fr&&x.loanDate<=to}).reduce(function(s,x){return s+x.amt},0)),F(pay.filter(function(t){return t.cityId===c.id}).reduce(function(s,t){return s+t.a},0)),F(dayT(f).pbal),F(r2(pay.filter(function(t){return t.cityId===c.id}).reduce(function(s,t){return s+intr(t)},0))),F(ex.filter(function(t){return t.cityId===c.id}).reduce(function(s,t){return s+t.a},0))]});break;
+ case"area":res.cols=["City","Area","Day","Collection","P Bal"];res.rows=db.areas.filter(function(a){return!ci||a.cityId===ci}).map(function(a){return[cn(a.cityId),a.name,a.day!=null?DAYS[a.day]:"—",F(pay.filter(function(t){return t.areaId===a.id}).reduce(function(s,t){return s+t.a},0)),F(dayT({city:a.cityId,area:a.id,date:to}).pbal)]});break;
+ case"cust":res.cols=["ID","Customer","City","Area","Loan","Payable","Paid","Balance","Status"];res.rows=cs.map(function(c){var m=cm(c,to);return[c.code,c.name,cn(c.cityId),an(c.areaId),F(c.amt),F(m.tot),F(m.paid),F(m.bal),c.status]});break;
+ case"out":res.cols=["ID","Customer","City","Area","Balance","P Bal","Pending inst."];res.rows=cs.filter(function(c){return c.status!=="completed"&&cm(c,to).bal>0}).map(function(c){var m=cm(c,to);return[c.code,c.name,cn(c.cityId),an(c.areaId),F(m.bal),F(m.prin),m.pend]});break;
+ case"int":res.cols=["Date","Interest income"];var g={};pay.forEach(function(t){g[t.d]=(g[t.d]||0)+intr(t)});res.rows=Object.keys(g).sort().map(function(k){return[k,F(r2(g[k]))]});res.rows.push(["Total",F(r2(Object.keys(g).reduce(function(s,k){return s+g[k]},0)))]);break;
+ case"exp":res.cols=["Date","Type","Name","City","Amount"];res.rows=ex.sort(function(a,b){return a.d.localeCompare(b.d)}).map(function(t){return[t.d,t.t==="b"?"Bill":"Expense",t.name,cn(t.cityId),F(t.a)]});break;
+ case"pl":var I=r2(pay.reduce(function(s,t){return s+intr(t)},0)),E=r2(ex.filter(function(t){return t.t==="e"}).reduce(function(s,t){return s+t.a},0)),B=r2(ex.filter(function(t){return t.t==="b"}).reduce(function(s,t){return s+t.a},0));
+  res.cols=["Item","Amount"];res.rows=[["Interest income",F(I)],["Expenses",F(E)],["Bills",F(B)],["Profit / (Loss)",F(r2(I-E-B))]]}
+ return res}
+var RT=[["daily","Daily collection"],["weekly","Weekly collection"],["monthly","Monthly collection"],["city","City-wise"],["area","Area-wise"],["cust","Customer-wise"],["out","Outstanding loans"],["int","Interest income"],["exp","Expenses"],["pl","Profit & loss"]];
+function vRep(){var R=S.rep,r=report();
+ return'<div class="hd np"><h2>Reports</h2></div><div class="row np"><select id="r-t" style="flex:1 1 100%">'+opt(RT,R.t)+'</select><input type="date" id="r-from" value="'+R.from+'" style="flex:1"><input type="date" id="r-to" value="'+R.to+'" style="flex:1"><select id="r-city" style="flex:1 1 100%">'+cityOpts(R.city,"All cities")+'</select></div>'+
+ '<div class="row np"><button class="btn s" data-a="csv">Export Excel (CSV)</button><button class="btn s o" data-a="print">Export PDF</button></div><h3 class="p">'+esc((RT.find(function(x){return x[0]===R.t})||[])[1])+" · "+D(R.from)+" – "+D(R.to)+'</h3><div class="tw"><table><tr>'+r.cols.map(function(c){return"<th>"+c+"</th>"}).join("")+"</tr>"+(r.rows.map(function(x){return"<tr>"+x.map(function(v){return"<td>"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")||'<tr><td class="mu" colspan="'+r.cols.length+'">No data for this selection</td></tr>')+"</table></div>"}
+function download(name,type,txt){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}
+function vSet(){return'<div class="hd"><h2>Settings</h2></div><div class="row"><button class="btn s o" data-a="nav" data-v="home">Manage cities &amp; areas</button><button class="btn s o" data-a="theme">Theme: '+(db.cfg.theme==="light"?"Light":"Dark")+"</button></div>"+
+ '<p class="p mu">Default and area-specific interest and weekly collection days are set per city/area on the Cities page. Payment methods: Cash, Online.</p>'+
+ '<div class="row"><button class="btn s" data-a="pin">'+(db.cfg.pin?"Change / remove PIN":"Set PIN lock")+'</button><button class="btn s o" data-a="bk">Backup</button><label class="btn s o" style="margin:0">Restore<input id="rs" type="file" accept=".json" style="display:none"></label><button class="btn s o" data-a="exc">Export customers</button></div>'+
+ '<h3 class="p">Audit log</h3><div class="tw"><table>'+(db.audit.slice(0,30).map(function(a){return"<tr><td>"+esc(a.ts.slice(0,16).replace("T"," "))+"</td><td>"+esc(a.a)+"</td><td>"+esc(a.d)+"</td></tr>"}).join("")||'<tr><td class="mu">No entries</td></tr>')+"</table></div>"}
 
-    return base.map(function(b, i){
-      var startDate = addDays(todayStr(), -b.startDaysAgo);
-      var totalRepayment = b.amountLent; // 0% interest by default, matches ledger totals
-      var weeklyInstallment = Math.round(totalRepayment / b.weeks);
-      var payments = [];
-      for(var w=1; w<=b.weeksPaid; w++){
-        payments.push({
-          date: addDays(startDate, w*7),
-          amount: weeklyInstallment
-        });
-      }
-      return {
-        id: uid(),
-        customerId: String(101 + i),
-        name: b.name,
-        phone: b.phone,
-        address: b.address,
-        city: b.city,
-        amountLent: b.amountLent,
-        weeks: b.weeks,
-        interestPercent: 0,
-        startDate: startDate,
-        line: i%2 ? "Line 2" : "Line 1",
-        area: i%2 ? "Area 3" : (i%4<2 ? "Area 1" : "Area 2"),
-        week: String((i%4)+1),
-        payments: payments
-      };
-    });
-  }
+function lock(){document.getElementById("app").innerHTML='<div class="hd"><h2>Enter PIN</h2></div><div class="fl"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autofocus></div><div class="row"><button class="btn" data-a="unlock">Unlock</button></div>'}
+function render(){document.body.classList.toggle("lt",db.cfg.theme==="light");if(db.cfg.pin&&!S.unl)return lock();
+ var y=scrollY,a=document.activeElement&&document.activeElement.id,h=({home:vHome,city:vCity,coll:vColl,exp:vExp,cust:vCust,rep:vRep,set:vSet})[S.v]();
+ $("#app").innerHTML=h+nav();if(a==="q"){var q=$("#q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}scrollTo(0,y)}
 
-  var customers = [];
-  function loadData(){
-    try{
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if(raw){
-        customers = JSON.parse(raw);
-        return;
-      }
-    }catch(e){ /* ignore, fall through to sample data */ }
-    customers = buildSampleData();
-    saveData();
-  }
-  function saveData(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(customers)); }
-    catch(e){ /* storage unavailable, continue in-memory */ }
-  }
-
-  /* ====================== DATA HELPERS ====================== */
-  function cityFiltered(list){
-    if(state.selectedCity === "All") return list;
-    return list.filter(function(c){ return c.city === state.selectedCity; });
-  }
-  function getCustomerById(id){
-    return customers.filter(function(c){ return c.id === id; })[0];
-  }
-  function cityCounts(){
-    var m = {};
-    CITIES.forEach(function(city){ m[city] = customers.filter(function(c){return c.city===city;}).length; });
-    return m;
-  }
-
-  /* ====================== RENDER: SHELL ====================== */
-  function setActiveNav(){
-    document.querySelectorAll(".nav-item").forEach(function(btn){
-      btn.classList.toggle("active", btn.getAttribute("data-view") === state.view);
-    });
-  }
-  function setTitle(title, subtitle){
-    document.getElementById("page-title").textContent = title;
-    document.getElementById("page-subtitle").textContent = subtitle;
-  }
-  function renderCityDropdown(){
-    var counts = cityCounts();
-    var html = '<div class="opt' + (state.selectedCity==="All"?" sel":"") + '" data-city="All">' +
-      '<span>All Cities</span><span class="cnt">' + customers.length + '</span></div>';
-    CITIES.forEach(function(city){
-      html += '<div class="opt' + (state.selectedCity===city?" sel":"") + '" data-city="' + city + '">' +
-        '<span>' + city + '</span><span class="cnt">' + (counts[city]||0) + '</span></div>';
-    });
-    document.getElementById("city-dropdown").innerHTML = html;
-    document.getElementById("city-label").textContent = state.selectedCity === "All" ? "All Cities" : state.selectedCity;
-  }
-
-  /* ====================== RENDER: DASHBOARD ====================== */
-  function renderDashboard(){
-    var list = cityFiltered(customers).map(function(c){
-      var d = calc(c);
-      return Object.assign({}, c, d);
-    });
-    var totalCustomers = list.length;
-    var totalLent = list.reduce(function(s,c){return s+c.amountLent;},0);
-    var totalCollected = list.reduce(function(s,c){return s+c.amountPaid;},0);
-    var outstanding = list.reduce(function(s,c){return s+c.balance;},0);
-    var active = list.filter(function(c){return c.status==="Active";}).length;
-    var overdue = list.filter(function(c){return c.status==="Overdue";}).length;
-    var completed = list.filter(function(c){return c.status==="Completed";}).length;
-
-    var kpiHtml =
-      '<div class="kpi-grid">' +
-        kpiCard("Total Customers", totalCustomers, "across " + (state.selectedCity==="All"?CITIES.length+" branches":state.selectedCity), "") +
-        kpiCard("Amount Lent", fmtINR(totalLent), "principal disbursed", "") +
-        kpiCard("Amount Collected", fmtINR(totalCollected), "received to date", "teal") +
-        kpiCard("Outstanding Balance", fmtINR(outstanding), "yet to be collected", "amber") +
-        kpiCard("Active Loans", active + (overdue?(" +"+overdue+" overdue"):""), "currently running", overdue?"coral":"teal") +
-        kpiCard("Completed Loans", completed, "fully repaid", "") +
-      '</div>';
-
-    // City collection breakdown (only meaningful in All view, but show branch split always)
-    var counts = {};
-    CITIES.forEach(function(city){
-      var sub = customers.filter(function(c){return c.city===city;}).map(function(c){return Object.assign({},c,calc(c));});
-      counts[city] = sub.reduce(function(s,c){return s+c.amountPaid;},0);
-    });
-    var maxVal = Math.max.apply(null, Object.values(counts).concat([1]));
-    var barsHtml = CITIES.map(function(city){
-      var v = counts[city];
-      var pct = Math.round((v/maxVal)*100);
-      return '<div class="bar-row"><div class="bar-label">'+city+'</div>' +
-        '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div>' +
-        '<div class="bar-val num">'+fmtINR(v)+'</div></div>';
-    }).join("");
-
-    // Recent activity: latest payments + latest customers, mixed, newest first
-    var events = [];
-    customers.forEach(function(c){
-      (c.payments||[]).forEach(function(p){
-        events.push({type:"pay", date:p.date, name:c.name, city:c.city, amount:p.amount});
-      });
-      events.push({type:"new", date:c.startDate, name:c.name, city:c.city, amount:c.amountLent});
-    });
-    events.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
-    events = events.slice(0, 8);
-    var activityHtml = events.map(function(e){
-      if(e.type==="pay"){
-        return '<div class="activity-item"><div class="activity-ic pay">₹</div>' +
-          '<div class="activity-body"><div class="activity-title">Payment received — '+escapeHtml(e.name)+'</div>' +
-          '<div class="activity-sub">'+e.city+' · '+fmtDate(e.date)+'</div></div>' +
-          '<div class="activity-amt">'+fmtINR(e.amount)+'</div></div>';
-      }
-      return '<div class="activity-item"><div class="activity-ic new">+</div>' +
-        '<div class="activity-body"><div class="activity-title">New loan opened — '+escapeHtml(e.name)+'</div>' +
-        '<div class="activity-sub">'+e.city+' · '+fmtDate(e.date)+'</div></div>' +
-        '<div class="activity-amt">'+fmtINR(e.amount)+'</div></div>';
-    }).join("") || '<div class="no-payments">No recent activity.</div>';
-
-    document.getElementById("content").innerHTML =
-      kpiHtml +
-      '<div class="dash-row">' +
-        '<div class="panel"><div class="panel-head"><h3>Collections by branch</h3><span class="meta">all-time</span></div>' + barsHtml + '</div>' +
-        '<div class="panel"><div class="panel-head"><h3>Recent activity</h3><span class="meta">latest 8</span></div>' +
-          '<div class="activity-list">' + activityHtml + '</div>' +
-        '</div>' +
-      '</div>';
-  }
-  function kpiCard(label, value, sub, colorClass){
-    return '<div class="kpi-card"><div class="kpi-label">'+label+'</div>' +
-      '<div class="kpi-value '+(colorClass||"")+'">'+value+'</div>' +
-      '<div class="kpi-sub">'+sub+'</div></div>';
-  }
-
-  /* ====================== RENDER: CUSTOMERS LIST ====================== */
-  function renderCustomers(){
-    var list = cityFiltered(customers).map(function(c){ return Object.assign({}, c, calc(c)); });
-
-    if(state.search.trim()){
-      var q = state.search.trim().toLowerCase();
-      list = list.filter(function(c){
-        return c.name.toLowerCase().indexOf(q) > -1 ||
-               c.customerId.toLowerCase().indexOf(q) > -1 ||
-               c.phone.toLowerCase().indexOf(q) > -1;
-      });
-    }
-    if(state.statusFilter !== "All"){
-      list = list.filter(function(c){ return c.status === state.statusFilter; });
-    }
-    list.sort(function(a,b){ return new Date(b.startDate) - new Date(a.startDate); });
-
-    var pills = ["All","Active","Overdue","Completed"].map(function(s){
-      return '<button class="pill'+(state.statusFilter===s?" active":"")+'" data-status="'+s+'">'+s+'</button>';
-    }).join("");
-
-    var filterHtml =
-      '<div class="filter-bar">' +
-        '<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-        '<input id="search-input" type="text" placeholder="Search by name, ID or phone" value="'+escapeHtml(state.search)+'"/></div>' +
-        '<div class="pill-group">'+pills+'</div>' +
-      '</div>';
-
-    var rowsHtml;
-    if(list.length === 0){
-      rowsHtml = '';
-    } else {
-      rowsHtml = list.map(function(c){
-        var dots = "";
-        for(var i=0;i<c.weeks;i++){
-          dots += '<span class="dot'+(i<c.installmentsCompleted?" filled":"")+'"></span>';
-        }
-        return '<tr data-id="'+c.id+'">' +
-          '<td><div class="cust-name">'+escapeHtml(c.name)+'</div><div class="cust-id">'+escapeHtml(c.phone)+'</div></td>' +
-          '<td class="num">'+c.customerId+'</td>' +
-          '<td><span class="cell-city">'+c.city+'</span></td>' +
-          '<td class="num">'+fmtINR(c.amountLent)+'</td>' +
-          '<td class="num">'+fmtINR(c.weeklyInstallment)+'</td>' +
-          '<td class="num">'+c.installmentsCompleted+'/'+c.weeks+'</td>' +
-          '<td class="num">'+fmtINR(c.amountPaid)+'</td>' +
-          '<td class="num">'+fmtINR(c.balance)+'</td>' +
-          '<td><span class="badge '+c.status.toLowerCase()+'">'+c.status+'</span></td>' +
-          '<td><div class="dots">'+dots+'</div></td>' +
-        '</tr>';
-      }).join("");
-    }
-
-    var tableHtml =
-      '<div class="table-wrap">' +
-        (list.length === 0 ?
-          '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>No customers match your search.</div></div>' :
-          '<table><thead><tr>' +
-            '<th>Customer</th><th>ID</th><th>City</th><th>Amount Lent</th><th>Weekly</th>' +
-            '<th>Installments</th><th>Paid</th><th>Balance</th><th>Status</th><th>Progress</th>' +
-          '</tr></thead><tbody>' + rowsHtml + '</tbody></table>'
-        ) +
-      '</div>';
-
-    document.getElementById("content").innerHTML = filterHtml + tableHtml;
-
-    document.getElementById("search-input").addEventListener("input", function(e){
-      state.search = e.target.value; renderCustomers();
-      // preserve focus & caret
-      var el = document.getElementById("search-input");
-      el.focus(); el.setSelectionRange(el.value.length, el.value.length);
-    });
-    document.querySelectorAll(".pill").forEach(function(p){
-      p.addEventListener("click", function(){ state.statusFilter = p.getAttribute("data-status"); renderCustomers(); });
-    });
-    document.querySelectorAll("tbody tr").forEach(function(tr){
-      tr.addEventListener("click", function(){ openCustomerModal(tr.getAttribute("data-id")); });
-    });
-  }
-
-  /* ====================== RENDER: ADD CUSTOMER ====================== */
-  function renderAddCustomer(){
-    var editing = state.editingCustomerId ? getCustomerById(state.editingCustomerId) : null;
-
-    document.getElementById("content").innerHTML =
-      '<div class="form-shell">' +
-        '<div class="form-card">' +
-          '<h3>'+(editing?"Edit customer":"New customer & loan")+'</h3>' +
-          '<form id="cust-form">' +
-            '<div class="form-grid">' +
-              field("Customer name","name","text", editing?editing.name:"", true, "e.g. Kavitha Raman") +
-              field("Customer ID","custId","text", editing?editing.customerId: nextCustomerId(), true, "") +
-              field("Phone number","phone","tel", editing?editing.phone:"", true, "10-digit mobile") +
-              selectField("City / branch","city", CITIES, editing?editing.city:CITIES[0]) +
-              selectField("Line","line", [], "") + selectField("Area","area", [], "") + selectField("Week","week", ["1","2","3","4","5"], editing?String(editing.week||""):"1") +
-              fieldFull("Address","address","text", editing?editing.address:"", "House no., street, area") +
-              field("Amount lent (₹)","amountLent","number", editing?editing.amountLent:"10000", true, "") +
-              field("Weeks to repay","weeks","number", editing?editing.weeks:"10", true, "") +
-              field("Interest (%, optional)","interest","number", editing?editing.interestPercent:"0", false, "0 = no interest") +
-              field("Start date","startDate","date", editing?editing.startDate:todayStr(), true, "") +
-            '</div>' +
-            '<div class="form-actions">' +
-              '<button type="submit" class="btn btn-primary">'+(editing?"Save changes":"Add customer")+'</button>' +
-              '<button type="button" class="btn btn-outline" id="cancel-add">Cancel</button>' +
-            '</div>' +
-          '</form>' +
-        '</div>' +
-        '<div class="summary-card" id="calc-summary"></div>' +
-      '</div>';
-
-    var form = document.getElementById("cust-form");
-    function fillGeo(line, area){
-      var ls = geo[form.city.value] ? Object.keys(geo[form.city.value]) : [];
-      form.line.innerHTML = ls.map(function(l){ return '<option>'+escapeHtml(l)+'</option>'; }).join("");
-      if(line && ls.indexOf(line) > -1) form.line.value = line;
-      var as = (geo[form.city.value] && geo[form.city.value][form.line.value]) || [];
-      form.area.innerHTML = as.map(function(a){ return '<option>'+escapeHtml(a)+'</option>'; }).join("");
-      if(area && as.indexOf(area) > -1) form.area.value = area;
-    }
-    fillGeo(editing?editing.line:"", editing?editing.area:"");
-    form.city.addEventListener("change", function(){ fillGeo("",""); });
-    form.line.addEventListener("change", function(){ fillGeo(form.line.value,""); });
-    function refreshSummary(){
-      var amountLent = parseFloat(form.amountLent.value) || 0;
-      var weeks = parseInt(form.weeks.value) || 1;
-      var interest = parseFloat(form.interest.value) || 0;
-      var startDate = form.startDate.value || todayStr();
-      var total = Math.round(amountLent * (1+interest/100));
-      var weekly = Math.round(total/weeks);
-      var due = addDays(startDate, weeks*7);
-      var paidSoFar = editing ? (editing.payments||[]).reduce(function(s,p){return s+p.amount;},0) : 0;
-      document.getElementById("calc-summary").innerHTML =
-        '<h3>Loan summary</h3>' +
-        summaryRow("Principal amount", fmtINR(amountLent)) +
-        summaryRow("Interest", interest+"%") +
-        summaryRow("Total repayment", fmtINR(total)) +
-        summaryRow("Weekly installment", fmtINR(weekly)) +
-        summaryRow("Due date", fmtDate(due)) +
-        summaryRow("Amount paid so far", fmtINR(paidSoFar)) +
-        summaryRow("Remaining balance", fmtINR(Math.max(0,total-paidSoFar)), true);
-    }
-    ["amountLent","weeks","interest","startDate"].forEach(function(n){
-      form[n].addEventListener("input", refreshSummary);
-    });
-    refreshSummary();
-
-    document.getElementById("cancel-add").addEventListener("click", function(){
-      state.editingCustomerId = null; navigate("customers");
-    });
-
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-      var payload = {
-        name: form.name.value.trim(),
-        customerId: form.custId.value.trim(),
-        phone: form.phone.value.trim(),
-        address: form.address.value.trim(),
-        city: form.city.value,
-        line: form.line.value,
-        area: form.area.value,
-        week: form.week.value,
-        amountLent: parseFloat(form.amountLent.value) || 0,
-        weeks: parseInt(form.weeks.value) || 1,
-        interestPercent: parseFloat(form.interest.value) || 0,
-        startDate: form.startDate.value || todayStr()
-      };
-      if(!payload.name || !payload.phone){ return; }
-      if(editing){
-        Object.assign(editing, payload);
-      } else {
-        customers.unshift(Object.assign({id: uid(), payments: []}, payload));
-      }
-      saveData();
-      state.editingCustomerId = null;
-      navigate("customers");
-    });
-  }
-  function nextCustomerId(){
-    var max = customers.reduce(function(m,c){ var n=parseInt(c.customerId); return isNaN(n)?m:Math.max(m,n); }, 100);
-    return String(max+1);
-  }
-  function field(label,name,type,value,required,placeholder){
-    return '<div class="field"><label>'+label+(required?" *":"")+'</label>' +
-      '<input name="'+name+'" type="'+type+'" '+(type==="number"?'step="1" min="0"':'')+' value="'+escapeHtml(String(value))+'" placeholder="'+(placeholder||"")+'" '+(required?"required":"")+'/></div>';
-  }
-  function fieldFull(label,name,type,value,placeholder){
-    return '<div class="field full"><label>'+label+'</label>' +
-      '<input name="'+name+'" type="'+type+'" value="'+escapeHtml(String(value))+'" placeholder="'+(placeholder||"")+'"/></div>';
-  }
-  function selectField(label,name,options,selected){
-    var opts = options.map(function(o){ return '<option value="'+o+'"'+(o===selected?" selected":"")+'>'+o+'</option>'; }).join("");
-    return '<div class="field"><label>'+label+'</label><select name="'+name+'">'+opts+'</select></div>';
-  }
-  function summaryRow(label, val, big){
-    return '<div class="summary-row'+(big?" big":"")+'"><span class="lbl">'+label+'</span><span class="val">'+val+'</span></div>';
-  }
-
-  /* ====================== CUSTOMER DETAIL MODAL ====================== */
-  function openCustomerModal(id){
-    state.activeCustomerId = id;
-    renderModal();
-    document.getElementById("modal-overlay").classList.add("open");
-  }
-  function closeModal(){
-    document.getElementById("modal-overlay").classList.remove("open");
-    state.activeCustomerId = null;
-  }
-  function renderModal(){
-    var c = getCustomerById(state.activeCustomerId);
-    if(!c) return;
-    var d = calc(c);
-
-    var payHtml = (c.payments||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);})
-      .map(function(p, idx){
-        return '<div class="pay-row"><div class="pay-left"><div class="ic">₹</div>' +
-          '<div>Installment payment<div style="font-size:11.5px;color:var(--ink-faint)">'+fmtDate(p.date)+'</div></div></div>' +
-          '<div class="pay-amt">+'+fmtINR(p.amount)+'</div></div>';
-      }).join("") || '<div class="no-payments">No payments recorded yet.</div>';
-
-    document.getElementById("modal-inner").innerHTML =
-      '<div class="modal-head"><div>' +
-        '<h2>'+escapeHtml(c.name)+'</h2>' +
-        '<div class="modal-sub">Customer ID '+c.customerId+' · '+c.city+' · '+escapeHtml(c.phone)+'</div>' +
-      '</div><button class="modal-close" id="modal-close-btn">✕</button></div>' +
-      '<div class="modal-body">' +
-        '<div class="detail-grid">' +
-          detailStat("Amount lent", fmtINR(c.amountLent)) +
-          detailStat("Weekly installment", fmtINR(d.weeklyInstallment)) +
-          detailStat("Amount paid", fmtINR(d.amountPaid)) +
-          detailStat("Balance", fmtINR(d.balance)) +
-        '</div>' +
-        '<div class="info-grid">' +
-          infoRow("Address", c.address || "—") +
-          infoRow("Line / Area / Week", escapeHtml((c.line||"—")+" / "+(c.area||"—")+" / "+(c.week||"—"))) +
-          infoRow("Loan status", '<span class="badge '+d.status.toLowerCase()+'">'+d.status+'</span>') +
-          infoRow("Start date", fmtDate(c.startDate)) +
-          infoRow("Due date", fmtDate(d.dueDate)) +
-          infoRow("Installments completed", d.installmentsCompleted + " / " + c.weeks) +
-          infoRow("Installments remaining", d.installmentsRemaining) +
-        '</div>' +
-        (d.status !== "Completed" ?
-          '<div class="record-pay-box"><div class="field"><label>Record payment amount (₹)</label>' +
-          '<input id="pay-amount" type="number" min="1" value="'+d.weeklyInstallment+'"/></div>' +
-          '<div class="field"><label>Payment date</label><input id="pay-date" type="date" value="'+todayStr()+'"/></div>' +
-          '<button class="btn btn-primary btn-sm" id="record-pay-btn">Record payment</button></div>'
-          : '<div class="record-pay-box" style="background:var(--surface-2);border-color:var(--border);"><div style="color:var(--ink-soft);font-size:13px;">✓ This loan is fully repaid.</div></div>'
-        ) +
-        '<div class="payhist-head" style="margin-top:22px;"><h4>Payment history</h4><span style="font-size:11.5px;color:var(--ink-faint);">'+(c.payments||[]).length+' entries</span></div>' +
-        payHtml +
-        '<div class="form-actions" style="margin-top:20px;">' +
-          '<button class="btn btn-outline btn-sm" id="edit-cust-btn">Edit details</button>' +
-          '<button class="btn btn-outline btn-sm" id="delete-cust-btn" style="color:var(--coral);border-color:var(--coral-soft);">Delete customer</button>' +
-        '</div>' +
-      '</div>';
-
-    document.getElementById("modal-close-btn").addEventListener("click", closeModal);
-    var recordBtn = document.getElementById("record-pay-btn");
-    if(recordBtn){
-      recordBtn.addEventListener("click", function(){
-        var amt = parseFloat(document.getElementById("pay-amount").value) || 0;
-        var dt = document.getElementById("pay-date").value || todayStr();
-        if(amt <= 0) return;
-        c.payments = c.payments || [];
-        c.payments.push({date: dt, amount: amt});
-        saveData();
-        renderModal();
-        renderRoute(); // refresh underlying view (dashboard/list totals)
-      });
-    }
-    document.getElementById("edit-cust-btn").addEventListener("click", function(){
-      state.editingCustomerId = c.id;
-      closeModal();
-      navigate("add-customer");
-    });
-    document.getElementById("delete-cust-btn").addEventListener("click", function(){
-      if(!confirm("Delete " + c.name + "? This cannot be undone.")) return;
-      customers = customers.filter(function(x){ return x.id !== c.id; });
-      saveData();
-      closeModal();
-      renderRoute();
-    });
-  }
-  function detailStat(l,v){ return '<div class="detail-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
-  function infoRow(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+v+'</span></div>'; }
-
-  /* ====================== COLLECTION MODULE (entry, collection, expense, settings) ====================== */
-  var K_GEO="vasool_geo_v1", K_TX="vasool_tx_v1", K_CFG="vasool_cfg_v1", K_ENT="vasool_entry_v1";
-  var geo = {}, txs = [], cfg = {open:{}};
-  var V = {e:{date:"",city:"",week:"",line:"",area:""}, f:null, tab:"c", q:"", open:true, panel:false, sub:false, msg:""};
-  function jl(k,d){ try{ var r=localStorage.getItem(k); return r?JSON.parse(r):d; }catch(e){ return d; } }
-  function jw(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
-  function ci(a,x){ x=String(x).trim().toLowerCase(); return a.filter(function(y){return y.toLowerCase()===x;})[0]; }
-  /* Adds city/line/area only if missing (case-insensitive) -> never duplicates. Returns true if anything new was added. */
-  function addGeo(c,l,a){
-    c=String(c||"").trim(); l=String(l||"").trim(); a=String(a||"").trim();
-    var added=false; if(!c) return false;
-    var C=ci(Object.keys(geo),c); if(!C){ C=c; geo[C]={}; added=true; }
-    if(!l) return added;
-    var L=ci(Object.keys(geo[C]),l); if(!L){ L=l; geo[C][L]=[]; added=true; }
-    if(a && !ci(geo[C][L],a)){ geo[C][L].push(a); added=true; }
-    return added;
-  }
-  function syncCities(){ CITIES.length=0; Object.keys(geo).forEach(function(c){ CITIES.push(c); }); }
-  function initModule(){
-    geo = jl(K_GEO,null);
-    if(!geo){ geo={}; CITIES.forEach(function(c){ addGeo(c,"Line 1","Area 1"); addGeo(c,"Line 1","Area 2"); addGeo(c,"Line 2","Area 3"); }); }
-    customers.forEach(function(c){ c.line=c.line||""; c.area=c.area||""; c.week=c.week||""; addGeo(c.city,c.line,c.area); });
-    txs = jl(K_TX,[]); cfg = jl(K_CFG,{open:{}}); if(!cfg.open) cfg.open={};
-    jw(K_GEO,geo); syncCities();
-    var s=jl(K_ENT,{});
-    V.e={date:todayStr(),city:s.city||"",week:s.week||"",line:s.line||"",area:s.area||""};
-    V.f=Object.assign({},V.e);
-  }
-
-  /* ---------- calculations (single source of truth = customers[].payments + txs) ---------- */
-  function cm(c,d){ /* customer figures as of date d */
-    var t=calc(c), p=0;
-    (c.payments||[]).forEach(function(x){ if(x.date<=d) p+=x.amount; });
-    var inst=t.weeklyInstallment, bal=Math.max(0,t.totalRepayment-p);
-    var n=bal<=0?c.weeks:Math.min(c.weeks, inst?Math.floor(p/inst):0);
-    return {tot:t.totalRepayment, inst:inst, paid:p, bal:bal, n:n, pend:c.weeks-n};
-  }
-  function custIn(f,c){ return (!f.city||c.city===f.city)&&(!f.week||String(c.week)===String(f.week))&&(!f.line||c.line===f.line)&&(!f.area||c.area===f.area); }
-  function txIn(f,t){ return (!f.city||t.city===f.city)&&(!f.week||String(t.week)===String(f.week)); }
-  function day(f){
-    var d=f.date, r={pbal:0,coll:0,cash:0,online:0,exp:0,bill:0,loan:0,pend:0};
-    Object.keys(cfg.open).forEach(function(k){ if(!f.city||k===f.city) r.pbal+=(+cfg.open[k]||0); });
-    customers.forEach(function(c){
-      if(!custIn(f,c)) return;
-      var got=0;
-      if(c.startDate<d) r.pbal-=c.amountLent; else if(c.startDate===d) r.loan+=c.amountLent;
-      (c.payments||[]).forEach(function(p){
-        if(p.date<d) r.pbal+=p.amount;
-        else if(p.date===d){ r.coll+=p.amount; got+=p.amount; if(p.mode==="online") r.online+=p.amount; else r.cash+=p.amount; }
-      });
-      if(c.startDate<d){ var due=Math.min(calc(c).weeklyInstallment, cm(c,addDays(d,-1)).bal); r.pend+=Math.max(0,due-got); }
-    });
-    txs.forEach(function(t){ if(!txIn(f,t)) return; var k=t.t==="b"?"bill":"exp"; if(t.date<d) r.pbal-=t.amount; else if(t.date===d) r[k]+=t.amount; });
-    r.bal=r.pbal+r.coll-r.exp-r.bill-r.loan;
-    return r;
-  }
-  /* one payment record per customer + date + mode (re-saving replaces, never doubles) */
-  function setPay(c,d,m,a){
-    c.payments=(c.payments||[]).filter(function(p){ return !(p.date===d && (p.mode||"cash")===m); });
-    if(a>0) c.payments.push({date:d,amount:a,mode:m});
-  }
-  function room(c,d){ var o=0; (c.payments||[]).forEach(function(p){ if(p.date!==d) o+=p.amount; }); return calc(c).totalRepayment-o; }
-  function payAmt(c,d,m){ var s=0; (c.payments||[]).forEach(function(p){ if(p.date===d && (p.mode||"cash")===m) s+=p.amount; }); return s; }
-
-  /* ---------- views ---------- */
-  function IN(n){ return fmtINR(n).replace("₹",""); }
-  function vsel(id,lb,items,v,ph){
-    return '<div class="vf"><label>'+lb+'</label><select id="'+id+'"'+(items.length?'':' disabled')+'><option value="">'+ph+'</option>'+
-      items.map(function(x){ var a=x instanceof Array?x:[x,x]; return '<option value="'+escapeHtml(a[0])+'"'+(String(a[0])===String(v)?' selected':'')+'>'+escapeHtml(a[1])+'</option>'; }).join("")+'</select></div>';
-  }
-  function vsels(p,o,ph){
-    var l=geo[o.city]?Object.keys(geo[o.city]):[], a=(geo[o.city]&&geo[o.city][o.line])||[];
-    return vsel(p+"-city","City",Object.keys(geo),o.city,ph)+vsel(p+"-week","Week",[1,2,3,4,5].map(function(w){return [w,"Week "+w];}),o.week,ph)+
-           vsel(p+"-line","Line",l,o.line,ph)+vsel(p+"-area","Area",a,o.area,ph);
-  }
-  function vhd(t,left,right){ return '<div class="vh">'+(left||"")+'<h2>'+t+'</h2>'+(right||'<span class="vi">🔔</span><span class="vi">🧮</span>')+'</div>'; }
-  function vgrid(T){
-    return '<div class="vg"><div>P.Bal: <b class="gr">'+IN(T.pbal)+'</b></div><div>Expense: <b class="rd">'+IN(T.exp)+'</b></div>'+
-      '<div>Bill: <b>'+IN(T.bill)+'</b></div><div>Loan: <b class="rd">'+IN(T.loan)+'</b></div>'+
-      '<div>Coll: <b class="gr">'+IN(T.coll)+'</b></div><div>Pending: <b class="rd">'+IN(T.pend)+'</b></div>'+
-      '<div>Cash: <b class="gr">'+IN(T.cash)+'</b></div><div>Online: <b class="gr">'+IN(T.online)+'</b></div></div>';
-  }
-  function vEntry(){
-    var e=V.e, ok=e.date&&e.city&&e.week&&e.line&&e.area;
-    return vhd("Collection")+'<div class="vf"><label>Date</label><input type="date" id="vce-date" value="'+e.date+'"></div>'+
-      vsels("vce",e,"Select")+
-      '<button class="vsub" data-vc="go"'+(ok?'':' disabled')+'>SUBMIT</button>'+
-      '<p class="vmu">City and week are remembered. Change them here any time.</p>';
-  }
-  function vcard(c,m,f){
-    var wk=Math.max(0,Math.floor((new Date(f.date)-new Date(c.startDate))/6048e5)), dots="";
-    for(var i=0;i<Math.min(Math.max(wk,m.n),c.weeks);i++) dots+='<i class="'+(i<m.n?'g':'r')+'"></i>';
-    var o=payAmt(c,f.date,"online"), h=payAmt(c,f.date,"cash");
-    return '<div class="vcd"><div class="vr"><div class="vl"><div class="vn">'+escapeHtml(c.customerId)+'-'+escapeHtml(c.name)+'</div>'+
-      '<div>'+escapeHtml(c.address||"")+'</div><div>'+fmtDate(c.startDate)+'('+wk+')</div>'+
-      '<div>Install: <b>'+IN(m.inst)+' ('+m.n+'/'+c.weeks+')</b> · Pending '+m.pend+'</div>'+
-      '<div class="vn">'+escapeHtml(c.area||"")+'</div><div class="vd">'+dots+'</div></div>'+
-      '<div class="vk"><div>Bal: <b class="rd">'+IN(m.bal)+'</b></div><div>Paid: <b class="gr">'+IN(m.paid)+'</b></div><hr><div>Tot: <b>'+IN(m.tot)+'</b></div></div></div>'+
-      (m.bal>0||o||h?'<div class="vp"><span class="vgl">🌐</span><input id="vco-'+c.id+'" type="number" inputmode="numeric" min="0" placeholder="Online" value="'+(o||"")+'">'+
-      '<span class="vgl">⁙</span><input id="vcc-'+c.id+'" type="number" inputmode="numeric" min="0" placeholder="Cash" value="'+(h||"")+'">'+
-      '<button class="vsv" data-vc="save" data-id="'+c.id+'" aria-label="Save">💾</button></div>':'')+'</div>';
-  }
-  function vColl(){
-    var f=V.f, T=day(f), q=V.q.trim().toLowerCase();
-    var all=customers.filter(function(c){ return custIn(f,c)&&c.startDate<=f.date&&(!q||(c.customerId+c.name+c.address+c.area).toLowerCase().indexOf(q)>-1); })
-      .map(function(c){ return [c,cm(c,f.date)]; }).sort(function(a,b){ return String(b[0].customerId).localeCompare(String(a[0].customerId),undefined,{numeric:true}); });
-    var col=all.filter(function(x){return x[1].bal>0;}), dn=all.filter(function(x){return x[1].bal<=0;});
-    var paidT=function(x){ return (x[0].payments||[]).some(function(p){return p.date===f.date;}); };
-    var un=customers.filter(function(c){ return (!f.city||c.city===f.city)&&(!c.line||!c.area||!c.week); }).length;
-    var tabs=[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){ return '<button class="'+(V.tab===t[0]?'on':'')+'" data-vc="tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join("");
-    var list=V.tab==="c"?col:dn, body;
-    if(V.tab==="p") body=vPay();
-    else body='<div class="vt">Total: '+list.length+(V.tab==="c"?' [<span class="gr">'+col.filter(function(x){return !paidT(x);}).length+'</span> + <span class="rd">'+col.filter(paidT).length+'</span>]':'')+'</div>'+
-      (list.length?list.map(function(x){return vcard(x[0],x[1],f);}).join(""):'<p class="vmu">No customers for this selection.</p>');
-    return '<div class="vh"><button class="vib" data-vc="back" aria-label="Back">‹</button><input class="vq" id="vcq" placeholder="Search" value="'+escapeHtml(V.q)+'">'+
-      '<button class="vib" data-vc="back" aria-label="Change city and week">⋮</button><button class="vib" data-vc="panel" aria-label="Filters">☰</button></div>'+
-      (V.panel?'<div class="vpn"><div class="vf"><label>Date</label><input type="date" id="vcf-date" value="'+f.date+'"></div>'+vsels("vcf",f,"All")+'</div>':'')+
-      '<div class="vs" data-vc="open"><span>'+fmtDate(f.date)+'</span><span class="vbl"><small>Balance</small><b class="'+(T.bal<0?'rd':'gr')+'">'+IN(T.bal)+'</b></span><span>'+(V.open?'▴':'▾')+'</span></div>'+
-      (V.open?vgrid(T):'')+
-      (un&&(f.line||f.area||f.week)?'<p class="vmu">'+un+' customer(s) have no Line/Area/Week yet and show only when those filters are All. Assign them in Customer › Edit.</p>':'')+
-      '<div class="vtb">'+tabs+'</div>'+body;
-  }
-  function vPay(){
-    var f=V.f, L=txs.filter(function(t){return t.date===f.date&&txIn(f,t);});
-    return '<div class="vpy">'+(f.city&&f.week?'<div class="vad"><select id="vcx-t"><option value="e">Expense</option><option value="b">Bill</option></select>'+
-      '<input id="vcx-a" type="number" inputmode="numeric" min="1" placeholder="Amount"><input id="vcx-n" placeholder="Note"><button class="vsv" data-vc="add">Add</button></div>'
-      :'<p class="vmu">Select a city and week to add an expense or bill.</p>')+
-      '<p class="vmu">Loans are counted automatically from each customer\'s Amount lent on the start date.</p>'+
-      L.map(function(t){ return '<div class="vo"><span>'+(t.t==="b"?"Bill":"Expense")+' '+escapeHtml(t.note||"")+'</span><b class="rd">'+IN(t.amount)+'</b><button class="vib" data-vc="del" data-id="'+t.id+'">✕</button></div>'; }).join("")+'</div>';
-  }
-  function vExp(){
-    var f=V.f, T=day(f);
-    return vhd("Expense")+'<div class="vpn"><div class="vf"><label>Date</label><input type="date" id="vcf-date" value="'+f.date+'"></div>'+vsels("vcf",f,"All")+'</div>'+vgrid(T)+vPay();
-  }
-  function vSet(){
-    var h=vhd("Settings")+'<div class="vpn"><h3>Opening balance (per city)</h3>'+
-      Object.keys(geo).map(function(c){ return '<div class="vf"><label>'+escapeHtml(c)+'</label><input type="number" data-vc="open-bal" data-city="'+escapeHtml(c)+'" value="'+(cfg.open[c]||"")+'" placeholder="0"></div>'; }).join("")+'</div>'+
-      '<div class="vpn"><h3>Add city / line / area</h3><div class="vad"><input id="vcg-c" placeholder="City"><input id="vcg-l" placeholder="Line"><input id="vcg-a" placeholder="Area"><button class="vsv" data-vc="geo">Add</button></div>'+
-      (V.msg?'<p class="vmu">'+V.msg+'</p>':'')+'</div><div class="vpn"><h3>Cities, lines and areas</h3>'+
-      Object.keys(geo).map(function(c){ return '<div><b>'+escapeHtml(c)+'</b>'+Object.keys(geo[c]).map(function(l){ return '<div class="vmu">'+escapeHtml(l)+': '+escapeHtml(geo[c][l].join(", ")||"—")+'</div>'; }).join("")+'</div>'; }).join("")+'</div>';
-    return h;
-  }
-  function vcRender(){
-    var y=window.scrollY, a=document.activeElement&&document.activeElement.id, el=document.getElementById("content");
-    var h = state.view==="expense"?vExp():state.view==="settings"?vSet():(V.sub?vColl():vEntry());
-    el.innerHTML='<div class="vc">'+h+'</div>';
-    if(a==="vcq"){ var q=document.getElementById("vcq"); if(q){ q.focus(); q.setSelectionRange(q.value.length,q.value.length); } }
-    window.scrollTo(0,y);
-  }
-  function vToast(m){ var t=document.createElement("div"); t.className="vts"; t.textContent=m; document.body.appendChild(t); setTimeout(function(){t.remove();},1900); }
-  function vSave(id){
-    var c=getCustomerById(id), d=V.f.date;
-    var o=parseFloat(document.getElementById("vco-"+id).value)||0, h=parseFloat(document.getElementById("vcc-"+id).value)||0;
-    if(o<0||h<0) return;
-    var r=room(c,d); if(o+h>r){ vToast("Exceeds balance. Maximum "+IN(r)); return; }
-    setPay(c,d,"online",o); setPay(c,d,"cash",h); saveData(); vcRender(); vToast("Saved");
-  }
-  function vcInit(){
-    var content=document.getElementById("content");
-    content.addEventListener("click",function(e){
-      var t=e.target.closest("[data-vc]"); if(!t||t.tagName==="INPUT") return;
-      var a=t.getAttribute("data-vc"), id=t.getAttribute("data-id");
-      if(a==="go"){ V.f=Object.assign({},V.e); V.sub=true; V.tab="c"; V.panel=false; jw(K_ENT,{city:V.e.city,week:V.e.week,line:V.e.line,area:V.e.area}); }
-      else if(a==="back") V.sub=false;
-      else if(a==="panel") V.panel=!V.panel;
-      else if(a==="open") V.open=!V.open;
-      else if(a==="tab") V.tab=t.getAttribute("data-t");
-      else if(a==="save") return vSave(id);
-      else if(a==="add"){
-        var amt=parseFloat(document.getElementById("vcx-a").value)||0; if(amt<=0) return;
-        txs.push({id:"t"+Date.now(),t:document.getElementById("vcx-t").value,city:V.f.city,week:+V.f.week,date:V.f.date,amount:amt,note:document.getElementById("vcx-n").value.trim()});
-        jw(K_TX,txs);
-      }
-      else if(a==="del"){ txs=txs.filter(function(x){return x.id!==id;}); jw(K_TX,txs); }
-      else if(a==="geo"){
-        var added=addGeo(document.getElementById("vcg-c").value,document.getElementById("vcg-l").value,document.getElementById("vcg-a").value);
-        V.msg=added?"Added.":"Already exists, nothing duplicated."; jw(K_GEO,geo); syncCities();
-      }
-      vcRender();
-    });
-    content.addEventListener("change",function(e){
-      var t=e.target, a=t.getAttribute&&t.getAttribute("data-vc");
-      if(a==="open-bal"){ cfg.open[t.getAttribute("data-city")]=parseFloat(t.value)||0; jw(K_CFG,cfg); return; }
-      var p=(t.id||"").split("-"); if(p[0]!=="vce"&&p[0]!=="vcf") return;
-      var o=p[0]==="vce"?V.e:V.f; o[p[1]]=t.value;
-      if(p[1]==="city"){ o.line=""; o.area=""; } if(p[1]==="line") o.area="";
-      if(p[0]==="vce") jw(K_ENT,{city:V.e.city,week:V.e.week,line:V.e.line,area:V.e.area});
-      vcRender();
-    });
-    content.addEventListener("input",function(e){ if(e.target.id==="vcq"){ V.q=e.target.value; vcRender(); } });
-  }
-
-  /* ====================== ROUTER ====================== */
-  function navigate(view){
-    state.view = view;
-    setActiveNav();
-    closeSidebarMobile();
-    renderRoute();
-  }
-  function renderRoute(){
-    var isV = state.view==="collection" || state.view==="expense" || state.view==="settings";
-    document.body.classList.toggle("vcm", isV);
-    document.querySelectorAll("#bnav button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===state.view); });
-    if(isV){ vcRender(); return; }
-    if(state.view === "dashboard"){
-      setTitle("Dashboard", state.selectedCity==="All" ? "Overview across all branches" : state.selectedCity + " branch overview");
-      renderDashboard();
-    } else if(state.view === "customers"){
-      setTitle("Customers", state.selectedCity==="All" ? "All branches" : state.selectedCity + " branch");
-      renderCustomers();
-    } else if(state.view === "add-customer"){
-      setTitle(state.editingCustomerId ? "Edit customer" : "Add customer", "Create or update a loan record");
-      renderAddCustomer();
-    }
-    renderCityDropdown();
-  }
-
-  /* ====================== MOBILE SIDEBAR ====================== */
-  function openSidebarMobile(){
-    document.getElementById("sidebar").classList.add("open");
-    document.getElementById("scrim").classList.add("open");
-  }
-  function closeSidebarMobile(){
-    document.getElementById("sidebar").classList.remove("open");
-    document.getElementById("scrim").classList.remove("open");
-  }
-
-  /* ====================== INIT / EVENTS ====================== */
-  function init(){
-    loadData();
-    initModule();
-    vcInit();
-    document.querySelectorAll("#bnav button").forEach(function(b){ b.addEventListener("click", function(){ navigate(b.getAttribute("data-view")); }); });
-
-    document.querySelectorAll(".nav-item").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        if(btn.getAttribute("data-view") === "add-customer") state.editingCustomerId = null;
-        navigate(btn.getAttribute("data-view"));
-      });
-    });
-    document.getElementById("quick-add-btn").addEventListener("click", function(){
-      state.editingCustomerId = null;
-      navigate("add-customer");
-    });
-    document.getElementById("hamburger").addEventListener("click", openSidebarMobile);
-    document.getElementById("scrim").addEventListener("click", closeSidebarMobile);
-
-    var cityBtn = document.getElementById("city-btn");
-    var cityDropdown = document.getElementById("city-dropdown");
-    cityBtn.addEventListener("click", function(e){
-      e.stopPropagation();
-      cityDropdown.classList.toggle("open");
-    });
-    document.addEventListener("click", function(){ cityDropdown.classList.remove("open"); });
-    cityDropdown.addEventListener("click", function(e){
-      var opt = e.target.closest(".opt");
-      if(!opt) return;
-      state.selectedCity = opt.getAttribute("data-city");
-      cityDropdown.classList.remove("open");
-      renderRoute();
-    });
-
-    document.getElementById("modal-overlay").addEventListener("click", function(e){
-      if(e.target.id === "modal-overlay") closeModal();
-    });
-
-    setActiveNav();
-    renderRoute();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
+/* ---------- events ---------- */
+document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;
+ if(a==="unlock"){if(hash($("#pin").value)===db.cfg.pin){S.unl=true}else return toast("Wrong PIN")}
+ else if(a==="close"){closeM();return}
+ else if(a==="nav"){S.v=v;if(v==="home")S.city="";S.q=""}
+ else if(a==="coll"){S.f.city="";S.f.area="";S.v="coll";S.tab="c"}
+ else if(a==="collcity"){S.f.city=S.city;S.f.area="";S.v="coll";S.tab="c"}
+ else if(a==="city"){if(e.target.closest("button"))return;S.city=id;S.v="city"}
+ else if(a==="cadd")return cityForm();else if(a==="cedit")return cityForm(id);
+ else if(a==="cdel"){var c=city(id);if(!confirm("Delete "+c.name+"?"))return;if(delGeo("city",id)){if(confirm(c.name+" has customers/transactions, so it cannot be deleted without losing history.\nArchive it instead? (hidden, history kept)")){c.arch=1;audit("city_archive",c.name)}else return}else audit("city_delete",c.name);save()}
+ else if(a==="aadd")return areaForm(S.city);else if(a==="aedit")return areaForm(S.city,id);
+ else if(a==="adel"){var ar=area(id);if(!confirm("Delete "+ar.name+"?"))return;if(delGeo("area",id)){if(confirm(ar.name+" has customers/transactions. Archive it instead? (history kept)")){ar.arch=1;audit("area_archive",ar.name)}else return}else audit("area_delete",ar.name);save()}
+ else if(a==="panel")S.panel=!S.panel;else if(a==="open")S.open=!S.open;else if(a==="tab")S.tab=v;
+ else if(a==="ovr"){if(S.ovr){S.ovr=""}else{if(!confirm("Admin override lets you record collections outside the area's collection day. Continue?")||!pinOk("enable override"))return;var rs=prompt("Reason for override (recorded in the audit log):");if(!rs)return;S.ovr=rs;audit("override_on",rs+" · "+S.f.date)}}
+ else if(a==="save"){var er=savePay(id,S.f.date,$("#o-"+id).value,$("#h-"+id).value,S.ovr);if(er)return toast(er);save();toast("Saved")}
+ else if(a==="oadd")return outForm(v);else if(a==="cuadd")return custForm();
+ else if(a==="odel"){if(!confirm("Remove this entry?"))return;db.tx=db.tx.filter(function(x){return x.id!==id});audit("tx_delete",id);save()}
+ else if(a==="prof")return profile(id);else if(a==="cuedit"){closeM();return custForm(id)}
+ else if(a==="done"){var c2=cust(id),b=cm(c2,today()).bal;if(b>0&&!confirm("Balance "+F(b)+" is still due. Mark as completed anyway (written off)?"))return;c2.status="completed";c2.closedOn=today();audit("loan_completed",c2.code+" bal "+b);save();closeM()}
+ else if(a==="csv"){var r=report();download("report-"+S.rep.t+".csv","text/csv",[r.cols].concat(r.rows).map(function(x){return x.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("\n"));return}
+ else if(a==="print"){window.print();return}
+ else if(a==="theme"){db.cfg.theme=db.cfg.theme==="light"?"dark":"light";save()}
+ else if(a==="pin"){var p=prompt(db.cfg.pin?"Enter a new PIN (leave empty to remove the PIN):":"Choose a PIN:");if(p===null)return;if(db.cfg.pin&&!pinOk("change the PIN"))return;db.cfg.pin=p?hash(p):"";audit("pin",p?"set":"removed");save();S.unl=true}
+ else if(a==="bk"){download("vasool-backup-"+today()+".json","application/json",JSON.stringify(db));return}
+ else if(a==="exc"){download("customers.csv","text/csv",["ID,Name,Phone,City,Area,Loan,Payable,Paid,Balance"].concat(db.cust.map(function(c){var m=cm(c,today());return[c.code,c.name,c.phone,cn(c.cityId),an(c.areaId),c.amt,m.tot,m.paid,m.bal].map(function(v){return'"'+v+'"'}).join(",")})).join("\n"));return}
+ render()});
+document.addEventListener("change",function(e){var t=e.target,i=t.id,f=S.f;
+ if(i==="rs"&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{var d=JSON.parse(fr.result);if(!d.cities||!d.cust||!d.tx)throw 0;if(!confirm("Restore this backup? It replaces all current data."))return;db=d;audit("restore","backup restored");save();render()}catch(x){toast("Invalid backup file")}};fr.readAsText(t.files[0]);return}
+ if(i==="f-date"){f.date=t.value;S.ovr=""}else if(i==="f-city"){f.city=t.value;f.area=""}else if(i==="f-area")f.area=t.value;else if(i==="f-mode")f.mode=t.value;
+ else if(i==="f-st"){f.st=t.value;if(t.value)S.tab=t.value}else if(i==="x-date")S.xd=t.value;else if(i==="cf")f.city=t.value;
+ else if(i==="r-t")S.rep.t=t.value;else if(i==="r-from")S.rep.from=t.value;else if(i==="r-to")S.rep.to=t.value;else if(i==="r-city")S.rep.city=t.value;else return;render()});
+document.addEventListener("input",function(e){if(e.target.id==="q"){S.q=e.target.value;render()}});
+document.addEventListener("DOMContentLoaded",function(){load();render()});
 })();
-</script>
-</body>
-</html>
+</script></body></html>
