@@ -34,6 +34,17 @@ option{background:var(--bar);color:var(--tx)}select:disabled,input:disabled{opac
 #bn{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;background:var(--bg);border-top:1px solid var(--ln);padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));max-width:640px;margin:auto}
 #bn button{flex:1;background:none;border:0;color:var(--mu);font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}#bn svg{width:25px;height:25px;fill:currentColor}#bn .on{color:var(--b)}
 .ts{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#333;color:#fff;padding:10px 16px;border-radius:8px;z-index:400;max-width:90%}
+.ic{filter:grayscale(1) brightness(2);font-size:20px}
+.sf{position:relative;margin:0 16px;padding:22px 30px 10px 0;border-bottom:1px solid var(--ln);cursor:pointer;min-height:72px}.sf label{display:block;font-size:20px;color:var(--mu)}.sf.fi label{font-size:12px}.sf div{font-size:19px}.sf::after{content:"▾";position:absolute;right:6px;top:30px;font-size:20px}
+.mo.ctr{align-items:center;padding:20px}.mo.ctr .mb{border-radius:16px;background:#1c1d20;color:#fff;max-width:380px;padding-bottom:10px}body.lt .mo.ctr .mb{background:#fff;color:#111}
+.rw{display:flex;align-items:center;gap:14px;padding:14px 22px;cursor:pointer;font-size:17px}.ra{width:20px;height:20px;border:2px solid var(--mu);border-radius:50%;flex-shrink:0}.ra.on{border-color:var(--b);background:radial-gradient(var(--b) 45%,transparent 50%)}
+.rw input[type=checkbox]{width:20px;height:20px;flex-shrink:0;accent-color:var(--b);padding:0}.al{max-height:48vh;overflow:auto}
+.gv{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:14px 16px 10px;font-size:15px}.gv u{font-weight:600}
+.tt{display:flex;justify-content:space-between;align-items:center}.tt .ib{padding:0 2px}
+.vd{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.vd i{width:10px;height:10px;border-radius:50%}.vd .g{background:#1e8e4e}.vd .r{background:#d6001c}
+.cb{display:inline-flex;align-items:center;gap:4px;background:var(--b);color:#fff;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;text-decoration:none;flex-shrink:0}
+.gl{width:34px;height:34px;display:grid;place-items:center;border:1px solid #4a4aa8;border-radius:8px;background:#1a1a3a;flex-shrink:0;font-size:15px}
+.sv{background:none;border:0;color:var(--b);padding:0 2px;cursor:pointer;flex-shrink:0}
 @media print{#bn,.hd,.np{display:none!important}body{background:#fff;color:#000}}
 </style></head><body><div id="app"></div>
 <script>
@@ -60,8 +71,15 @@ function paidTo(c,d){return r2(db.tx.reduce(function(s,t){return s+(t.t==="c"&&t
 function cm(c,d){var T=tot(c),p=paidTo(c,d),bal=r2(Math.max(0,T-p)),n=bal<=0?c.n:Math.min(c.n,c.inst?Math.floor((p+0.004)/c.inst):0);
  var wo=c.status==="completed"&&c.closedOn&&c.closedOn<=d;
  return{tot:T,paid:p,bal:bal,n:n,pend:c.n-n,prin:(wo||c.loanDate>d||!T)?0:r2(bal*c.amt/T)}}
-function cIn(f,c){return(!f.city||c.cityId===f.city)&&(!f.area||c.areaId===f.area)}
-function tIn(f,t){return(!f.city||t.cityId===f.city)&&(!f.area||t.areaId===f.area)}
+function selOk(f,id,cid){var s=f.areas;if(!s||!s.length)return true;return id?s.indexOf(id)>-1:s.indexOf("c:"+cid)>-1}
+function selCity(f,cid){var s=f.areas;if(!s||!s.length)return true;return s.some(function(x){return x.indexOf("c:")===0?x.slice(2)===cid:(area(x)||{}).cityId===cid})}
+function cIn(f,c){return(!f.city||c.cityId===f.city)&&(!f.area||c.areaId===f.area)&&selOk(f,c.areaId,c.cityId)}
+function tIn(f,t){return(!f.city||t.cityId===f.city)&&(!f.area||t.areaId===f.area)&&(t.areaId?selOk(f,t.areaId,t.cityId):selCity(f,t.cityId))}
+function lineMap(){var m={};function put(d,k,n,c){if(d==null)return;m[d]=m[d]||{};m[d][k]={id:k,name:n,city:c}}
+ var cname=function(id){return(city(id)||{}).name||""};
+ db.areas.forEach(function(a){if(!a.arch&&a.day!=null)put(a.day,a.id,a.name,cname(a.cityId))});
+ db.cities.forEach(function(c){if(!c.arch&&c.day!=null&&!db.areas.some(function(a){return a.cityId===c.id&&!a.arch}))put(c.day,"c:"+c.id,c.name,"")});
+ db.cust.forEach(function(c){if(c.status==="completed")return;var d=effDay(c);if(d==null)return;var a=area(c.areaId);put(d,c.areaId||"c:"+c.cityId,a?a.name:cname(c.cityId),a?cname(c.cityId):"")});return m}
 function dayT(f){var d=f.date,r={open:0,loan:0,coll:0,cash:0,online:0,exp:0,bill:0,intr:0,pbal:0},cl=0,ll=0,xl=0;
  db.cities.forEach(function(x){if(!f.city||x.id===f.city)r.open+=+x.open||0});
  db.cust.forEach(function(c){if(!cIn(f,c)||c.loanDate>d)return;ll+=c.amt;if(c.loanDate===d)r.loan+=c.amt;r.pbal+=cm(c,d).prin});
@@ -91,7 +109,7 @@ function migrate(){var oc;try{oc=JSON.parse(localStorage.getItem(OLD))}catch(e){
  var cs={};function gc(n){if(!cs[n]){cs[n]={id:uid(),name:n,rate:0,day:null,open:+(cf.open||{})[n]||0};db.cities.push(cs[n])}return cs[n]}
  var as={};Object.keys(g).forEach(function(n){gc(n);Object.keys(g[n]).forEach(function(l){g[n][l].forEach(function(a){var k=n+"|"+a;if(!as[k]){as[k]={id:uid(),cityId:cs[n].id,name:a,rate:null,day:null};db.areas.push(as[k])}})})});
  oc.forEach(function(o){var c=gc(o.city),a=o.area&&as[o.city+"|"+o.area],T=r2(o.amountLent*(1+(o.interestPercent||0)/100)),n=o.weeks||1;
-  var cu={id:o.id,code:o.customerId,name:o.name,phone:o.phone,cityId:c.id,areaId:a?a.id:"",amt:o.amountLent,rate:o.interestPercent||0,loanDate:o.startDate,n:n,inst:r2(T/n),day:dow(o.startDate),notes:o.address||"",status:"active"};
+  var cu={id:o.id,code:o.customerId,name:o.name,phone:o.phone,cityId:c.id,areaId:a?a.id:"",amt:o.amountLent,rate:o.interestPercent||0,loanDate:o.startDate,n:n,inst:r2(T/n),day:dow(o.startDate),addr:o.address||"",notes:"",status:"active"};
   db.cust.push(cu);(o.payments||[]).forEach(function(p){db.tx.push({id:uid(),t:"c",cid:o.id,cityId:c.id,areaId:cu.areaId,d:p.date,m:p.mode==="online"?"online":"cash",a:p.amount})})});
  ot.forEach(function(t){var c=gc(t.city);db.tx.push({id:t.id,t:t.t==="b"?"b":"e",name:t.note||"",cityId:c.id,areaId:"",d:t.date,a:t.amount,note:""})});
  audit("migrate","Imported "+oc.length+" customers from previous version");return true}
@@ -104,13 +122,13 @@ function seed(){var T="Thanjavur",c1={id:uid(),name:T,rate:10,day:null,open:5000
  db.tx.push({id:uid(),t:"e",name:"Fuel",cityId:c1.id,areaId:"",d:add(today(),-3),a:800,note:""},{id:uid(),t:"b",name:"Stationery",cityId:c1.id,areaId:"",d:add(today(),-2),a:200,note:""})}
 /*END*/
 
-var S={v:"home",city:"",f:{city:"",area:"",date:today(),mode:"",st:""},tab:"c",q:"",open:true,panel:false,ovr:"",unl:false,rep:{t:"daily",from:add(today(),-30),to:today(),city:""},pid:"",xd:today()};
+var S={v:"entry",city:"",tmp:[],f:{city:"",area:"",areas:[],line:"",date:today(),mode:"",st:""},tab:"c",q:"",open:true,panel:false,ovr:"",unl:false,rep:{t:"daily",from:add(today(),-30),to:today(),city:""},pid:"",xd:today()};
 var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
 var F=function(n){return(+n||0).toLocaleString("en-IN",{maximumFractionDigits:2})};
 var D=function(d){return d?d.split("-").reverse().join("/"):"—"};
 function save(){try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}}
-function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}if(r&&r.cities){db=r;db.audit=db.audit||[];db.cfg=db.cfg||{pin:"",theme:"dark"}}else{if(!migrate())seed();save()}}
+function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}if(r&&r.cities){db=r;db.audit=db.audit||[];db.cfg=db.cfg||{pin:"",theme:"dark"};db.cust.forEach(function(c){if(c.addr===undefined)c.addr=c.notes||""})}else{if(!migrate())seed();save()}}
 function toast(m){var t=document.createElement("div");t.className="ts";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
 function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return String(h)}
 function pinOk(why){if(!db.cfg.pin)return true;var p=prompt("Enter PIN to "+why);return p!==null&&hash(p)===db.cfg.pin}
@@ -122,6 +140,7 @@ var cn=function(id){var c=city(id);return c?c.name:"—"},an=function(id){var a=
 
 /* ---------- generic modal form ---------- */
 function openForm(title,fields,onSub,after){
+ closeM();
  var h='<form id="mf"><h3>'+title+"</h3>"+fields.map(function(f){
   if(f.t==="h")return'<div class="p mu" id="'+f.k+'">'+(f.v||"")+"</div>";
   var inp=f.t==="s"?'<select name="'+f.k+'">'+f.o+"</select>":f.t==="x"?'<textarea name="'+f.k+'" rows="2">'+esc(f.v)+"</textarea>":'<input name="'+f.k+'" type="'+(f.t==="n"?"number":f.t==="d"?"date":"text")+'"'+(f.t==="n"?' step="any" inputmode="decimal"':"")+' value="'+esc(f.v)+'"'+(f.ph?' placeholder="'+f.ph+'"':"")+">";
@@ -145,14 +164,14 @@ function areaForm(cid,id){var a=id?area(id):{name:"",rate:null,day:null};
   if(v.day==="")return"Select the weekly collection day";var o=id?area(id):{id:uid(),cityId:cid};o.name=n;o.rate=v.rate===""?null:+v.rate;o.day=+v.day;if(!id)db.areas.push(o);audit(id?"area_edit":"area_add",n+" "+DAYS[o.day]);save()})}
 function custForm(id){var c=id?cust(id):{name:"",phone:"",cityId:S.f.city||(db.cities[0]||{}).id,areaId:S.f.area||"",amt:"",rate:"",loanDate:today(),n:10,inst:"",day:null,notes:""};
  if(!db.cities.length)return toast("Add a city first");
- openForm(id?"Edit customer":"Add customer",[{k:"name",l:"Customer name",v:c.name},{k:"phone",l:"Mobile number",t:"t",v:c.phone},{k:"cityId",l:"City",t:"s",o:cityOpts(c.cityId)},{k:"areaId",l:"Area (optional)",t:"s",o:areaOpts(c.cityId,c.areaId,"No area")},
+ openForm(id?"Edit customer":"Add customer",[{k:"name",l:"Customer name",v:c.name},{k:"phone",l:"Mobile number",t:"t",v:c.phone},{k:"addr",l:"Address (optional)",v:c.addr||""},{k:"cityId",l:"City",t:"s",o:cityOpts(c.cityId)},{k:"areaId",l:"Area (optional)",t:"s",o:areaOpts(c.cityId,c.areaId,"No area")},
   {k:"amt",l:"Loan amount",t:"n",v:c.amt},{k:"rate",l:"Interest % (inherited)",t:"n",v:c.rate},{k:"loanDate",l:"Loan date",t:"d",v:c.loanDate},{k:"n",l:"Total installments",t:"n",v:c.n},{k:"inst",l:"Weekly installment amount",t:"n",v:c.inst},
   {k:"day",l:"Weekly collection day",t:"s",o:dayOpts(c.day,"Select day")},{k:"notes",l:"Notes (optional)",t:"x",v:c.notes},{t:"h",k:"pv"}],function(v){
   var amt=+v.amt,n=Math.round(+v.n),rate=+v.rate,inst=+v.inst;if(!v.name.trim())return"Enter the customer name";if(!(amt>0))return"Enter the loan amount";if(!(n>=1))return"Enter the number of installments";if(!(inst>0))return"Enter the installment amount";
   var inh=inhDay(v.cityId,v.areaId),day=inh!=null?inh:(v.day===""?null:+v.day);if(day==null)return"Select the weekly collection day";
   if(rate!==rateFor(v.cityId,v.areaId)&&!pinOk("override the interest rate"))return"Interest override needs the PIN";
   var o=id?cust(id):{id:uid(),code:String(db.cust.reduce(function(m,x){return Math.max(m,parseInt(x.code)||0)},100)+1),status:"active"};
-  Object.assign(o,{name:v.name.trim(),phone:v.phone.trim(),cityId:v.cityId,areaId:v.areaId,amt:amt,rate:rate,loanDate:v.loanDate,n:n,inst:inst,day:day,notes:v.notes});if(!id)db.cust.push(o);audit(id?"cust_edit":"loan_given",o.code+" "+o.name+" "+amt);save()},
+  Object.assign(o,{name:v.name.trim(),phone:v.phone.trim(),addr:v.addr,cityId:v.cityId,areaId:v.areaId,amt:amt,rate:rate,loanDate:v.loanDate,n:n,inst:inst,day:day,notes:v.notes});if(!id)db.cust.push(o);audit(id?"cust_edit":"loan_given",o.code+" "+o.name+" "+amt);save()},
   function(f,e){var nm=e&&e.target.name;if(nm==="cityId"){f.areaId.innerHTML=areaOpts(f.cityId.value,"","No area")}
    if(!e||nm==="cityId"||nm==="areaId"){if(!id||e){f.rate.value=rateFor(f.cityId.value,f.areaId.value);f.rate.dataset.man=""}}
    var inh=inhDay(f.cityId.value,f.areaId.value);f.day.disabled=inh!=null;if(inh!=null)f.day.value=inh;
@@ -167,7 +186,7 @@ function outForm(type){if(!db.cities.length)return toast("Add a city first");var
 
 /* ---------- views ---------- */
 var IC={c:"M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8z",e:"M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z",u:"M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.3 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",r:"M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z",s:"M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 5v-2l-2.2-.4a7 7 0 0 0-.7-1.6l1.3-1.8-1.4-1.4-1.8 1.3a7 7 0 0 0-1.6-.7L14 3h-2l-.4 2.2a7 7 0 0 0-1.6.7L8.2 4.6 6.8 6l1.3 1.8c-.3.5-.6 1-.7 1.6L5 11v2l2.4.4c.2.6.4 1.1.7 1.6L6.8 17l1.4 1.4 1.8-1.3c.5.3 1 .6 1.6.7L12 20h2l.4-2.2c.6-.2 1.1-.4 1.6-.7l1.8 1.3 1.4-1.4-1.3-1.8c.3-.5.6-1 .7-1.6z"};
-function nav(){var N=[["c","Collection",["home","city","coll"]],["e","Expense",["exp"]],["u","Customer",["cust"]],["r","Reports",["rep"]],["s","Settings",["set"]]];
+function nav(){var N=[["c","Collection",["entry","coll"]],["e","Expense",["exp"]],["u","Customer",["cust"]],["r","Reports",["rep"]],["s","Settings",["set","home","city"]]];
  return'<nav id="bn">'+N.map(function(n){return'<button data-a="nav" data-v="'+n[2][0]+'" class="'+(n[2].indexOf(S.v)>-1?"on":"")+'"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="'+IC[n[0]]+'"/></svg>'+n[1]+"</button>"}).join("")+"</nav>"}
 function gridT(T,x){return'<div class="gd"><div>P Bal: <b class="gr">'+F(T.pbal)+"</b></div><div>Expense: <b class=\"rd\">"+F(T.exp)+"</b></div><div>Bill: <b>"+F(T.bill)+'</b></div><div>Loan: <b class="rd">'+F(T.loan)+"</b></div><div>Collection: <b class=\"gr\">"+F(T.coll)+"</b></div><div>Total balance: <b>"+F(T.all)+"</b></div><div>Cash: <b class=\"gr\">"+F(T.cash)+"</b></div><div>Online: <b class=\"gr\">"+F(T.online)+"</b></div>"+(x||"")+"</div>"}
 function vHome(){var t=today();
@@ -179,23 +198,34 @@ function vCity(){var c=city(S.city);if(!c){S.v="home";return vHome()}var T=dayT(
  return'<div class="hd"><button class="ib" data-a="nav" data-v="home">‹</button><h2>'+esc(c.name)+'</h2><button class="btn s" data-a="collcity">Collection</button></div>'+gridT(T)+
  '<div class="row"><b style="flex:1">Areas ('+ars.length+')</b><button class="btn s o" data-a="aadd">+ Area</button><button class="btn s o" data-a="cedit" data-id="'+c.id+'">Edit city</button></div>'+
  (ars.map(function(a){var n=db.cust.filter(function(x){return x.areaId===a.id}).length;return'<div class="cc"><div class="row" style="padding:0"><b style="flex:1">'+esc(a.name)+'</b><button class="btn s o" data-a="aedit" data-id="'+a.id+'">Edit</button><button class="btn s d" data-a="adel" data-id="'+a.id+'">Delete</button></div><div class="mu">'+(a.day!=null?DAYS[a.day]:"No day set")+" · Interest "+(a.rate==null?c.rate+"% (city)":a.rate+"%")+" · "+n+" customer(s)</div></div>"}).join("")||'<p class="p mu">No areas. This city works without areas'+(c.day!=null?" (collection day: "+DAYS[c.day]+")":" — set a collection day via Edit city")+".</p>")}
+var FI='<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>';
+var SV='<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>';
+var DTA=["ஞாயிற்றுக்கிழமை","திங்கட்கிழமை","செவ்வாய்க்கிழமை","புதன்கிழமை","வியாழக்கிழமை","வெள்ளிக்கிழமை","சனிக்கிழமை"];
+var dayLbl=function(d){return DTA[d]+" · "+DAYS[d]};
+function entrySel(){var s=db.cfg.sel,lm=lineMap();if(!s){var t=dow(today());s={line:lm[t]?t:"",areas:[]}}return s}
+function showDlg(html){closeM();var m=document.createElement("div");m.className="mo ctr";m.id="mo";m.innerHTML='<div class="mb">'+html+"</div>";document.body.appendChild(m)}
+function vEntry(){var s=entrySel(),m=lineMap()[s.line]||{},nm=(s.areas||[]).filter(function(k){return m[k]}).map(function(k){return m[k].name});
+ return'<div class="hd"><h2>Collection</h2><span class="ic">🔔</span><span class="ic">🧮</span></div><div class="sf'+(s.line!==""?" fi":"")+'" data-a="pickline"><label>Line</label><div>'+(s.line!==""?esc(dayLbl(s.line)):"")+'</div></div><div class="sf'+(nm.length?" fi":"")+'" data-a="pickarea"><label>Area</label><div>'+esc(nm.join(", "))+'</div></div><div style="text-align:center"><button class="btn" style="padding:13px 42px;margin-top:22px" data-a="go"'+(s.line!==""&&nm.length?"":" disabled")+'>SUBMIT</button></div><p class="p mu" style="text-align:center;margin-top:18px">Today: '+DAYS[dow(today())]+' · <span data-a="nav" data-v="home" style="color:var(--b);cursor:pointer">Manage cities &amp; areas</span></p>'}
+function gridV(T){return'<div class="gv"><div>P.Bal: <u class="gr">'+F(T.pbal)+'</u></div><div>Expense: <u class="rd">'+F(T.exp)+'</u></div><div>Bill: <u>'+F(T.bill)+'</u></div><div>Loan: <u class="rd">'+F(T.loan)+'</u></div><div>Coll: <u class="gr">'+F(T.coll)+'</u></div><div></div><div class="mu" style="grid-column:1/-1">Total balance '+F(T.all)+" · Cash "+F(T.cash)+" · Online "+F(T.online)+"</div></div>"}
 function vColl(){var f=S.f,T=dayT(f),L=dueList(f,S.ovr),q=S.q.trim().toLowerCase();
  if(q)L=L.filter(function(x){return(x.c.code+x.c.name+x.c.phone).toLowerCase().indexOf(q)>-1});
  if(f.mode)L=L.filter(function(x){return S.tab!=="d"||todayPaid(x.c,f.date,f.mode)>0});
  var col=L.filter(function(x){return!x.done}),dn=L.filter(function(x){return x.done}),lst=S.tab==="d"?dn:col,body;
  if(S.tab==="p")body=vPay();else{
-  body='<div class="tt">Total: '+(col.length+dn.length)+' [<span class="rd">'+col.length+' pending</span> + <span class="gr">'+dn.length+' collected</span>]</div>';
-  if(!L.length&&!S.ovr){var ar=db.areas.filter(function(a){return(!f.city||a.cityId===f.city)&&(!f.area||a.id===f.area)&&a.day!=null&&!a.arch});
-   body+='<p class="p mu">No collections are due on '+DAYS[dow(f.date)]+" "+D(f.date)+".</p>"+ar.map(function(a){return'<p class="p mu">'+esc(cn(a.cityId))+" · "+esc(a.name)+" — "+DAYS[a.day]+", next "+D(nextDay(a.day,f.date))+"</p>"}).join("")}
-  body+=lst.map(function(x){return card(x)}).join("")}
- return'<div class="hd"><button class="ib" data-a="nav" data-v="home">‹</button><input class="q" id="q" placeholder="Search" value="'+esc(S.q)+'"><button class="ib" data-a="ovr" title="Admin override">'+(S.ovr?"🔓":"🔒")+'</button><button class="ib" data-a="panel">☰</button></div>'+
- (S.panel?'<div class="row"><div style="flex:1 1 45%"><label class="mu">Date</label><input type="date" id="f-date" value="'+f.date+'"></div><div style="flex:1 1 45%"><label class="mu">City</label><select id="f-city">'+cityOpts(f.city,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Area</label><select id="f-area">'+areaOpts(f.city,f.area,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Payment mode</label><select id="f-mode">'+opt([["cash","Cash"],["online","Online"]],f.mode,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Status</label><select id="f-st">'+opt([["p","Pending"],["d","Collected"]],f.st,"All")+"</select></div></div>":"")+
- '<div class="sm" data-a="open"><span>'+D(f.date)+'</span><span><small>Balance</small><b class="'+(T.bal<0?"rd":"gr")+'">'+F(T.bal)+"</b></span><span>"+(S.open?"▴":"▾")+"</span></div>"+(S.open?gridT(T):"")+
+  body='<div class="tt"><span>Total: '+(col.length+dn.length)+' [<span class="gr">'+col.length+'</span> + <span class="rd">'+dn.length+'</span>]</span><button class="ib" data-a="panel" aria-label="Filters">'+FI+"</button></div>";
+  if(!L.length&&!S.ovr){var lm=lineMap(),nx="";Object.keys(lm).forEach(function(d){Object.keys(lm[d]).forEach(function(k){if(f.areas.length&&f.areas.indexOf(k)<0)return;nx+='<p class="p mu">'+esc(lm[d][k].name)+" — "+DAYS[d]+", next "+D(nextDay(+d,f.date))+"</p>"})});
+   body+='<p class="p mu">No collections are due on '+DAYS[dow(f.date)]+" "+D(f.date)+". Collections can only be entered on the area's collection day.</p>"+nx}
+  body+=lst.map(card).join("")}
+ return'<div class="hd"><button class="ib" data-a="nav" data-v="entry" aria-label="Back">‹</button><input class="q" id="q" placeholder="Search" value="'+esc(S.q)+'"><button class="ib" data-a="menu" aria-label="Menu">⋮</button><button class="ib" data-a="panel" aria-label="Filters">'+FI+"</button></div>"+
+ (S.panel?'<div class="row"><div style="flex:1 1 45%"><label class="mu">Date</label><input type="date" id="f-date" value="'+f.date+'"></div><div style="flex:1 1 45%"><label class="mu">City</label><select id="f-city">'+cityOpts(f.city,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Payment mode</label><select id="f-mode">'+opt([["cash","Cash"],["online","Online"]],f.mode,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Status</label><select id="f-st">'+opt([["c","Pending"],["d","Collected"]],f.st,"All")+"</select></div></div>":"")+
+ '<div class="sm" data-a="open"><span>'+D(f.date)+'</span><span><small>Balance</small><b class="'+(T.bal<0?"rd":"gr")+'">'+F(T.bal)+"</b></span><span>"+(S.open?"▴":"▾")+"</span></div>"+(S.open?gridV(T):"")+
  (S.ovr?'<p class="p rd">Admin override active: '+esc(S.ovr)+"</p>":"")+'<div class="tb">'+[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){return'<button data-a="tab" data-v="'+t[0]+'" class="'+(S.tab===t[0]?"on":"")+'">'+t[1]+"</button>"}).join("")+"</div>"+body}
-function card(x){var c=x.c,m=x.m,f=S.f,st=x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':'<span class="chip rd">Pending</span>';
- return'<div class="cd"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'" style="cursor:pointer">'+esc(c.code)+"-"+esc(c.name)+"</div><div>"+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+"</div><div>Loan date: "+D(c.loanDate)+"</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+")</b> · Pending "+m.pend+"</div><div>"+st+"</div></div>"+
- '<div class="ck"><div>Bal: <b class="rd">'+F(m.bal)+"</b></div><div>Paid: <b class=\"gr\">"+F(m.paid)+"</b></div><hr><div>Tot: <b>"+F(m.tot)+"</b></div></div></div>"+
- '<div class="pl"><a class="btn s o" href="tel:'+esc(c.phone)+'" aria-label="Call">📞</a><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="btn s" data-a="save" data-id="'+c.id+'">✔ Collected</button></div></div>'}
+function card(x){var c=x.c,m=x.m,f=S.f,wk=Math.max(0,Math.floor((pd(f.date)-pd(c.loanDate))/6048e5)),dots="",a=area(c.areaId),
+ st=x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':'<span class="chip rd">Pending</span>';
+ for(var i=0;i<Math.min(Math.max(wk,m.n),c.n);i++)dots+='<i class="'+(i<m.n?"g":"r")+'"></i>';
+ return'<div class="cd"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'">'+esc(c.code)+"-"+esc(c.name)+"</div>"+(c.addr?"<div>"+esc(c.addr)+"</div>":"")+"<div>"+D(c.loanDate)+"("+wk+")</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+')</b></div><div class="nm">'+esc(a?a.name:cn(c.cityId))+" "+st+'</div><div class="vd">'+dots+'</div></div>'+
+ '<div class="ck"><div>Bal: <b class="rd">'+F(m.bal)+'</b></div><div>Paid: <b class="gr">'+F(m.paid)+"</b></div><hr><div>Tot: <b>"+F(m.tot)+"</b></div></div></div>"+
+ '<div class="pl">'+(c.phone?'<a class="cb" href="tel:'+esc(c.phone)+'">📞 Call</a>':"")+'<span class="gl">🌐</span><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><span class="gl">⣿</span><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="sv" data-a="save" data-id="'+c.id+'" aria-label="Mark as collected">'+SV+"</button></div></div>"}
 function vPay(){var f=S.f,rows=db.tx.filter(function(t){return t.t!=="c"&&t.d===f.date&&tIn(f,t)}),ln=db.cust.filter(function(c){return c.loanDate===f.date&&cIn(f,c)});
  return'<div class="row"><button class="btn s o" data-a="oadd" data-v="e">+ Expense</button><button class="btn s o" data-a="oadd" data-v="b">+ Bill</button><button class="btn s o" data-a="cuadd">+ New loan</button></div>'+
  ln.map(function(c){return'<div class="row"><span style="flex:1">Loan · '+esc(c.name)+'</span><b class="rd">'+F(c.amt)+"</b></div>"}).join("")+
@@ -244,21 +274,28 @@ function vSet(){return'<div class="hd"><h2>Settings</h2></div><div class="row"><
 
 function lock(){document.getElementById("app").innerHTML='<div class="hd"><h2>Enter PIN</h2></div><div class="fl"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autofocus></div><div class="row"><button class="btn" data-a="unlock">Unlock</button></div>'}
 function render(){document.body.classList.toggle("lt",db.cfg.theme==="light");if(db.cfg.pin&&!S.unl)return lock();
- var y=scrollY,a=document.activeElement&&document.activeElement.id,h=({home:vHome,city:vCity,coll:vColl,exp:vExp,cust:vCust,rep:vRep,set:vSet})[S.v]();
+ var y=scrollY,a=document.activeElement&&document.activeElement.id,h=({entry:vEntry,home:vHome,city:vCity,coll:vColl,exp:vExp,cust:vCust,rep:vRep,set:vSet})[S.v]();
  $("#app").innerHTML=h+nav();if(a==="q"){var q=$("#q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}scrollTo(0,y)}
 
 /* ---------- events ---------- */
-document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;
+document.addEventListener("click",function(e){if(e.target.id==="mo"){closeM();return}var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;closeM();
  if(a==="unlock"){if(hash($("#pin").value)===db.cfg.pin){S.unl=true}else return toast("Wrong PIN")}
- else if(a==="close"){closeM();return}
+ else if(a==="close"){return}
  else if(a==="nav"){S.v=v;if(v==="home")S.city="";S.q=""}
- else if(a==="coll"){S.f.city="";S.f.area="";S.v="coll";S.tab="c"}
- else if(a==="collcity"){S.f.city=S.city;S.f.area="";S.v="coll";S.tab="c"}
+ else if(a==="coll"){S.f={city:"",area:"",areas:[],line:"",date:today(),mode:"",st:""};S.v="coll";S.tab="c"}
+ else if(a==="collcity"){S.f={city:S.city,area:"",areas:[],line:"",date:today(),mode:"",st:""};S.v="coll";S.tab="c"}
  else if(a==="city"){if(e.target.closest("button"))return;S.city=id;S.v="city"}
  else if(a==="cadd")return cityForm();else if(a==="cedit")return cityForm(id);
  else if(a==="cdel"){var c=city(id);if(!confirm("Delete "+c.name+"?"))return;if(delGeo("city",id)){if(confirm(c.name+" has customers/transactions, so it cannot be deleted without losing history.\nArchive it instead? (hidden, history kept)")){c.arch=1;audit("city_archive",c.name)}else return}else audit("city_delete",c.name);save()}
  else if(a==="aadd")return areaForm(S.city);else if(a==="aedit")return areaForm(S.city,id);
  else if(a==="adel"){var ar=area(id);if(!confirm("Delete "+ar.name+"?"))return;if(delGeo("area",id)){if(confirm(ar.name+" has customers/transactions. Archive it instead? (history kept)")){ar.arch=1;audit("area_archive",ar.name)}else return}else audit("area_delete",ar.name);save()}
+ else if(a==="pickline"){var lm3=lineMap(),ds=Object.keys(lm3).map(Number).sort(function(x,y){return x-y}),cur=entrySel().line;showDlg("<h3>Line</h3>"+(ds.map(function(d){return'<div class="rw" data-a="setline" data-v="'+d+'"><span class="ra'+(cur===d?" on":"")+'"></span>'+esc(dayLbl(d))+"</div>"}).join("")||'<p class="p mu">No collection days yet. Add areas with a weekly day under Cities.</p>')+'<div class="row" style="justify-content:flex-end"><button class="btn o s" style="border:0" data-a="close">CANCEL</button></div>');return}
+ else if(a==="setline"){var o1=entrySel();db.cfg.sel={line:+v,areas:o1.line!==""&&+v===+o1.line?o1.areas:[]};save()}
+ else if(a==="pickarea"){var s3=entrySel();if(s3.line==="")return toast("Select Line first");S.tmp=(s3.areas||[]).slice();var m3=lineMap()[s3.line]||{};
+  showDlg('<h3>Area</h3><div class="fl"><input id="aq" placeholder="Search"></div><div class="al">'+Object.keys(m3).map(function(k){return'<label class="rw" data-t="'+esc((m3[k].name+" "+m3[k].city).toLowerCase())+'"><input type="checkbox" data-k="'+esc(k)+'"'+(S.tmp.indexOf(k)>-1?" checked":"")+"><span>"+esc(m3[k].name)+(m3[k].city?' <small class="mu">'+esc(m3[k].city)+"</small>":"")+"</span></label>"}).join("")+'</div><div class="row" style="justify-content:flex-end"><button class="btn o s" style="border:0" data-a="close">CANCEL</button><button class="btn o s" style="border:0" data-a="areaok">OK</button></div>');return}
+ else if(a==="areaok"){var o2=entrySel();db.cfg.sel={line:o2.line,areas:S.tmp.slice()};save()}
+ else if(a==="go"){var s2=entrySel(),m2=lineMap()[s2.line]||{},ks=(s2.areas||[]).filter(function(k){return m2[k]});if(!ks.length)return;db.cfg.sel={line:s2.line,areas:ks};save();S.f={city:"",area:"",areas:ks,line:s2.line,date:today(),mode:"",st:""};S.ovr="";S.tab="c";S.v="coll"}
+ else if(a==="menu"){showDlg('<div class="rw" data-a="ovr">'+(S.ovr?"Turn off admin override":"Admin override")+'</div><div class="rw" data-a="oadd" data-v="e">Add expense</div><div class="rw" data-a="oadd" data-v="b">Add bill</div><div class="rw" data-a="cuadd">New customer / loan</div><div class="rw" data-a="nav" data-v="entry">Change line / area</div>');return}
  else if(a==="panel")S.panel=!S.panel;else if(a==="open")S.open=!S.open;else if(a==="tab")S.tab=v;
  else if(a==="ovr"){if(S.ovr){S.ovr=""}else{if(!confirm("Admin override lets you record collections outside the area's collection day. Continue?")||!pinOk("enable override"))return;var rs=prompt("Reason for override (recorded in the audit log):");if(!rs)return;S.ovr=rs;audit("override_on",rs+" · "+S.f.date)}}
  else if(a==="save"){var er=savePay(id,S.f.date,$("#o-"+id).value,$("#h-"+id).value,S.ovr);if(er)return toast(er);save();toast("Saved")}
@@ -273,12 +310,12 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-a]")
  else if(a==="bk"){download("vasool-backup-"+today()+".json","application/json",JSON.stringify(db));return}
  else if(a==="exc"){download("customers.csv","text/csv",["ID,Name,Phone,City,Area,Loan,Payable,Paid,Balance"].concat(db.cust.map(function(c){var m=cm(c,today());return[c.code,c.name,c.phone,cn(c.cityId),an(c.areaId),c.amt,m.tot,m.paid,m.bal].map(function(v){return'"'+v+'"'}).join(",")})).join("\n"));return}
  render()});
-document.addEventListener("change",function(e){var t=e.target,i=t.id,f=S.f;
+document.addEventListener("change",function(e){var t=e.target,i=t.id,f=S.f;if(t.dataset&&t.dataset.k){var ix=S.tmp.indexOf(t.dataset.k);if(t.checked&&ix<0)S.tmp.push(t.dataset.k);if(!t.checked&&ix>-1)S.tmp.splice(ix,1);return}
  if(i==="rs"&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{var d=JSON.parse(fr.result);if(!d.cities||!d.cust||!d.tx)throw 0;if(!confirm("Restore this backup? It replaces all current data."))return;db=d;audit("restore","backup restored");save();render()}catch(x){toast("Invalid backup file")}};fr.readAsText(t.files[0]);return}
  if(i==="f-date"){f.date=t.value;S.ovr=""}else if(i==="f-city"){f.city=t.value;f.area=""}else if(i==="f-area")f.area=t.value;else if(i==="f-mode")f.mode=t.value;
  else if(i==="f-st"){f.st=t.value;if(t.value)S.tab=t.value}else if(i==="x-date")S.xd=t.value;else if(i==="cf")f.city=t.value;
  else if(i==="r-t")S.rep.t=t.value;else if(i==="r-from")S.rep.from=t.value;else if(i==="r-to")S.rep.to=t.value;else if(i==="r-city")S.rep.city=t.value;else return;render()});
-document.addEventListener("input",function(e){if(e.target.id==="q"){S.q=e.target.value;render()}});
+document.addEventListener("input",function(e){if(e.target.id==="aq"){var qq=e.target.value.toLowerCase();document.querySelectorAll(".al .rw").forEach(function(r){r.style.display=r.dataset.t.indexOf(qq)>-1?"":"none"});return}if(e.target.id==="q"){S.q=e.target.value;render()}});
 document.addEventListener("DOMContentLoaded",function(){load();render()});
 })();
 </script></body></html>
