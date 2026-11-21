@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>Vasool Collection</title>
+<html lang="en"><head><meta charset="UTF-8"><title>Vasool Collection by KK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0a0a0a"><meta name="mobile-web-app-capable" content="yes">
@@ -45,6 +45,12 @@ option{background:var(--bar);color:var(--tx)}select:disabled,input:disabled{opac
 .cb{display:inline-flex;align-items:center;gap:4px;background:var(--b);color:#fff;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;text-decoration:none;flex-shrink:0}
 .gl{width:34px;height:34px;display:grid;place-items:center;border:1px solid #4a4aa8;border-radius:8px;background:#1a1a3a;flex-shrink:0;font-size:15px}
 .sv{background:none;border:0;color:var(--b);padding:0 2px;cursor:pointer;flex-shrink:0}
+.sw{position:relative;overflow:hidden;border-bottom:1px solid var(--ln)}.sw .cd{border-bottom:0}.sa{position:absolute;top:0;bottom:0;width:110px}.sa.r{right:0;background:#1e8e4e}.sa.l{left:0;background:#c47a00}
+.sa button{background:none;border:0;color:#fff;font-weight:700;font-size:15px;text-align:center;line-height:1.25;width:100%;height:100%;cursor:pointer}.sa button:disabled{opacity:.5}
+.sc{position:relative;z-index:1;background:var(--bg);touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.pb{height:4px;background:var(--ln);border-radius:3px;margin-top:6px;overflow:hidden}.pb i{display:block;height:100%;background:linear-gradient(90deg,#1e8e4e,var(--g))}.pb.big{height:8px;margin-top:8px}
+.hero{margin:10px 16px;padding:12px 14px;border:1px solid var(--ln);border-radius:12px;background:var(--cd)}
+.ft{text-align:center;color:var(--mu);font-size:12px;padding:24px 16px 8px;line-height:1.6}.ft::before{content:"";display:block;width:36px;height:2px;background:var(--b);margin:0 auto 10px;border-radius:2px}
 @media print{#bn,.hd,.np{display:none!important}body{background:#fff;color:#000}}
 </style></head><body><div id="app"></div>
 <script>
@@ -60,7 +66,7 @@ var today=function(){return iso(new Date())};
 var dow=function(d){return pd(d).getDay()};
 var nextDay=function(day,from){for(var i=0;i<7;i++){if(dow(add(from,i))===day)return add(from,i)}};
 var uid=function(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-3)};
-var db={cities:[],areas:[],cust:[],tx:[],audit:[],cfg:{pin:"",theme:"dark"}};
+var db={cities:[],areas:[],cust:[],tx:[],audit:[],np:{},cfg:{pin:"",theme:"dark",swipeMode:"cash",dueMode:"inst",confirmSwipe:true,missN:1}};
 var city=function(id){return db.cities.find(function(x){return x.id===id})},area=function(id){return db.areas.find(function(x){return x.id===id})},cust=function(id){return db.cust.find(function(x){return x.id===id})};
 function audit(a,d){db.audit.unshift({id:uid(),ts:new Date().toISOString(),a:a,d:d});db.audit=db.audit.slice(0,500)}
 function rateFor(cid,aid){var a=area(aid),c=city(cid);return a&&a.rate!=null?a.rate:(c?c.rate:0)}
@@ -88,6 +94,10 @@ function dayT(f){var d=f.date,r={open:0,loan:0,coll:0,cash:0,online:0,exp:0,bill
   else{if(!tIn(f,t))return;xl+=t.a;if(t.d===d)r[t.t==="b"?"bill":"exp"]+=t.a}});
  r.bal=r2(r.open+cl-ll-xl);Object.keys(r).forEach(function(k){r[k]=r2(r[k])});r.all=r2(r.bal+r.pbal);return r}
 function todayPaid(c,d,m){return r2(db.tx.reduce(function(s,t){return s+(t.t==="c"&&t.cid===c.id&&t.d===d&&(!m||t.m===m)?t.a:0)},0))}
+function dueInfo(c,d,mode){var before=cm(c,add(d,-1)).bal,paidB=paidTo(c,add(d,-1)),T=tot(c),first=nextDay(effDay(c),add(c.loanDate,1)),
+ sch=function(x){return x<first?0:Math.min(c.n,Math.floor((pd(x)-pd(first))/6048e5)+1)},ex=function(k){return k>=c.n?T:r2(k*c.inst)},
+ arrears=r2(Math.max(0,ex(sch(d))-paidB)),prev=r2(Math.max(0,ex(sch(add(d,-1)))-paidB)),missed=c.inst?Math.max(0,Math.ceil(prev/c.inst-0.001)):0,
+ due=mode==="arrears"?Math.min(before,arrears):Math.min(c.inst,before);return{due:r2(Math.max(0,due)),arrears:arrears,missed:missed,before:before}}
 function dueList(f,ovr){var d=f.date;return db.cust.filter(function(c){
   if(!cIn(f,c)||c.loanDate>=d||(c.status==="completed"&&c.closedOn<d))return false;
   var before=cm(c,add(d,-1)).bal;if(before<=0&&!todayPaid(c,d))return false;
@@ -128,7 +138,7 @@ var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){r
 var F=function(n){return(+n||0).toLocaleString("en-IN",{maximumFractionDigits:2})};
 var D=function(d){return d?d.split("-").reverse().join("/"):"—"};
 function save(){try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}}
-function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}if(r&&r.cities){db=r;db.audit=db.audit||[];db.cfg=db.cfg||{pin:"",theme:"dark"};db.cust.forEach(function(c){if(c.addr===undefined)c.addr=c.notes||""})}else{if(!migrate())seed();save()}}
+function load(){var r;try{r=JSON.parse(localStorage.getItem(K))}catch(e){}if(r&&r.cities){db=r;db.audit=db.audit||[];db.cfg=db.cfg||{pin:"",theme:"dark"};db.cust.forEach(function(c){if(c.addr===undefined)c.addr=c.notes||""});db.np=db.np||{};db.cfg=Object.assign({pin:"",theme:"dark",swipeMode:"cash",dueMode:"inst",confirmSwipe:true,missN:1},db.cfg)}else{if(!migrate())seed();save()}}
 function toast(m){var t=document.createElement("div");t.className="ts";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
 function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return String(h)}
 function pinOk(why){if(!db.cfg.pin)return true;var p=prompt("Enter PIN to "+why);return p!==null&&hash(p)===db.cfg.pin}
@@ -205,14 +215,18 @@ var dayLbl=function(d){return DTA[d]+" · "+DAYS[d]};
 function entrySel(){var s=db.cfg.sel,lm=lineMap();if(!s){var t=dow(today());s={line:lm[t]?t:"",areas:[]}}return s}
 function showDlg(html){closeM();var m=document.createElement("div");m.className="mo ctr";m.id="mo";m.innerHTML='<div class="mb">'+html+"</div>";document.body.appendChild(m)}
 function vEntry(){var s=entrySel(),m=lineMap()[s.line]||{},nm=(s.areas||[]).filter(function(k){return m[k]}).map(function(k){return m[k].name});
- return'<div class="hd"><h2>Collection</h2><span class="ic">🔔</span><span class="ic">🧮</span></div><div class="sf'+(s.line!==""?" fi":"")+'" data-a="pickline"><label>Line</label><div>'+(s.line!==""?esc(dayLbl(s.line)):"")+'</div></div><div class="sf'+(nm.length?" fi":"")+'" data-a="pickarea"><label>Area</label><div>'+esc(nm.join(", "))+'</div></div><div style="text-align:center"><button class="btn" style="padding:13px 42px;margin-top:22px" data-a="go"'+(s.line!==""&&nm.length?"":" disabled")+'>SUBMIT</button></div><p class="p mu" style="text-align:center;margin-top:18px">Today: '+DAYS[dow(today())]+' · <span data-a="nav" data-v="home" style="color:var(--b);cursor:pointer">Manage cities &amp; areas</span></p>'}
+ return'<div class="hd"><h2>Collection</h2><span class="ic">🔔</span><span class="ic">🧮</span></div><div class="sf'+(s.line!==""?" fi":"")+'" data-a="pickline"><label>Line</label><div>'+(s.line!==""?esc(dayLbl(s.line)):"")+'</div></div><div class="sf'+(nm.length?" fi":"")+'" data-a="pickarea"><label>Area</label><div>'+esc(nm.join(", "))+'</div></div><div style="text-align:center"><button class="btn" style="padding:13px 42px;margin-top:22px" data-a="go"'+(s.line!==""&&nm.length?"":" disabled")+'>SUBMIT</button></div>'+tstat()+'<p class="p mu" style="text-align:center;margin-top:18px">Today: '+DAYS[dow(today())]+' · <span data-a="nav" data-v="home" style="color:var(--b);cursor:pointer">Manage cities &amp; areas</span></p>'}
+function tstat(){var t=today(),T=dayT({date:t}),n=dueList({date:t,areas:[]},"").filter(function(x){return!x.done}).length;return'<div class="cc" style="margin-top:22px"><div class="mu">Today · '+DAYS[dow(t)]+" "+D(t)+'</div><div class="gd" style="border:0"><div>Due customers: <b class="rd">'+n+'</b></div><div>Collected: <b class="gr">'+F(T.coll)+'</b></div><div>Balance: <b>'+F(T.bal)+'</b></div><div>P Bal: <b class="gr">'+F(T.pbal)+"</b></div></div></div>"}
+function hero(L,f){var due=0,got=0;L.forEach(function(x){due+=Math.max(dueInfo(x.c,f.date,db.cfg.dueMode).due,x.tp);got+=x.tp});var p=due?Math.min(100,Math.round(got/due*100)):0;
+ return'<div class="hero"><div class="row" style="padding:0;justify-content:space-between"><span>Collected <b class="gr">'+F(got)+"</b> of <b>"+F(due)+'</b></span><span class="mu">'+p+'%</span></div><div class="pb big"><i style="width:'+p+'%"></i></div><div class="row" style="padding:10px 0 0"><button class="btn s o" data-a="xun">⬇ Not paid list (Excel)</button><span class="mu">Swipe ← Paid · Not paid →</span></div></div>'}
+function toastUndo(m){document.querySelectorAll(".ts").forEach(function(x){x.remove()});var t=document.createElement("div");t.className="ts";t.innerHTML=esc(m)+' <button class="btn s" data-a="undo" style="margin-left:10px;padding:3px 10px">Undo</button>';document.body.appendChild(t);setTimeout(function(){t.remove()},6000)}
 function gridV(T){return'<div class="gv"><div>P.Bal: <u class="gr">'+F(T.pbal)+'</u></div><div>Expense: <u class="rd">'+F(T.exp)+'</u></div><div>Bill: <u>'+F(T.bill)+'</u></div><div>Loan: <u class="rd">'+F(T.loan)+'</u></div><div>Coll: <u class="gr">'+F(T.coll)+'</u></div><div></div><div class="mu" style="grid-column:1/-1">Total balance '+F(T.all)+" · Cash "+F(T.cash)+" · Online "+F(T.online)+"</div></div>"}
 function vColl(){var f=S.f,T=dayT(f),L=dueList(f,S.ovr),q=S.q.trim().toLowerCase();
  if(q)L=L.filter(function(x){return(x.c.code+x.c.name+x.c.phone).toLowerCase().indexOf(q)>-1});
  if(f.mode)L=L.filter(function(x){return S.tab!=="d"||todayPaid(x.c,f.date,f.mode)>0});
  var col=L.filter(function(x){return!x.done}),dn=L.filter(function(x){return x.done}),lst=S.tab==="d"?dn:col,body;
  if(S.tab==="p")body=vPay();else{
-  body='<div class="tt"><span>Total: '+(col.length+dn.length)+' [<span class="gr">'+col.length+'</span> + <span class="rd">'+dn.length+'</span>]</span><button class="ib" data-a="panel" aria-label="Filters">'+FI+"</button></div>";
+  body='<div class="tt"><span>Total: '+(col.length+dn.length)+' [<span class="gr">'+col.length+'</span> + <span class="rd">'+dn.length+'</span>]</span><button class="ib" data-a="panel" aria-label="Filters">'+FI+"</button></div>"+hero(L,f);
   if(!L.length&&!S.ovr){var lm=lineMap(),nx="";Object.keys(lm).forEach(function(d){Object.keys(lm[d]).forEach(function(k){if(f.areas.length&&f.areas.indexOf(k)<0)return;nx+='<p class="p mu">'+esc(lm[d][k].name)+" — "+DAYS[d]+", next "+D(nextDay(+d,f.date))+"</p>"})});
    body+='<p class="p mu">No collections are due on '+DAYS[dow(f.date)]+" "+D(f.date)+". Collections can only be entered on the area's collection day.</p>"+nx}
   body+=lst.map(card).join("")}
@@ -220,12 +234,16 @@ function vColl(){var f=S.f,T=dayT(f),L=dueList(f,S.ovr),q=S.q.trim().toLowerCase
  (S.panel?'<div class="row"><div style="flex:1 1 45%"><label class="mu">Date</label><input type="date" id="f-date" value="'+f.date+'"></div><div style="flex:1 1 45%"><label class="mu">City</label><select id="f-city">'+cityOpts(f.city,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Payment mode</label><select id="f-mode">'+opt([["cash","Cash"],["online","Online"]],f.mode,"All")+'</select></div><div style="flex:1 1 45%"><label class="mu">Status</label><select id="f-st">'+opt([["c","Pending"],["d","Collected"]],f.st,"All")+"</select></div></div>":"")+
  '<div class="sm" data-a="open"><span>'+D(f.date)+'</span><span><small>Balance</small><b class="'+(T.bal<0?"rd":"gr")+'">'+F(T.bal)+"</b></span><span>"+(S.open?"▴":"▾")+"</span></div>"+(S.open?gridV(T):"")+
  (S.ovr?'<p class="p rd">Admin override active: '+esc(S.ovr)+"</p>":"")+'<div class="tb">'+[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){return'<button data-a="tab" data-v="'+t[0]+'" class="'+(S.tab===t[0]?"on":"")+'">'+t[1]+"</button>"}).join("")+"</div>"+body}
-function card(x){var c=x.c,m=x.m,f=S.f,wk=Math.max(0,Math.floor((pd(f.date)-pd(c.loanDate))/6048e5)),dots="",a=area(c.areaId),
- st=x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':'<span class="chip rd">Pending</span>';
+function card(x){var c=x.c,m=x.m,f=S.f,di=dueInfo(c,f.date,db.cfg.dueMode),np=db.np[f.date+"|"+c.id],wk=Math.max(0,Math.floor((pd(f.date)-pd(c.loanDate))/6048e5)),dots="",a=area(c.areaId),
+ over=!x.done&&di.missed>=(+db.cfg.missN||1),extra=r2(di.due-x.tp),pct=m.tot?Math.min(100,Math.round(m.paid/m.tot*100)):0,
+ st=x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':np?'<span class="chip rd">Not paid</span>':'<span class="chip rd">Pending</span>',
+ acc=x.done?"var(--g)":x.tp>0?"#e0a030":over?"var(--r)":"var(--ln)";
  for(var i=0;i<Math.min(Math.max(wk,m.n),c.n);i++)dots+='<i class="'+(i<m.n?"g":"r")+'"></i>';
- return'<div class="cd"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'">'+esc(c.code)+"-"+esc(c.name)+"</div>"+(c.addr?"<div>"+esc(c.addr)+"</div>":"")+"<div>"+D(c.loanDate)+"("+wk+")</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+')</b></div><div class="nm">'+esc(a?a.name:cn(c.cityId))+" "+st+'</div><div class="vd">'+dots+'</div></div>'+
+ return'<div class="sw"><div class="sa l"><button data-a="npaid" data-id="'+c.id+'">'+(np?"Clear<br>not paid":"Not<br>paid")+'</button></div><div class="sa r"><button data-a="spay" data-id="'+c.id+'"'+(extra>0?"":" disabled")+">Paid<br><b>"+F(Math.max(0,extra))+"</b></button></div>"+
+ '<div class="cd sc" style="border-left:4px solid '+acc+'"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'">'+esc(c.code)+"-"+esc(c.name)+"</div>"+(c.addr?"<div>"+esc(c.addr)+"</div>":"")+"<div>"+D(c.loanDate)+"("+wk+")</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+')</b> · Due: <b class="rd">'+F(di.due)+"</b></div>"+
+ '<div class="nm">'+esc(a?a.name:cn(c.cityId))+" "+st+(over?' <span class="chip rd">Overdue ×'+di.missed+"</span>":"")+(np&&np.r?'<div class="mu">'+esc(np.r)+"</div>":"")+'</div><div class="vd">'+dots+'</div><div class="pb"><i style="width:'+pct+'%"></i></div></div>'+
  '<div class="ck"><div>Bal: <b class="rd">'+F(m.bal)+'</b></div><div>Paid: <b class="gr">'+F(m.paid)+"</b></div><hr><div>Tot: <b>"+F(m.tot)+"</b></div></div></div>"+
- '<div class="pl">'+(c.phone?'<a class="cb" href="tel:'+esc(c.phone)+'">📞 Call</a>':"")+'<span class="gl">🌐</span><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><span class="gl">⣿</span><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="sv" data-a="save" data-id="'+c.id+'" aria-label="Mark as collected">'+SV+"</button></div></div>"}
+ '<div class="pl">'+(c.phone?'<a class="cb" href="tel:'+esc(c.phone)+'">📞 Call</a>':"")+'<span class="gl">🌐</span><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><span class="gl">⣿</span><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="sv" data-a="save" data-id="'+c.id+'" aria-label="Mark as collected">'+SV+"</button></div></div></div>"}
 function vPay(){var f=S.f,rows=db.tx.filter(function(t){return t.t!=="c"&&t.d===f.date&&tIn(f,t)}),ln=db.cust.filter(function(c){return c.loanDate===f.date&&cIn(f,c)});
  return'<div class="row"><button class="btn s o" data-a="oadd" data-v="e">+ Expense</button><button class="btn s o" data-a="oadd" data-v="b">+ Bill</button><button class="btn s o" data-a="cuadd">+ New loan</button></div>'+
  ln.map(function(c){return'<div class="row"><span style="flex:1">Loan · '+esc(c.name)+'</span><b class="rd">'+F(c.amt)+"</b></div>"}).join("")+
@@ -266,19 +284,22 @@ var RT=[["daily","Daily collection"],["weekly","Weekly collection"],["monthly","
 function vRep(){var R=S.rep,r=report();
  return'<div class="hd np"><h2>Reports</h2></div><div class="row np"><select id="r-t" style="flex:1 1 100%">'+opt(RT,R.t)+'</select><input type="date" id="r-from" value="'+R.from+'" style="flex:1"><input type="date" id="r-to" value="'+R.to+'" style="flex:1"><select id="r-city" style="flex:1 1 100%">'+cityOpts(R.city,"All cities")+'</select></div>'+
  '<div class="row np"><button class="btn s" data-a="csv">Export Excel (CSV)</button><button class="btn s o" data-a="print">Export PDF</button></div><h3 class="p">'+esc((RT.find(function(x){return x[0]===R.t})||[])[1])+" · "+D(R.from)+" – "+D(R.to)+'</h3><div class="tw"><table><tr>'+r.cols.map(function(c){return"<th>"+c+"</th>"}).join("")+"</tr>"+(r.rows.map(function(x){return"<tr>"+x.map(function(v){return"<td>"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")||'<tr><td class="mu" colspan="'+r.cols.length+'">No data for this selection</td></tr>')+"</table></div>"}
-function download(name,type,txt){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}
+function download(name,type,txt){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([type.indexOf("csv")>-1?"\uFEFF"+txt:txt],{type:type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}
 function vSet(){return'<div class="hd"><h2>Settings</h2></div><div class="row"><button class="btn s o" data-a="nav" data-v="home">Manage cities &amp; areas</button><button class="btn s o" data-a="theme">Theme: '+(db.cfg.theme==="light"?"Light":"Dark")+"</button></div>"+
  '<p class="p mu">Default and area-specific interest and weekly collection days are set per city/area on the Cities page. Payment methods: Cash, Online.</p>'+
+ '<h3 class="p">Due &amp; swipe settings</h3><div class="fl"><label>Swipe “Paid” records the due as</label><select id="s-mode">'+opt([["cash","Cash"],["online","Online"]],db.cfg.swipeMode)+'</select></div><div class="fl"><label>Due amount to pay</label><select id="s-due">'+opt([["inst","One installment"],["arrears","Installment + missed (arrears)"]],db.cfg.dueMode)+'</select></div><div class="fl"><label>Confirm before swipe-paid</label><select id="s-conf">'+opt([["1","Yes"],["0","No"]],db.cfg.confirmSwipe?"1":"0")+'</select></div><div class="fl"><label>Show Overdue after this many missed installments</label><input id="s-miss" type="number" min="1" value="'+(db.cfg.missN||1)+'"></div>'+
  '<div class="row"><button class="btn s" data-a="pin">'+(db.cfg.pin?"Change / remove PIN":"Set PIN lock")+'</button><button class="btn s o" data-a="bk">Backup</button><label class="btn s o" style="margin:0">Restore<input id="rs" type="file" accept=".json" style="display:none"></label><button class="btn s o" data-a="exc">Export customers</button></div>'+
  '<h3 class="p">Audit log</h3><div class="tw"><table>'+(db.audit.slice(0,30).map(function(a){return"<tr><td>"+esc(a.ts.slice(0,16).replace("T"," "))+"</td><td>"+esc(a.a)+"</td><td>"+esc(a.d)+"</td></tr>"}).join("")||'<tr><td class="mu">No entries</td></tr>')+"</table></div>"}
 
-function lock(){document.getElementById("app").innerHTML='<div class="hd"><h2>Enter PIN</h2></div><div class="fl"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autofocus></div><div class="row"><button class="btn" data-a="unlock">Unlock</button></div>'}
+var FT='<div class="ft">Vasool Collection by KK<br>Made by Kirthan</div>';
+function lock(){document.getElementById("app").innerHTML='<div class="hd"><h2>Enter PIN</h2></div><div class="fl"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autofocus></div><div class="row"><button class="btn" data-a="unlock">Unlock</button></div>'+FT}
 function render(){document.body.classList.toggle("lt",db.cfg.theme==="light");if(db.cfg.pin&&!S.unl)return lock();
  var y=scrollY,a=document.activeElement&&document.activeElement.id,h=({entry:vEntry,home:vHome,city:vCity,coll:vColl,exp:vExp,cust:vCust,rep:vRep,set:vSet})[S.v]();
- $("#app").innerHTML=h+nav();if(a==="q"){var q=$("#q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}scrollTo(0,y)}
+ $("#app").innerHTML=h+FT+nav();if(a==="q"){var q=$("#q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}scrollTo(0,y)}
 
 /* ---------- events ---------- */
-document.addEventListener("click",function(e){if(e.target.id==="mo"){closeM();return}var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;closeM();
+var swT=0;
+document.addEventListener("click",function(e){if(swT&&Date.now()-swT<350&&!e.target.closest(".sa"))return;if(e.target.id==="mo"){closeM();return}var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;closeM();
  if(a==="unlock"){if(hash($("#pin").value)===db.cfg.pin){S.unl=true}else return toast("Wrong PIN")}
  else if(a==="close"){return}
  else if(a==="nav"){S.v=v;if(v==="home")S.city="";S.q=""}
@@ -289,13 +310,22 @@ document.addEventListener("click",function(e){if(e.target.id==="mo"){closeM();re
  else if(a==="cdel"){var c=city(id);if(!confirm("Delete "+c.name+"?"))return;if(delGeo("city",id)){if(confirm(c.name+" has customers/transactions, so it cannot be deleted without losing history.\nArchive it instead? (hidden, history kept)")){c.arch=1;audit("city_archive",c.name)}else return}else audit("city_delete",c.name);save()}
  else if(a==="aadd")return areaForm(S.city);else if(a==="aedit")return areaForm(S.city,id);
  else if(a==="adel"){var ar=area(id);if(!confirm("Delete "+ar.name+"?"))return;if(delGeo("area",id)){if(confirm(ar.name+" has customers/transactions. Archive it instead? (history kept)")){ar.arch=1;audit("area_archive",ar.name)}else return}else audit("area_delete",ar.name);save()}
+ else if(a==="spay"){var c1=cust(id),d1=S.f.date,ex1=r2(dueInfo(c1,d1,db.cfg.dueMode).due-todayPaid(c1,d1));if(ex1<=0)return toast("Nothing due");
+  if(db.cfg.confirmSwipe&&!confirm("Record "+F(ex1)+" ("+(db.cfg.swipeMode==="online"?"online":"cash")+") from "+c1.name+" as paid?"))return;
+  var pon=todayPaid(c1,d1,"online"),pca=todayPaid(c1,d1,"cash"),non=pon,nca=pca;if(db.cfg.swipeMode==="online")non+=ex1;else nca+=ex1;
+  var er1=savePay(id,d1,non,nca,S.ovr);if(er1)return toast(er1);delete db.np[d1+"|"+id];save();if(navigator.vibrate)navigator.vibrate(25);S.undo={id:id,d:d1,on:pon,ca:pca};render();toastUndo(c1.name+": "+F(ex1)+" paid");return}
+ else if(a==="undo"){document.querySelectorAll(".ts").forEach(function(x){x.remove()});var u=S.undo;if(u){var c3=cust(u.id);setPay(c3,u.d,"online",u.on);setPay(c3,u.d,"cash",u.ca);save();S.undo=null}}
+ else if(a==="npaid"){var k1=S.f.date+"|"+id;if(db.np[k1])delete db.np[k1];else{var rs1=prompt("Reason not paid (optional):");if(rs1===null)return;db.np[k1]={r:rs1,ts:new Date().toISOString()};audit("not_paid",cust(id).name+" "+S.f.date)}save()}
+ else if(a==="xun"){var f2=S.f,rw=dueList(f2,S.ovr).filter(function(x){return!x.done});if(!rw.length)return toast("No unpaid customers for this date");
+  var cols=["Date","Customer ID","Customer name","Phone","City","Area","Due amount","Balance","Missed installments","Reason"],rows=rw.map(function(x){var c=x.c,di=dueInfo(c,f2.date,db.cfg.dueMode),np=db.np[f2.date+"|"+c.id];return[D(f2.date),c.code,c.name,c.phone||"",cn(c.cityId),an(c.areaId)==="—"?"":an(c.areaId),r2(di.due-x.tp),x.m.bal,di.missed,np?np.r:""]});
+  download("not-paid-"+f2.date+".csv","text/csv",[cols].concat(rows).map(function(r){return r.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("\n"));return}
  else if(a==="pickline"){var lm3=lineMap(),ds=Object.keys(lm3).map(Number).sort(function(x,y){return x-y}),cur=entrySel().line;showDlg("<h3>Line</h3>"+(ds.map(function(d){return'<div class="rw" data-a="setline" data-v="'+d+'"><span class="ra'+(cur===d?" on":"")+'"></span>'+esc(dayLbl(d))+"</div>"}).join("")||'<p class="p mu">No collection days yet. Add areas with a weekly day under Cities.</p>')+'<div class="row" style="justify-content:flex-end"><button class="btn o s" style="border:0" data-a="close">CANCEL</button></div>');return}
  else if(a==="setline"){var o1=entrySel();db.cfg.sel={line:+v,areas:o1.line!==""&&+v===+o1.line?o1.areas:[]};save()}
  else if(a==="pickarea"){var s3=entrySel();if(s3.line==="")return toast("Select Line first");S.tmp=(s3.areas||[]).slice();var m3=lineMap()[s3.line]||{};
   showDlg('<h3>Area</h3><div class="fl"><input id="aq" placeholder="Search"></div><div class="al">'+Object.keys(m3).map(function(k){return'<label class="rw" data-t="'+esc((m3[k].name+" "+m3[k].city).toLowerCase())+'"><input type="checkbox" data-k="'+esc(k)+'"'+(S.tmp.indexOf(k)>-1?" checked":"")+"><span>"+esc(m3[k].name)+(m3[k].city?' <small class="mu">'+esc(m3[k].city)+"</small>":"")+"</span></label>"}).join("")+'</div><div class="row" style="justify-content:flex-end"><button class="btn o s" style="border:0" data-a="close">CANCEL</button><button class="btn o s" style="border:0" data-a="areaok">OK</button></div>');return}
  else if(a==="areaok"){var o2=entrySel();db.cfg.sel={line:o2.line,areas:S.tmp.slice()};save()}
  else if(a==="go"){var s2=entrySel(),m2=lineMap()[s2.line]||{},ks=(s2.areas||[]).filter(function(k){return m2[k]});if(!ks.length)return;db.cfg.sel={line:s2.line,areas:ks};save();S.f={city:"",area:"",areas:ks,line:s2.line,date:today(),mode:"",st:""};S.ovr="";S.tab="c";S.v="coll"}
- else if(a==="menu"){showDlg('<div class="rw" data-a="ovr">'+(S.ovr?"Turn off admin override":"Admin override")+'</div><div class="rw" data-a="oadd" data-v="e">Add expense</div><div class="rw" data-a="oadd" data-v="b">Add bill</div><div class="rw" data-a="cuadd">New customer / loan</div><div class="rw" data-a="nav" data-v="entry">Change line / area</div>');return}
+ else if(a==="menu"){showDlg('<div class="rw" data-a="ovr">'+(S.ovr?"Turn off admin override":"Admin override")+'</div><div class="rw" data-a="oadd" data-v="e">Add expense</div><div class="rw" data-a="oadd" data-v="b">Add bill</div><div class="rw" data-a="xun">Not paid list (Excel)</div><div class="rw" data-a="cuadd">New customer / loan</div><div class="rw" data-a="nav" data-v="entry">Change line / area</div>');return}
  else if(a==="panel")S.panel=!S.panel;else if(a==="open")S.open=!S.open;else if(a==="tab")S.tab=v;
  else if(a==="ovr"){if(S.ovr){S.ovr=""}else{if(!confirm("Admin override lets you record collections outside the area's collection day. Continue?")||!pinOk("enable override"))return;var rs=prompt("Reason for override (recorded in the audit log):");if(!rs)return;S.ovr=rs;audit("override_on",rs+" · "+S.f.date)}}
  else if(a==="save"){var er=savePay(id,S.f.date,$("#o-"+id).value,$("#h-"+id).value,S.ovr);if(er)return toast(er);save();toast("Saved")}
@@ -311,11 +341,18 @@ document.addEventListener("click",function(e){if(e.target.id==="mo"){closeM();re
  else if(a==="exc"){download("customers.csv","text/csv",["ID,Name,Phone,City,Area,Loan,Payable,Paid,Balance"].concat(db.cust.map(function(c){var m=cm(c,today());return[c.code,c.name,c.phone,cn(c.cityId),an(c.areaId),c.amt,m.tot,m.paid,m.bal].map(function(v){return'"'+v+'"'}).join(",")})).join("\n"));return}
  render()});
 document.addEventListener("change",function(e){var t=e.target,i=t.id,f=S.f;if(t.dataset&&t.dataset.k){var ix=S.tmp.indexOf(t.dataset.k);if(t.checked&&ix<0)S.tmp.push(t.dataset.k);if(!t.checked&&ix>-1)S.tmp.splice(ix,1);return}
- if(i==="rs"&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{var d=JSON.parse(fr.result);if(!d.cities||!d.cust||!d.tx)throw 0;if(!confirm("Restore this backup? It replaces all current data."))return;db=d;audit("restore","backup restored");save();render()}catch(x){toast("Invalid backup file")}};fr.readAsText(t.files[0]);return}
+ if(i==="rs"&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{var d=JSON.parse(fr.result);if(!d.cities||!d.cust||!d.tx)throw 0;if(!confirm("Restore this backup? It replaces all current data."))return;db=d;db.np=db.np||{};db.cfg=Object.assign({pin:"",theme:"dark",swipeMode:"cash",dueMode:"inst",confirmSwipe:true,missN:1},db.cfg);audit("restore","backup restored");save();render()}catch(x){toast("Invalid backup file")}};fr.readAsText(t.files[0]);return}
  if(i==="f-date"){f.date=t.value;S.ovr=""}else if(i==="f-city"){f.city=t.value;f.area=""}else if(i==="f-area")f.area=t.value;else if(i==="f-mode")f.mode=t.value;
  else if(i==="f-st"){f.st=t.value;if(t.value)S.tab=t.value}else if(i==="x-date")S.xd=t.value;else if(i==="cf")f.city=t.value;
- else if(i==="r-t")S.rep.t=t.value;else if(i==="r-from")S.rep.from=t.value;else if(i==="r-to")S.rep.to=t.value;else if(i==="r-city")S.rep.city=t.value;else return;render()});
+ else if(i==="r-t")S.rep.t=t.value;else if(i==="r-from")S.rep.from=t.value;else if(i==="r-to")S.rep.to=t.value;else if(i==="r-city")S.rep.city=t.value;else if(i==="s-mode"){db.cfg.swipeMode=t.value;save()}else if(i==="s-due"){db.cfg.dueMode=t.value;save()}else if(i==="s-conf"){db.cfg.confirmSwipe=t.value==="1";save()}else if(i==="s-miss"){db.cfg.missN=Math.max(1,+t.value||1);save()}else return;render()});
 document.addEventListener("input",function(e){if(e.target.id==="aq"){var qq=e.target.value.toLowerCase();document.querySelectorAll(".al .rw").forEach(function(r){r.style.display=r.dataset.t.indexOf(qq)>-1?"":"none"});return}if(e.target.id==="q"){S.q=e.target.value;render()}});
+var SW={on:false};
+function swClose(ex){document.querySelectorAll(".sc").forEach(function(c){if(c!==ex&&+c.dataset.x){c.style.transition="transform .18s";c.style.transform="translateX(0)";c.dataset.x=0}})}
+document.addEventListener("pointerdown",function(e){var c=e.target.closest(".sc");swClose(c);if(!c||e.target.closest("input,button,a,select"))return;SW={on:true,el:c,x0:e.clientX,y0:e.clientY,base:+c.dataset.x||0,lock:false,x:+c.dataset.x||0}});
+document.addEventListener("pointermove",function(e){if(!SW.on)return;var dx=e.clientX-SW.x0,dy=e.clientY-SW.y0;if(!SW.lock){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){SW.on=false;return}if(Math.abs(dx)<8)return;SW.lock=true}
+ SW.x=Math.max(-110,Math.min(110,SW.base+dx));SW.el.style.transition="none";SW.el.style.transform="translateX("+SW.x+"px)"});
+function swEnd(){if(!SW.on)return;SW.on=false;if(!SW.lock)return;swT=Date.now();var x=SW.x<-45?-110:SW.x>45?110:0;SW.el.style.transition="transform .18s";SW.el.style.transform="translateX("+x+"px)";SW.el.dataset.x=x}
+document.addEventListener("pointerup",swEnd);document.addEventListener("pointercancel",swEnd);
 document.addEventListener("DOMContentLoaded",function(){load();render()});
 })();
 </script></body></html>
