@@ -1,7 +1,7 @@
 {
   "name": "Vasool Collection by KK",
-  "short_name": "Vasool Collection",
-  "description": "Branch ledger and customer collection management by KK",
+  "short_name": "Vasool",
+  "description": "Loan management and daily collection app. Developed by Kirthan.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
