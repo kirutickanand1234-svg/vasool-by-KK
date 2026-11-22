@@ -99,6 +99,17 @@ option{background:var(--bar);color:var(--tx)}select:disabled,input:disabled{opac
 .hd h2{background:linear-gradient(90deg,var(--tx),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
 .btn:active{transform:scale(.97)}.mb::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:var(--ln);margin:6px auto 4px}.mo.ctr .mb::before{display:none}
 .cc{border-left:4px solid var(--b)}.chip{background:var(--bar)}
+html{scroll-behavior:smooth}body{font-variant-numeric:tabular-nums}#app{padding-bottom:116px}
+#bn{bottom:calc(8px + env(safe-area-inset-bottom,0px));left:0;right:0;width:calc(100% - 20px);max-width:620px;border:1px solid var(--ln);border-radius:22px;background:var(--bg);background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 28px #0007;padding:8px 4px}
+.hd{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pl input{background:var(--bar);border:1px solid var(--ln);border-radius:10px;padding:8px 10px;font-size:15px}
+.sv{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--a2));color:#fff;display:grid;place-items:center;padding:0;box-shadow:0 4px 12px #0005}.sv svg{width:24px;height:24px}
+.cb{border-radius:999px;padding:6px 12px}.chip{padding:2px 9px}
+.ts{border-radius:12px;background:var(--bar);color:var(--tx);border:1px solid var(--ln);box-shadow:0 8px 24px #0008}
+.eh{position:relative;overflow:hidden}.eh::before{content:"";position:absolute;left:50%;top:30px;width:240px;height:240px;transform:translateX(-50%);background:radial-gradient(circle,rgba(43,179,255,.28),transparent 70%);z-index:0;pointer-events:none}.eh>*{position:relative;z-index:1}
+.emp{text-align:center;color:var(--mu);padding:40px 16px}.ei2{font-size:42px;margin-bottom:8px}
+.cnt{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:10px;background:#ffffff26;font-size:12px;line-height:18px}.tb button:not(.on) .cnt{background:var(--ln)}
+.tl{box-shadow:0 6px 16px #0004}.ec{box-shadow:0 12px 34px #0006}
 #pr{display:none}
 @media print{#app,#bn,.mo,.ts{display:none!important}html,body{background:#fff!important;color:#000}#pr{display:block;padding:8px;color:#000;font-family:system-ui,"Noto Sans Tamil",sans-serif}#pr h2{margin:0 0 4px;font-size:18px}#pr table{border-collapse:collapse;width:100%;margin-top:8px}#pr th,#pr td{border:1px solid #888;padding:4px 6px;font-size:11.5px;text-align:left;white-space:normal}#pr th{background:#eee}#pr .ftp{margin-top:12px;font-size:11px;color:#555;text-align:center}}
 </style></head><body><div id="app"></div><div id="pr"></div>
@@ -305,7 +316,7 @@ function vColl(){var f=S.f,T=dayT(f),L=dueList(f,S.ovr),q=S.q.trim().toLowerCase
  return'<div class="hd"><button class="ib" data-a="nav" data-v="entry" aria-label="Back">‹</button><input class="q" id="q" placeholder="Search" value="'+esc(S.q)+'"><button class="ib" data-a="menu" aria-label="Menu">⋮</button><button class="ib" data-a="panel" aria-label="Filters">'+FI+"</button></div>"+
  (S.panel?'<div class="row"><div style="flex:1 1 45%"><label class="mu">Date</label><input type="date" id="f-date" value="'+f.date+'"></div><div style="flex:1 1 45%"><label class="mu">City</label><select id="f-city">'+cityOpts(f.city,"All")+'</select></div></div>':"")+
  '<div class="sm" data-a="open"><span>'+D(f.date)+'</span><span><small>Balance</small><b class="'+(T.bal<0?"rd":"gr")+'">'+F(T.bal)+"</b></span><span>"+(S.open?"▴":"▾")+"</span></div>"+(S.open?gridV(T):"")+
- (S.ovr?'<p class="p rd">Admin override active: '+esc(S.ovr)+"</p>":"")+'<div class="tb">'+[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){return'<button data-a="tab" data-v="'+t[0]+'" class="'+(S.tab===t[0]?"on":"")+'">'+t[1]+"</button>"}).join("")+"</div>"+body}
+ (S.ovr?'<p class="p rd">Admin override active: '+esc(S.ovr)+"</p>":"")+'<div class="tb">'+[["c","Collect"],["p","Pay"],["d","Completed"]].map(function(t){return'<button data-a="tab" data-v="'+t[0]+'" class="'+(S.tab===t[0]?"on":"")+'">'+t[1]+(t[0]==="c"?' <span class="cnt">'+col.length+"</span>":t[0]==="d"?' <span class="cnt">'+cview(f,S.ovr,S.cf).rows.length+"</span>":"")+"</button>"}).join("")+"</div>"+body}
 function card(x){var c=x.c,m=x.m,f=S.f,di=dueInfo(c,f.date,db.cfg.dueMode),np=db.np[f.date+"|"+c.id],wk=Math.max(0,Math.floor((pd(f.date)-pd(c.loanDate))/6048e5)),dots="",a=area(c.areaId),
  over=!x.done&&di.missed>=(+db.cfg.missN||1),extra=r2(di.due-x.tp),pct=m.tot?Math.min(100,Math.round(m.paid/m.tot*100)):0,
  st=x.closed?'<span class="chip gr">Closed</span>':x.done?'<span class="chip gr">Collected</span>':x.tp>0?'<span class="chip rd">Partial</span>':np?'<span class="chip rd">Not paid</span>':'<span class="chip rd">Pending</span>',
@@ -327,7 +338,7 @@ function vExp(){var d=S.xd,f={date:d},w=add(d,-dow(d)),ms=d.slice(0,8)+"01",sum=
  (rows.map(function(t){return'<div class="cd"><div class="row" style="padding:0"><div style="flex:1"><b>'+esc(t.name)+"</b> "+(t.t==="b"?'<span class="chip">Bill</span>':"")+'<div class="mu">'+esc(cn(t.cityId))+" · "+esc(an(t.areaId))+" "+esc(t.note)+'</div></div><b class="rd">'+F(t.a)+'</b><button class="ib" data-a="odel" data-id="'+t.id+'">✕</button></div></div>'}).join("")||'<p class="p mu">No expenses on this date.</p>')}
 function vCust(){var q=S.q.trim().toLowerCase(),l=db.cust.filter(function(c){return(!S.f.city||c.cityId===S.f.city)&&(!q||(c.code+c.name+c.phone).toLowerCase().indexOf(q)>-1)}).sort(function(a,b){return(parseInt(b.code)||0)-(parseInt(a.code)||0)});
  return'<div class="hd"><input class="q" id="q" placeholder="Search customers" value="'+esc(S.q)+'"><button class="btn s" data-a="cuadd">+ Add</button></div><div class="row"><select id="cf" style="flex:1">'+cityOpts(S.f.city,"All cities")+"</select></div>"+
- (l.map(function(c){var m=cm(c,today());return'<div class="cd" data-a="prof" data-id="'+c.id+'" style="cursor:pointer"><div class="cr"><div class="cl"><div class="nm">'+esc(c.code)+"-"+esc(c.name)+'</div><div class="mu">'+esc(cn(c.cityId))+" · "+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+"</div></div><div style=\"text-align:right\"><b class=\""+(m.bal>0?"rd":"gr")+'">'+F(m.bal)+'</b><div class="mu">'+(c.status==="completed"?"Completed":m.n+"/"+c.n)+"</div></div></div></div>"}).join("")||'<p class="p mu">No customers.</p>')}
+ (l.map(function(c){var m=cm(c,today());return'<div class="cd" data-a="prof" data-id="'+c.id+'" style="cursor:pointer"><div class="cr"><div class="cl"><div class="nm">'+esc(c.code)+"-"+esc(c.name)+'</div><div class="mu">'+esc(cn(c.cityId))+" · "+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+"</div></div><div style=\"text-align:right\"><b class=\""+(m.bal>0?"rd":"gr")+'">'+F(m.bal)+'</b><div class="mu">'+(c.status==="completed"?"Completed":m.n+"/"+c.n)+"</div></div></div></div>"}).join("")||emp("👥","No customers yet"))}
 function profile(id){var c=cust(id),m=cm(c,today()),T=tot(c),first=nextDay(effDay(c),add(c.loanDate,1)),sch="",cum=0,h=db.tx.filter(function(t){return t.cid===id}).sort(function(a,b){return b.d.localeCompare(a.d)});
  for(var i=0;i<c.n;i++){var a=i===c.n-1?r2(T-c.inst*(c.n-1)):c.inst;cum=r2(cum+a);sch+="<tr><td>"+(i+1)+"</td><td>"+D(add(first,7*i))+"</td><td>"+F(a)+'</td><td class="'+(m.paid+0.004>=cum?"gr":"rd")+'">'+(m.paid+0.004>=cum?"Paid":"Due")+"</td></tr>"}
  showM("<h3>"+esc(c.code)+"-"+esc(c.name)+'</h3><div class="p mu">'+esc(c.phone)+" · "+esc(cn(c.cityId))+" · "+esc(an(c.areaId))+" · "+DAYS[effDay(c)]+(c.status==="completed"?" · Completed "+D(c.closedOn):"")+"</div>"+
@@ -371,6 +382,7 @@ function vSet(){var sec=SECS.find(function(x){return x[0]===S.sec});
 
 var THEMES=[["dark","Midnight","#0a0a0a","#1e90d6"],["ocean","Ocean","#06131f","#2bb3ff"],["emerald","Emerald","#06140e","#14b8a6"],["sunset","Sunset","#2a1220","#ff8a3d"],["royal","Royal","#1b1536","#8b7bff"],["light","Light","#f5f5f2","#1565c0"]];
 var FT='<div class="ft">Vasool Collection by KK<br>Made by Kirthan</div>';
+function emp(i,m){return'<div class="emp"><div class="ei2">'+i+"</div><div>"+m+"</div></div>"}
 function printDoc(title,cols,rows,sub){var p=$("#pr");p.innerHTML="<h2>"+esc(title)+"</h2><div>"+esc(sub||"")+"</div><table><tr>"+cols.map(function(c){return"<th>"+esc(c)+"</th>"}).join("")+"</tr>"+rows.map(function(r){return"<tr>"+r.map(function(v){return"<td>"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+'</table><div class="ftp">Vasool Collection by KK · Made by Kirthan</div>';setTimeout(function(){window.print()},60)}
 var b64=function(b){return btoa(String.fromCharCode.apply(null,new Uint8Array(b)))},unb64=function(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})};
 async function bioEnable(){if(!db.cfg.pin)return toast("Set a PIN first. It is the backup if the fingerprint fails.");
@@ -384,7 +396,7 @@ function vDone(f,q){var cf=S.cf,V2=cview(f,S.ovr,cf),c=V2.cnt,rows=V2.rows.slice
  var np=rows.filter(function(x){return!(x.tp>0)}).length;
  return'<div class="tbx"><div class="tt2"><span>Total: '+rows.length+' [<span class="gr">'+(rows.length-np)+'</span> + <span class="rd">'+np+'</span>]</span><span class="tic"><button class="ib" data-a="csort" aria-label="Sort">'+(S.csort==="desc"?"↓":"↑")+'</button><button class="ib" data-a="cexp" aria-label="Export"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button><button class="ib" data-a="cpanel" aria-label="Filters">'+FI+"</button></span></div>"+
  (S.cpanel?'<div class="cfp">'+chk("paid","Paid ("+c.paid+') <b class="gr">['+F(c.pamt)+"]</b>")+chk("np","Not Paid ("+c.np+")")+chk("cash","Cash ("+c.cash+") <b>["+F(c.camt)+"]</b>")+chk("online","Online ("+c.on+") <b>["+F(c.oamt)+"]</b>")+chk("closed","Closed ("+c.closed+")")+"</div>":"")+"</div>"+
- (rows.length?rows.map(card).join(""):'<p class="p mu">No customers for this selection.</p>')}
+ (rows.length?rows.map(card).join(""):emp("🔍","No customers for this selection"))}
 function doneExport(){var f=S.f,rows=cview(f,S.ovr,S.cf).rows.slice().sort(function(a,b){return(parseInt(a.c.code)||0)-(parseInt(b.c.code)||0)}),cs=0,on=0,pd_=0;
  var out=rows.map(function(x){var c=x.c,di=dueInfo(c,f.date,db.cfg.dueMode);cs+=x.ca;on+=x.on;pd_+=x.tp;return[D(f.date),c.code,c.name,c.phone||"",cn(c.cityId),an(c.areaId)==="—"?"":an(c.areaId),x.closed?"Closed":x.tp>0?"Paid":"Not paid",x.ca,x.on,x.tp,r2(Math.max(0,di.due-x.tp)),x.m.bal]});
  out.push(["","","TOTAL","","","","",r2(cs),r2(on),r2(pd_),"",""]);
