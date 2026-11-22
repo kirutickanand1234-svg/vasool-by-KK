@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>Vasool Collection by KK</title>
+<html lang="en"><head><meta charset="UTF-8"><title>Vasool Drive</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#0a0a0a"><meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a"><meta name="application-name" content="Vasool Drive"><meta name="apple-mobile-web-app-title" content="Vasool Drive"><meta name="mobile-web-app-capable" content="yes">
 <style>
 :root{--bg:#0a0a0a;--bar:#1c1d20;--ln:#2e2f33;--mu:#9aa0a6;--tx:#fff;--g:#3ddc84;--r:#ff5a5f;--b:#1e90d6;--a2:#1565c0;--cd:#121316;color-scheme:dark;padding-top:env(safe-area-inset-top,0px)}
 .th-light{--bg:#f5f5f2;--bar:#e9e9e4;--ln:#d4d4cc;--mu:#666;--tx:#111;--g:#0e8a4e;--r:#c62828;--b:#1565c0;--a2:#6a1b9a;--cd:#fff;color-scheme:light}
@@ -92,6 +92,13 @@ option{background:var(--bar);color:var(--tx)}select:disabled,input:disabled{opac
 .cc{box-shadow:0 4px 14px #0003}
 .tw{border:1px solid var(--ln);border-radius:12px;background:var(--cd)}th{background:var(--bar)}
 .fl input,.fl select,.fl textarea{background:var(--bar);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-top:4px}
+.mnu{margin:12px 14px}.mi{display:flex;align-items:center;gap:14px;padding:14px;margin-bottom:10px;border:1px solid var(--ln);border-radius:16px;background:var(--cd);box-shadow:0 3px 10px #0003;cursor:pointer}
+.mi .si{width:40px;height:40px;border-radius:12px;font-size:19px;flex-shrink:0}.mt{flex:1;min-width:0}.mt b{display:block;font-size:16px}.mt small{display:block;color:var(--mu);font-size:12.5px;margin-top:2px}.chev{font-size:26px;color:var(--mu);line-height:1}
+.mi:active{background:var(--bar)}.sc2 .srow:first-child{border-top:0}
+.av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--a2));color:#fff;font-size:13px;margin-right:8px;vertical-align:middle}
+.hd h2{background:linear-gradient(90deg,var(--tx),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn:active{transform:scale(.97)}.mb::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:var(--ln);margin:6px auto 4px}.mo.ctr .mb::before{display:none}
+.cc{border-left:4px solid var(--b)}.chip{background:var(--bar)}
 #pr{display:none}
 @media print{#app,#bn,.mo,.ts{display:none!important}html,body{background:#fff!important;color:#000}#pr{display:block;padding:8px;color:#000;font-family:system-ui,"Noto Sans Tamil",sans-serif}#pr h2{margin:0 0 4px;font-size:18px}#pr table{border-collapse:collapse;width:100%;margin-top:8px}#pr th,#pr td{border:1px solid #888;padding:4px 6px;font-size:11.5px;text-align:left;white-space:normal}#pr th{background:#eee}#pr .ftp{margin-top:12px;font-size:11px;color:#555;text-align:center}}
 </style></head><body><div id="app"></div><div id="pr"></div>
@@ -188,7 +195,7 @@ function cview(f,ovr,cf){var v=dayView(f,ovr),any=cf.cash||cf.online,mo=function
  return{rows:rows,cnt:cnt}}
 /*END*/
 
-var S={v:"entry",city:"",tmp:[],cf:{paid:true,np:true,cash:false,online:false,closed:false},cpanel:true,csort:"desc",f:{city:"",area:"",areas:[],line:"",date:today(),mode:"",st:""},tab:"c",q:"",open:true,panel:false,ovr:"",unl:false,rep:{t:"daily",from:add(today(),-30),to:today(),city:"",det:"names"},pid:"",xd:today()};
+var S={v:"entry",city:"",sec:"",tmp:[],cf:{paid:true,np:true,cash:false,online:false,closed:false},cpanel:true,csort:"desc",f:{city:"",area:"",areas:[],line:"",date:today(),mode:"",st:""},tab:"c",q:"",open:true,panel:false,ovr:"",unl:false,rep:{t:"daily",from:add(today(),-30),to:today(),city:"",det:"names"},pid:"",xd:today()};
 var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
 var F=function(n){return(+n||0).toLocaleString("en-IN",{maximumFractionDigits:2})};
@@ -228,7 +235,11 @@ function areaForm(cid,id){var a=id?area(id):{name:"",rate:null,day:null};
  openForm(id?"Edit area":"Add area",[{k:"name",l:"Area name",v:a.name},{k:"rate",l:"Interest % (blank = city default "+city(cid).rate+"%)",t:"n",v:a.rate==null?"":a.rate},{k:"day",l:"Weekly collection day",t:"s",o:dayOpts(a.day,"Select day")}],function(v){
   var n=v.name.trim();if(!n)return"Enter an area name";if(db.areas.some(function(x){return x.cityId===cid&&x.id!==id&&x.name.toLowerCase()===n.toLowerCase()}))return"Area already exists in this city";
   if(v.day==="")return"Select the weekly collection day";var o=id?area(id):{id:uid(),cityId:cid};o.name=n;o.rate=v.rate===""?null:+v.rate;o.day=+v.day;if(!id)db.areas.push(o);audit(id?"area_edit":"area_add",n+" "+DAYS[o.day]);save()})}
-function custForm(id){var c=id?cust(id):{name:"",phone:"",cityId:S.f.city||(db.cities[0]||{}).id,areaId:S.f.area||"",amt:"",rate:"",loanDate:today(),n:10,inst:"",day:null,notes:""};
+function defGeo(){var s=entrySel(),m=lineMap()[s.line]||{},ks=(s.areas||[]).filter(function(k){return m[k]}),g={cityId:"",areaId:"",day:s.line===""?null:+s.line};
+ if(S.f&&S.f.city){g.cityId=S.f.city;return g}
+ if(!ks.length)ks=Object.keys(m);if(!ks.length)return g;var k=ks[0];
+ if(k.indexOf("c:")===0)g.cityId=k.slice(2);else{var a=area(k);if(a){g.cityId=a.cityId;if(ks.length===1)g.areaId=a.id}}return g}
+function custForm(id){var dg=id?{}:defGeo(),c=id?cust(id):{name:"",phone:"",addr:"",cityId:dg.cityId||(db.cities[0]||{}).id,areaId:dg.areaId||"",amt:"",rate:"",loanDate:today(),n:10,inst:"",day:dg.day==null?null:dg.day,notes:""};
  if(!db.cities.length)return toast("Add a city first");
  openForm(id?"Edit customer":"Add customer",[{k:"name",l:"Customer name",v:c.name},{k:"phone",l:"Mobile number",t:"t",v:c.phone},{k:"addr",l:"Address (optional)",v:c.addr||""},{k:"cityId",l:"City",t:"s",o:cityOpts(c.cityId)},{k:"areaId",l:"Area (optional)",t:"s",o:areaOpts(c.cityId,c.areaId,"No area")},
   {k:"amt",l:"Loan amount",t:"n",v:c.amt},{k:"rate",l:"Interest % (inherited)",t:"n",v:c.rate},{k:"loanDate",l:"Loan date",t:"d",v:c.loanDate},{k:"n",l:"Total installments",t:"n",v:c.n},{k:"inst",l:"Weekly installment amount",t:"n",v:c.inst},
@@ -301,7 +312,7 @@ function card(x){var c=x.c,m=x.m,f=S.f,di=dueInfo(c,f.date,db.cfg.dueMode),np=db
  acc=x.done?"var(--g)":x.tp>0?"#e0a030":over?"var(--r)":"var(--ln)";
  for(var i=0;i<Math.min(Math.max(wk,m.n),c.n);i++)dots+='<i class="'+(i<m.n?"g":"r")+'"></i>';
  return'<div class="sw"><div class="sa l"><button data-a="npaid" data-id="'+c.id+'">'+(np?"Clear<br>not paid":"Not<br>paid")+'</button></div><div class="sa r"><button data-a="spay" data-id="'+c.id+'"'+(extra>0?"":' class="dim"')+">Paid<br><b>"+F(Math.max(0,extra))+"</b></button></div>"+
- '<div class="cd sc" style="border-left:4px solid '+acc+'"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'">'+esc(c.code)+"-"+esc(c.name)+"</div>"+(c.addr?"<div>"+esc(c.addr)+"</div>":"")+"<div>"+D(c.loanDate)+"("+wk+")</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+')</b> · Due: <b class="rd">'+F(di.due)+"</b></div>"+
+ '<div class="cd sc" style="border-left:4px solid '+acc+'"><div class="cr"><div class="cl"><div class="nm" data-a="prof" data-id="'+c.id+'"><span class="av">'+esc((c.name||"?").trim().charAt(0))+"</span>"+esc(c.code)+"-"+esc(c.name)+"</div>"+(c.addr?"<div>"+esc(c.addr)+"</div>":"")+"<div>"+D(c.loanDate)+"("+wk+")</div><div>Install: <b>"+F(c.inst)+" ("+m.n+"/"+c.n+')</b> · Due: <b class="rd">'+F(di.due)+"</b></div>"+
  '<div class="nm">'+esc(a?a.name:cn(c.cityId))+" "+st+(over?' <span class="chip rd">Overdue ×'+di.missed+"</span>":"")+(np&&np.r?'<div class="mu">'+esc(np.r)+"</div>":"")+'</div><div class="vd">'+dots+'</div><div class="pb"><i style="width:'+pct+'%"></i></div></div>'+
  '<div class="ck"><div>Bal: <b class="rd">'+F(m.bal)+'</b></div><div>Paid: <b class="gr">'+F(m.paid)+"</b></div><hr><div>Tot: <b>"+F(m.tot)+"</b></div></div></div>"+
  '<div class="pl">'+(c.phone?'<a class="cb" href="tel:'+esc(c.phone)+'">📞 Call</a>':"")+'<span class="gl">🌐</span><input id="o-'+c.id+'" type="number" inputmode="decimal" placeholder="Online" value="'+(todayPaid(c,f.date,"online")||"")+'"><span class="gl">⣿</span><input id="h-'+c.id+'" type="number" inputmode="decimal" placeholder="Cash" value="'+(todayPaid(c,f.date,"cash")||"")+'"><button class="sv" data-a="save" data-id="'+c.id+'" aria-label="Mark as collected">'+SV+"</button></div></div></div>"}
@@ -347,15 +358,16 @@ function vRep(){var R=S.rep,r=report();
  return'<div class="hd np"><h2>Reports</h2></div><div class="row np"><select id="r-t" style="flex:1 1 100%">'+opt(RT,R.t)+'</select><input type="date" id="r-from" value="'+R.from+'" style="flex:1"><input type="date" id="r-to" value="'+R.to+'" style="flex:1"><select id="r-city" style="flex:1 1 100%">'+cityOpts(R.city,"All cities")+'</select><select id="r-det" style="flex:1 1 100%">'+opt([["names","With customer names"],["sum","Summary only"]],R.det)+'</select></div>'+
  '<div class="row np"><button class="btn s" data-a="csv">Export Excel (CSV)</button><button class="btn s o" data-a="print">Export PDF</button></div><h3 class="p">'+esc((RT.find(function(x){return x[0]===R.t})||[])[1])+" · "+D(R.from)+" – "+D(R.to)+'</h3><div class="tw"><table><tr>'+r.cols.map(function(c){return"<th>"+c+"</th>"}).join("")+"</tr>"+(r.rows.map(function(x){return"<tr>"+x.map(function(v){return"<td>"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")||'<tr><td class="mu" colspan="'+r.cols.length+'">No data for this selection</td></tr>')+"</table></div>"}
 function download(name,type,txt){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([type.indexOf("csv")>-1?"\uFEFF"+txt:txt],{type:type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}
-function sset(ic,t,inner){return'<div class="sc2"><div class="sh"><span class="si">'+ic+"</span>"+t+"</div>"+inner+"</div>"}
 function srow(l,c){return'<div class="srow"><label>'+l+"</label>"+c+"</div>"}
-function vSet(){return'<div class="hd"><h2>Settings</h2></div>'+
- sset("🎨","Appearance",'<div class="th">'+THEMES.map(function(t){return'<button class="sw2'+((db.cfg.theme||"dark")===t[0]?" on":"")+'" data-a="theme" data-v="'+t[0]+'" style="background:linear-gradient(135deg,'+t[2]+","+t[3]+')">'+t[1]+"</button>"}).join("")+"</div>")+
- sset("📍","Cities & areas",'<div class="row"><button class="btn s o" data-a="nav" data-v="home">Manage cities &amp; areas</button></div><p class="mu p">Default interest, area interest and weekly collection days are set per city or area. Payment methods: Cash, Online.</p>')+
- sset("⏱️","Due & swipe",srow("Swipe “Paid” records as",'<select id="s-mode">'+opt([["cash","Cash"],["online","Online"]],db.cfg.swipeMode)+"</select>")+srow("Due amount to pay",'<select id="s-due">'+opt([["inst","One installment"],["arrears","Installment + arrears"]],db.cfg.dueMode)+"</select>")+srow("Confirm before swipe-paid",'<select id="s-conf">'+opt([["1","Yes"],["0","No"]],db.cfg.confirmSwipe?"1":"0")+"</select>")+srow("Show Overdue after missed installments",'<input id="s-miss" type="number" min="1" value="'+(db.cfg.missN||1)+'">'))+
- sset("🔒","Security",srow("PIN lock",'<button class="btn s" data-a="pin">'+(db.cfg.pin?"Change / remove":"Set PIN")+"</button>")+srow("Fingerprint lock",'<button class="btn s o" data-a="'+(db.cfg.bio?"biooff":"bioon")+'">👆 '+(db.cfg.bio?"On":"Off")+"</button>")+srow("Auto-lock after minutes away",'<input id="s-lock" type="number" min="0" value="'+(db.cfg.lockMins==null?2:db.cfg.lockMins)+'">'))+
- sset("💾","Data",'<div class="row"><button class="btn s o" data-a="bk">Backup</button><label class="btn s o" style="margin:0">Restore<input id="rs" type="file" accept=".json" style="display:none"></label><button class="btn s o" data-a="exc">Export customers</button></div>')+
- sset("📜","Audit log",'<div class="tw"><table>'+(db.audit.slice(0,30).map(function(a){return"<tr><td>"+esc(a.ts.slice(0,16).replace("T"," "))+"</td><td>"+esc(a.a)+"</td><td>"+esc(a.d)+"</td></tr>"}).join("")||'<tr><td class="mu">No entries</td></tr>')+"</table></div>")}
+function mrow(ic,t,sub,attr){return'<div class="mi" '+attr+'><span class="si">'+ic+'</span><div class="mt"><b>'+t+"</b><small>"+sub+'</small></div><span class="chev">›</span></div>'}
+var SECS=[["look","🎨","Appearance",function(){return'<div class="th">'+THEMES.map(function(t){return'<button class="sw2'+((db.cfg.theme||"dark")===t[0]?" on":"")+'" data-a="theme" data-v="'+t[0]+'" style="background:linear-gradient(135deg,'+t[2]+","+t[3]+')">'+t[1]+"</button>"}).join("")+"</div>"},function(){return(THEMES.find(function(t){return t[0]===(db.cfg.theme||"dark")})||THEMES[0])[1]+" theme"}],
+ ["due","⏱️","Due & swipe",function(){return srow("Swipe “Paid” records as",'<select id="s-mode">'+opt([["cash","Cash"],["online","Online"]],db.cfg.swipeMode)+"</select>")+srow("Due amount to pay",'<select id="s-due">'+opt([["inst","One installment"],["arrears","Installment + arrears"]],db.cfg.dueMode)+"</select>")+srow("Confirm before swipe-paid",'<select id="s-conf">'+opt([["1","Yes"],["0","No"]],db.cfg.confirmSwipe?"1":"0")+"</select>")+srow("Show Overdue after missed installments",'<input id="s-miss" type="number" min="1" value="'+(db.cfg.missN||1)+'">')},function(){return(db.cfg.swipeMode==="online"?"Online":"Cash")+" · "+(db.cfg.dueMode==="arrears"?"with arrears":"one installment")}],
+ ["sec","🔒","Security",function(){return srow("PIN lock",'<button class="btn s" data-a="pin">'+(db.cfg.pin?"Change / remove":"Set PIN")+"</button>")+srow("Fingerprint lock",'<button class="btn s o" data-a="'+(db.cfg.bio?"biooff":"bioon")+'">👆 '+(db.cfg.bio?"On":"Off")+"</button>")+srow("Auto-lock after minutes away",'<input id="s-lock" type="number" min="0" value="'+(db.cfg.lockMins==null?2:db.cfg.lockMins)+'">')},function(){return"PIN "+(db.cfg.pin?"on":"off")+" · Fingerprint "+(db.cfg.bio?"on":"off")}],
+ ["data","💾","Data & backup",function(){return'<div class="row"><button class="btn s o" data-a="bk">Backup</button><label class="btn s o" style="margin:0">Restore<input id="rs" type="file" accept=".json" style="display:none"></label><button class="btn s o" data-a="exc">Export customers</button></div>'},function(){return"Backup · Restore · Export"}],
+ ["log","📜","Audit log",function(){return'<div class="tw"><table>'+(db.audit.slice(0,30).map(function(a){return"<tr><td>"+esc(a.ts.slice(0,16).replace("T"," "))+"</td><td>"+esc(a.a)+"</td><td>"+esc(a.d)+"</td></tr>"}).join("")||'<tr><td class="mu">No entries</td></tr>')+"</table></div>"},function(){return db.audit.length+" entries"}]];
+function vSet(){var sec=SECS.find(function(x){return x[0]===S.sec});
+ if(sec)return'<div class="hd"><button class="ib" data-a="setback" aria-label="Back">‹</button><h2>'+sec[2]+'</h2></div><div class="sc2">'+sec[3]()+"</div>";
+ return'<div class="hd"><h2>Settings</h2></div><div class="mnu">'+mrow("📍","Cities &amp; areas","Interest rates and weekly collection days",'data-a="nav" data-v="home"')+SECS.map(function(x){return mrow(x[1],x[2],x[4](),'data-a="setsec" data-v="'+x[0]+'"')}).join("")+"</div>"}
 
 var THEMES=[["dark","Midnight","#0a0a0a","#1e90d6"],["ocean","Ocean","#06131f","#2bb3ff"],["emerald","Emerald","#06140e","#14b8a6"],["sunset","Sunset","#2a1220","#ff8a3d"],["royal","Royal","#1b1536","#8b7bff"],["light","Light","#f5f5f2","#1565c0"]];
 var FT='<div class="ft">Vasool Collection by KK<br>Made by Kirthan</div>';
@@ -387,7 +399,9 @@ var swT=0;
 document.addEventListener("click",function(e){if(swT&&Date.now()-swT<350&&e.target.closest(".sc"))return;if(e.target.id==="mo"){closeM();return}var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.id,v=t.dataset.v;closeM();
  if(a==="unlock"){if(hash($("#pin").value)===db.cfg.pin){S.unl=true}else return toast("Wrong PIN")}
  else if(a==="close"){return}
- else if(a==="nav"){S.v=v;if(v==="home")S.city="";S.q=""}
+ else if(a==="nav"){S.v=v;if(v==="home")S.city="";if(v==="set")S.sec="";S.q=""}
+ else if(a==="setsec"){S.sec=v}
+ else if(a==="setback"){S.sec=""}
  else if(a==="coll"){S.f={city:"",area:"",areas:[],line:"",date:today(),mode:"",st:""};S.v="coll";S.tab="c"}
  else if(a==="collcity"){S.f={city:S.city,area:"",areas:[],line:"",date:today(),mode:"",st:""};S.v="coll";S.tab="c"}
  else if(a==="city"){if(e.target.closest("button"))return;S.city=id;S.v="city"}

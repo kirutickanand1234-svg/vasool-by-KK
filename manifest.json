@@ -1,7 +1,7 @@
 {
-  "name": "Vasool Collection by KK",
-  "short_name": "Vasool",
-  "description": "Loan management and daily collection app. Developed by Kirthan.",
+  "name": "Vasool Drive",
+  "short_name": "Vasool Drive",
+  "description": "Vasool Drive: loan management and daily collection app. Developed by Kirthan.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,6 +9,18 @@
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
   "icons": [
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "icon-192.png",
       "sizes": "192x192",
@@ -20,12 +32,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
